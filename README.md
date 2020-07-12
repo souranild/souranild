@@ -1,1 +1,1 @@
-![Nani?](https://user-images.githubusercontent.com/42074408/87242736-f9756380-c44c-11ea-960b-e416fdb89e29.png)
+![Nani?](https://user-images.githubusercontent.com/42074408/87242771-60931800-c44d-11ea-827f-68cbf3b47f28.png)
