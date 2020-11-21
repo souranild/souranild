@@ -3,3 +3,5 @@
 I love new ideas.
 Additionally, I love graphic design, 3D Modeling, or anything close to these topics.
 I love music, and learning new languages. Yes that's all for now i guess
+
+Oh, and Microprocessors are cool as well i guess
