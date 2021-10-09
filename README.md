@@ -3,4 +3,7 @@
 
 
 
-<p align="center"> <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=souranild&theme=dracula" alt="souranild" /> </p>
+<p align="center"> 
+  <img align="left" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=souranild&theme=dracula" alt="souranild" width=62%"/> 
+  <img align="right" src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=souranild&theme=dracula" alt="souranild" width="30%"/> 
+</p>
