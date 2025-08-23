@@ -1,0 +1,534 @@
+/* Portfolio.css - Modern Gradient Style */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Main container - ChatGPT Pro Dark style */
+.portfolio-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+}
+
+/* Header section */
+.portfolio-header {
+  text-align: center;
+  padding: 3rem 0 2rem 0;
+  margin-bottom: 2rem;
+}
+
+.portfolio-header h1 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  font-family: 'Poppins', sans-serif;
+}
+
+.portfolio-header p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Navigation - Modern gradient style */
+.portfolio-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 2rem auto;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 768px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-nav a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 15px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.portfolio-nav a:hover,
+.portfolio-nav a.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Section styling - Modern glass morphism style */
+.portfolio-section {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 768px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.portfolio-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.portfolio-section h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Item styling */
+.portfolio-item {
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.portfolio-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-item:last-child {
+  margin-bottom: 0;
+}
+
+.portfolio-item-title {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  font-family: 'Poppins', sans-serif;
+}
+
+.portfolio-item-title a {
+  color: #ff6b9d !important;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+}
+
+.portfolio-item-title a:hover {
+  border-bottom-color: #ff6b9d;
+  color: #ff8fb3 !important;
+  text-shadow: 0 0 10px rgba(255, 107, 157, 0.3);
+}
+
+.portfolio-item-meta {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.portfolio-item-details {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+}
+
+.portfolio-item-details li {
+  margin-bottom: 0.5rem;
+  padding-left: 0;
+  list-style: none;
+  position: relative;
+  color: #dcdcdc;
+}
+
+/* Blog-specific styling */
+.blog-tags {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.blog-tag {
+  background: rgba(255, 107, 157, 0.2);
+  color: #ff6b9d;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  border: 1px solid rgba(255, 107, 157, 0.3);
+  transition: all 0.3s ease;
+}
+
+.blog-tag:hover {
+  background: rgba(255, 107, 157, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Collapsible functionality */
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+}
+
+.collapsible-header:hover {
+  opacity: 0.8;
+}
+
+.dropdown-arrow {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  transition: transform 0.3s ease;
+  user-select: none;
+  margin-left: 1rem;
+}
+
+.dropdown-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.portfolio-item-details {
+  margin-top: 1rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+    overflow: visible;
+  }
+}
+
+.portfolio-item-details li:before {
+  content: "•";
+  color: #ab68ff;
+  margin-right: 0.75rem;
+  font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .portfolio-container {
+    padding: 1rem 0.75rem;
+  }
+  
+  .portfolio-header {
+    padding: 2rem 0 1.5rem 0;
+  }
+  
+  .portfolio-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .portfolio-nav {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem;
+  }
+  
+  .portfolio-nav a {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .portfolio-item {
+    padding: 1.25rem;
+  }
+  
+  .portfolio-section h2 {
+    padding: 1.25rem 1.25rem 0 1.25rem;
+    font-size: 1rem;
+  }
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1rem;
+  color: #c5c5c5;
+}
+
+/* Scrollbar styling for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive Design */
+
+/* Desktop (default styles are for desktop) */
+@media (min-width: 1024px) {
+  .portfolio-container {
+    max-width: 1200px;
+    padding: 3rem 2rem;
+  }
+  
+  .portfolio-header h1 {
+    font-size: 3rem;
+  }
+  
+  .portfolio-header p {
+    font-size: 1.2rem;
+  }
+  
+  .portfolio-section {
+    max-width: 800px;
+    padding: 2.5rem;
+  }
+  
+  .portfolio-nav {
+    max-width: 800px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .portfolio-container {
+    max-width: 768px;
+    padding: 2rem 1.5rem;
+  }
+  
+  .portfolio-header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .portfolio-header p {
+    font-size: 1rem;
+  }
+  
+  .portfolio-section {
+    max-width: 700px;
+    padding: 2rem;
+    margin: 1.5rem auto;
+  }
+  
+  .portfolio-nav {
+    max-width: 700px;
+    padding: 0.75rem;
+  }
+  
+  .portfolio-nav a {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  
+  .portfolio-item {
+    padding: 1.25rem;
+  }
+  
+  .portfolio-item-title {
+    font-size: 1rem;
+  }
+  
+  .portfolio-item-meta {
+    font-size: 0.85rem;
+  }
+  
+  .portfolio-item-details {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  body {
+    padding: 1rem 0;
+  }
+  
+  .portfolio-container {
+    max-width: 100%;
+    padding: 1rem;
+    margin: 0;
+  }
+  
+  .portfolio-header {
+    padding: 2rem 0 1.5rem 0;
+  }
+  
+  .portfolio-header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .portfolio-header p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  
+  .portfolio-section {
+    max-width: 100%;
+    padding: 1.5rem;
+    margin: 1rem auto;
+    border-radius: 15px;
+  }
+  
+  .portfolio-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .portfolio-nav {
+    max-width: 100%;
+    padding: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  .portfolio-nav a {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    flex: 1;
+    text-align: center;
+    min-width: calc(50% - 0.125rem);
+  }
+  
+  .portfolio-item {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 12px;
+  }
+  
+  .portfolio-item-title {
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .portfolio-item-meta {
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .portfolio-item-details {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+  
+  .portfolio-item-details li {
+    margin-bottom: 0.3rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .portfolio-container {
+    padding: 0.75rem;
+  }
+  
+  .portfolio-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .portfolio-header p {
+    font-size: 0.85rem;
+  }
+  
+  .portfolio-section {
+    padding: 1.25rem;
+    margin: 0.75rem auto;
+  }
+  
+  .portfolio-section h2 {
+    font-size: 1.2rem;
+  }
+  
+  .portfolio-nav a {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .portfolio-item {
+    padding: 0.875rem;
+  }
+  
+  .portfolio-item-title {
+    font-size: 0.9rem;
+  }
+  
+  .portfolio-item-meta,
+  .portfolio-item-details {
+    font-size: 0.75rem;
+  }
+}

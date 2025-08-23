@@ -1,0 +1,143 @@
+\documentclass{resume}
+\usepackage[left=0.75in,top=0.6in,right=0.75in,bottom=0.6in]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{footnote}
+\usepackage{changepage}
+\usepackage{fontawesome}
+\usepackage{tabularx}
+
+\definecolor{navyblue}{RGB}{0,54,123}
+\newcommand{\italicitem}[1]{\item{\textit{#1}}}
+\newcommand{\bolditem}[1]{\item{\textbf{#1}}}
+\newcommand{\plainitem}[1]{\item{#1}}
+\newcommand{\link}[2]{{\href{#1}{#2}}}
+\newcommand{\entry}[2]{#1 & #2 \tabularnewline}
+\newcommand{\tableEnv}[2]{%
+  \begin{rSection}{#1}
+    \begin{adjustwidth}{0.0in}{0.1in}
+      \begin{tabularx}{\linewidth}{@{} >{\bfseries}l @{\hspace{6ex}} X @{}}
+        #2
+      \end{tabularx}
+    \end{adjustwidth}
+  \end{rSection}
+}
+
+
+
+
+
+\name{\color{navyblue} Souranil Das}
+
+\begin{document}
+
+\printPersonalInfo{
+  \personalInfo{\tag{Location}\info{Bengaluru, India}}
+  \personalInfo{\tag{E-mail}\info{\link{mailto:souranil.das@gmail.com}{souranil.das@gmail.com}} \infoSeparator \tag{Phone}\info{+91 700-8459-203}}  \personalInfo{\tag{LinkedIn}\info{\link{https://linkedin.com/in/souranild}{linkedin.com/in/souranild}} \infoSeparator \tag{GitHub}\info{\link{https://github.com/souranild}{github.com/souranild}}}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableEnv{Skills}{
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \entry{Languages}{SystemVerilog, C/C++, Python, Bash}
+    \entry{Technologies}{IoT, Embedded Systems, RTL Design, Automation, JTAG, Ethernet}
+    \entry{Verification}{Functional Verification, Assertion-Based Verification, UVM, SystemVerilog}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{rSection}{Education}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{rSubsectionNoBullet}{\bf B.Tech in Electronics and Communication}{Vellore Institute of Technology, Chennai}{Bachelor's in Tech - Electronics and Communication}{2019 – 2023}
+    \italicitem{GPA: 3.23/4.0 (8.53/10)}
+    \italicitem{Coursework: Data Structures \& Algorithms, VLSI, IOT, Computer Networks}
+    \italicitem{Activities and Societies: Gen Sec @ IEEE Photonics Club, Hack Club, Biosphere Club, Music Club.}
+\end{rSubsectionNoBullet}
+
+\end{rSection}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{rSection}{Experience}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{rSubsection}{NXP Semiconductors}{July 2023 – Present}{Design Verification Engineer - G1, G2}{Bengaluru, India}
+    \item Contributed to Matrix LED Controller updates for smart headlights/backlights, completed two incremental tape-outs, and worked on a Battery Management IP project.
+    \item Enhanced DV environments through automation inspired by Software Validation practices and contributed to the development of a high-speed In-Vehicle-Network Hub.
+    \item Headed and managed a python application which automated Regression and Coverage features.
+\end{rSubsection}
+
+\begin{rSubsection}{}{Sept 2022 – July 2023}{Software Validation \& Automation Intern}{Hyderabad, India}
+    \item Developed tests and automation scripts for Realtime Edge IoT platform
+    \item Shipped 3 successful releases with fully automated regression setups
+\end{rSubsection}
+
+\begin{rSubsection}{Samsung Electronics}{June 2021 – Jan 2022}{Project Intern}{Bengaluru, India}
+    \item Developed an internal web application using ReactJS, Flask, and TensorFlow for image and video annotation.
+    \item Integrated Advanced ML Models: Incorporated SSD, RCNN, and YOLOv3 for data testing and batch processing workflows.
+\end{rSubsection}
+
+\begin{rSubsection}{Yuan-Ze University}{June 2022 – March 2023}{IoT Research Intern}{Taoyuan, Taiwan}
+    \item Collaborated with YZU Taiwan students to design a Smart Hydroponic System with sensors and automation for basil growth.
+    \item Developed a Smart Hydroponic System, involving hardware and software co-creation. Achieved a fully automated system for monitoring indoor organic vegetable growth, including testing various hydroponic solutions, sensor combinations and reporting plant vitals.
+\end{rSubsection}
+
+
+\begin{rSubsection}{IEEE Photonics}{July 2020 – July 2021}{Vice President}{Chennai, India}
+    \item Headed the development of the society's website and collaborating on tasks such as scheduling talks. 
+    \item Managed administrative functions, contributing to the smooth operation of the Society.
+\end{rSubsection}
+
+\end{rSection}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{rSection}{Projects}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{rSubsectionNoBullet}{\href{https://docs.google.com/document/d/1O1YsuZPpMzv1nlXXJV094MKD4nJhtZU2g33nz0zF3LI/edit}{AI Annotation Tool for Data Testing}}{Jun 2021 - Jan 2022}{SAMSUNG PRISM} {}
+    \item{Developed a full-stack web application for image and video annotation using ReactJS, Flask, and TensorFlow. Integrated object detection models including SSD, RCNN, and YOLOv3. Deployed internally for data testing and batch processing workflows.}
+    
+\end{rSubsectionNoBullet}
+
+
+\begin{rSubsectionNoBullet}{\href{https://github.com/souranild/8051sec}{Access Control System using 8051 Microcontroller and DC Motor}}{Feb 2021 – Jun 2021}{Vellore Institute of Technology}{} 
+    \item{Developed an RFID-based access control system using 8051 microcontroller. Enabled motor control for authorized entries, unauthorized access alerts, and real-time entry count tracking.}
+\end{rSubsectionNoBullet}
+
+\begin{rSubsectionNoBullet}{\href{https://docs.google.com/document/d/1T75HzlptJYIZZojti-dx1BhP0im88-l5l7B-8dgqOQI/edit?usp=sharing}{Remote Video Surveillance Wireless Robot}}{Feb 2021 – Jun 2021}{Vellore Institute of Technology}{} 
+    \item {Built a Wi-Fi controlled robot with live video streaming, object/person detection, and intrusion alerts. Controlled via web server and Android app for remote surveillance.}
+\end{rSubsectionNoBullet}
+
+\begin{rSubsectionNoBullet}{\href{https://docs.google.com/document/d/1x4zfeQhCVb3S7J35QM56Sth9_4soquWMxKuBpIZtCDQ/edit?usp=sharing}{Garduino - Automatic Garden Management with Arduino}}{Apr 2020 – Sep 2020}{Vellore Institute of Technology}{Bengaluru, India}
+    \item {Designed and built an Arduino-based smart garden system with both manual and automatic plant watering capabilities. Enabled remote monitoring and control via smartphone using Wi-Fi, providing real-time plant status updates and user interaction.}
+\end{rSubsectionNoBullet}
+
+
+\end{rSection}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{rSection}{Publications}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{rSubsectionNoBullet}{Revolutionizing Holy-Basil Cultivation with AI-Enabled Hydroponics System}{Aug 2023}{IEEE Access}{} 
+    \plainitem{Co-authored the paper \textit{Revolutionizing Holy-Basil Cultivation With AI-Enabled Hydroponics System}, published in \textit{IEEE Access}, vol. 11, pp. 82624–82639, 2023. \href{https://ieeexplore.ieee.org/document/10198435}{DOI: 10.1109/ACCESS.2023.3300912}. The work integrates hydroponics, IoT, and machine learning to optimize holy-basil cultivation with real-time monitoring and healthiness scoring.}
+\end{rSubsectionNoBullet}
+
+\begin{rSubsectionNoBullet}{SMADE - Smart Medical Assist Device}{Jul 2022}{Springer} 
+    \plainitem{Co-authored the paper \textit{SMADE - Smart Medical Assist Device for Elders}, published in \textit{Computer, Communication, and Signal Processing (ICCCSP 2022)}, IFIP AICT vol. 651, Springer. \href{https://doi.org/10.1007/978-3-031-11633-9_19}{DOI: 10.1007/978-3-031-11633-9\_19}. Developed a device for elderly care integrating medication scheduling and real-time vitals monitoring.}
+\end{rSubsectionNoBullet}
+
+\end{rSection}
+
+
+
+
+
+\end{document}

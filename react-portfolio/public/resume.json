@@ -1,0 +1,116 @@
+{
+  "Education": [
+    {
+      "name": "B.Tech in Electronics and Communication",
+      "institution": "Vellore Institute of Technology, Chennai",
+      "degree": "Bachelor's in Tech - Electronics and Communication",
+      "years": "2019 – 2023",
+      "details": [
+        "GPA: 3.23/4.0 (8.53/10)",
+        "Coursework: Data Structures, Algorithms, VLSI, IoT, Computer Networks",
+        "Activities and Societies: Gen Sec @ IEEE Photonics Club, Hack Club, Biosphere Club, Music Club."
+      ]
+    }
+  ],
+  "Experience": [
+    {
+      "company": "NXP Semiconductors",
+      "dates": "July 2023 – Present",
+      "title": "Design Verification Engineer - G1, G2",
+      "location": "Bengaluru, India",
+      "details": [
+        "Contributed to Matrix LED Controller updates for smart headlights/backlights, completed two incremental tape-outs, and worked on a Battery Management IP project.",
+        "Enhanced DV environments through automation inspired by Software Validation practices and contributed to the development of a high-speed In-Vehicle-Network Hub.",
+        "Headed and managed a Python application which automated Regression and Coverage features."
+      ]
+    },
+    {
+      "company": "Samsung Electronics",
+      "dates": "June 2021 – Jan 2022",
+      "title": "Project Intern",
+      "location": "Bengaluru, India",
+      "details": [
+        "Developed an internal web application using ReactJS, Flask, and TensorFlow for image and video annotation.",
+        "Integrated Advanced ML Models: Incorporated SSD, RCNN, and YOLOv3 for data testing and batch processing workflows."
+      ]
+    }
+  ],
+  "Projects": [
+    {
+      "name": "AI Annotation Tool for Data Testing",
+      "dates": "Jun 2021 - Jan 2022",
+      "organization": "SAMSUNG PRISM",
+      "location": "Bengaluru, India",
+      "details": [
+        "Developed a full-stack web application for image and video annotation using ReactJS, Flask, and TensorFlow.",
+        "Integrated object detection models including SSD, RCNN, and YOLOv3. Deployed internally for data testing and batch processing workflows."
+      ],
+      "link": "https://docs.google.com/document/d/1O1YsuZPpMzv1nlXXJV094MKD4nJhtZU2g33nz0zF3LI/edit"
+    },
+    {
+      "name": "Access Control System using 8051 Microcontroller and DC Motor",
+      "dates": "Feb 2021 – Jun 2021",
+      "organization": "Vellore Institute of Technology",
+      "location": "Vellore, India",
+      "details": [
+        "Developed an RFID-based access control system using 8051 microcontroller.",
+        "Enabled motor control for authorized entries, unauthorized access alerts, and real-time entry count tracking."
+      ],
+      "link": "https://github.com/souranild/8051sec"
+    }
+  ],
+  "Publications": [
+    {
+      "title": "Revolutionizing Holy-Basil Cultivation with AI-Enabled Hydroponics System",
+      "date": "Aug 2023",
+      "journal": "IEEE Access",
+      "details": [
+        "Co-authored the paper Revolutionizing Holy-Basil Cultivation With AI-Enabled Hydroponics System."
+      ],
+      "link": "https://ieeexplore.ieee.org/document/10198435"
+    },
+    {
+      "title": "SMADE - Smart Medical Assist Device",
+      "date": "Jul 2022",
+      "journal": "Springer",
+      "details": [
+        "Co-authored the paper SMADE - Smart Medical Assist Device for Elders, published in Computer, Communication, and Signal Processing (ICCCSP 2022), IFIP AICT vol. 651, Springer."
+      ],
+      "link": "https://doi.org/10.1007/978-3-031-11633-9_19"
+    }
+  ],
+  "Blogs": [
+    {
+      "title": "Getting Started with Design Verification in VLSI",
+      "date": "Dec 2023",
+      "platform": "Medium",
+      "description": "A comprehensive guide to understanding design verification methodologies in VLSI, covering testbench development, coverage analysis, and debugging techniques.",
+      "link": "https://medium.com/@souranild/getting-started-with-design-verification",
+      "tags": ["VLSI", "SystemVerilog", "Design Verification", "Hardware"]
+    },
+    {
+      "title": "Building IoT Solutions with Python and Arduino",
+      "date": "Oct 2023",
+      "platform": "Dev.to",
+      "description": "Learn how to create end-to-end IoT solutions by integrating Python backend services with Arduino-based sensors and actuators.",
+      "link": "https://dev.to/souranild/building-iot-solutions-python-arduino",
+      "tags": ["IoT", "Python", "Arduino", "Sensors", "Automation"]
+    },
+    {
+      "title": "React Portfolio Development: From Design to Deployment",
+      "date": "Aug 2023",
+      "platform": "Hashnode",
+      "description": "Step-by-step tutorial on creating a modern, responsive portfolio website using React, including design principles and deployment strategies.",
+      "link": "https://souranild.hashnode.dev/react-portfolio-development",
+      "tags": ["React", "JavaScript", "Frontend", "Portfolio", "Web Development"]
+    },
+    {
+      "title": "Machine Learning in Hardware Design: AI-Driven Verification",
+      "date": "Jun 2023",
+      "platform": "LinkedIn",
+      "description": "Exploring the intersection of machine learning and hardware design verification, discussing how AI can improve testbench efficiency and bug detection.",
+      "link": "https://linkedin.com/pulse/ml-hardware-design-ai-verification-souranil-das",
+      "tags": ["Machine Learning", "AI", "Hardware Design", "Verification", "Innovation"]
+    }
+  ]
+}
