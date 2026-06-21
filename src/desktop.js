@@ -158,12 +158,8 @@ function focusNextWindow() {
 export function openAppWindow(appId) {
     const win = document.getElementById(`win-${appId}`);
     if (win) {
-        const targetWorkspace = windowWorkspaces[appId] || 1;
-        
-        // If window belongs to another workspace, switch workspace first!
-        if (targetWorkspace !== currentWorkspace) {
-            switchWorkspace(targetWorkspace);
-        }
+        // Associate the window to the current active workspace
+        windowWorkspaces[appId] = currentWorkspace;
 
         // If already open and focused in the active workspace, just focus it
         if (win.style.display === 'flex' && win.style.zIndex == topZIndex && win.dataset.isMinimized !== 'true') {

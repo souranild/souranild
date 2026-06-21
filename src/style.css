@@ -1297,20 +1297,20 @@ body, html {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 2px;
+    gap: 3px;
     background: #1c1e22;
     padding: 2px;
-    border-radius: 3px;
+    border-radius: 4px;
     border: 1px solid #14161a;
-    width: 36px;
+    width: 52px;
     height: 26px;
     align-items: center;
     justify-items: center;
 }
 .workspace-btn {
-    width: 14px;
+    width: 22px;
     height: 10px;
-    font-size: 0.52rem;
+    font-size: 0.6rem;
     display: flex;
     align-items: center;
     justify-content: center;
