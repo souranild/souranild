@@ -5,6 +5,8 @@ import { openAppWindow } from './desktop.js';
 let displayContainer;
 let inputField;
 let suggestSpan;
+let currentDir = 'portfolio';
+let cmdHistory = [];
 
 // Live filesystem assets updated dynamically from LaTeX
 const files = {
@@ -20,10 +22,11 @@ const files = {
 
 const COMMANDS = [
     'help', 'ls', 'clear', 'whoami', 'date', 'git status',
-    'libreoffice', 'evince', 'pdf', 'code', 'vscode', 'calculator',
+    'libreoffice', 'evince', 'pdf', 'code', 'vscode', 'calculator', 'neofetch',
     'cat about_me.txt', 'cat projects.odt', 'cat experience.pdf', 'cat research_papers.md',
     'cat open_projects.sh', 'cat open_experience.sh', 'cat open_vscode.sh',
-    './open_projects.sh', './open_experience.sh', './open_vscode.sh', './open_calculator.sh'
+    './open_projects.sh', './open_experience.sh', './open_vscode.sh', './open_calculator.sh',
+    'pwd', 'cd', 'uname -a', 'uptime', 'history', 'sudo', 'cowsay'
 ];
 
 export function updateZshFiles(resumeData) {
@@ -91,6 +94,16 @@ export function initZsh() {
     });
 }
 
+// Programmatic command trigger (e.g. from workspaces manager)
+export function runZshCommand(commandLine) {
+    if (!displayContainer) {
+        displayContainer = document.getElementById('zsh-display');
+    }
+    if (displayContainer) {
+        executeCommand(commandLine);
+    }
+}
+
 function handleInput() {
     const rawVal = inputField.value;
     const val = rawVal.trim().toLowerCase();
@@ -103,8 +116,9 @@ function handleInput() {
         const firstWord = val.split(' ')[0];
         const validFirstWords = [
             'help', 'ls', 'clear', 'whoami', 'date', 'git', 'libreoffice',
-            'evince', 'pdf', 'code', 'vscode', 'calculator', 'cat',
-            './open_projects.sh', './open_experience.sh', './open_vscode.sh', './open_calculator.sh'
+            'evince', 'pdf', 'code', 'vscode', 'calculator', 'cat', 'neofetch',
+            './open_projects.sh', './open_experience.sh', './open_vscode.sh', './open_calculator.sh',
+            'pwd', 'cd', 'uname', 'uptime', 'history', 'sudo', 'cowsay', 'echo', 'touch', 'rm'
         ];
         
         if (validFirstWords.includes(firstWord)) {
@@ -273,11 +287,13 @@ function runStartupSequence() {
 }
 
 function executeCommand(commandLine) {
+    cmdHistory.push(commandLine);
+    
     // Print original prompt line
     const promptRow = document.createElement('div');
     promptRow.className = 'prompt-line';
     promptRow.innerHTML = `
-        <span class="zsh-prompt">➜  <span class="zsh-dir">portfolio</span> <span class="zsh-git">git:(<span class="git-branch">main</span>)</span> <span class="zsh-cross">✗</span> </span>
+        <span class="zsh-prompt">➜  <span class="zsh-dir">${currentDir}</span> <span class="zsh-git">git:(<span class="git-branch">main</span>)</span> <span class="zsh-cross">✗</span> </span>
         <span class="prompt-cmd">${escapeHTML(commandLine)}</span>
     `;
     displayContainer.appendChild(promptRow);
@@ -289,50 +305,172 @@ function executeCommand(commandLine) {
         case 'help':
             printLine(`
 Available commands:
-  ls                      - Lists available files in directory
+  ls                      - Lists files in the current working directory
   cat [file]              - Prints content of text files (e.g. cat about_me.txt)
+  pwd                     - Prints the absolute path of the current directory
+  cd [dir]                - Changes the terminal working directory
+  neofetch                - Displays system specs alongside Red Hat logo
+  cowsay [text]           - Prints a talking ASCII cow
+  uname -a                - Prints system hardware and Linux kernel info
+  uptime                  - Displays the system uptime log
+  history                 - Shows command history log
+  touch [file]            - Creates a blank mock file
+  rm [file]               - Deletes a local mock file
+  echo [text]             - Outputs text arguments to the console
   clear                   - Clears the terminal screen
   whoami                  - Prints active user identity
   date                    - Prints local workstation timestamp
   git status              - Inspects git repo coverage status
-  libreoffice             - Launches LibreOffice Projects application
-  evince / pdf            - Launches PDF Resume experiences application
-  code / vscode           - Launches VS Code papers application
-  calculator              - Launches desktop Calculator application
-  help                    - Prints this helper panel
+  libreoffice / code / pdf- Shell shortcuts to launch desktop apps
             `);
             break;
             
         case 'ls':
-            printLine(`
--rw-r--r--  1  souranil  staff   1.2K  about_me.txt
--rw-r--r--  1  souranil  staff   2.5K  projects.odt
--rw-r--r--  1  souranil  staff   3.1K  experience.pdf
--rw-r--r--  1  souranil  staff   1.8K  research_papers.md
--rwxr-xr-x  1  souranil  staff   150B  open_projects.sh
--rwxr-xr-x  1  souranil  staff   150B  open_experience.sh
--rwxr-xr-x  1  souranil  staff   150B  open_vscode.sh
--rwxr-xr-x  1  souranil  staff   150B  open_calculator.sh
-            `);
+            if (currentDir === '~') {
+                printLine(`drwxr-xr-x  2  souranil  staff   256B  portfolio`);
+            } else {
+                let list = '';
+                Object.keys(files).forEach(f => {
+                    const size = files[f].length;
+                    list += `-rw-r--r--  1  souranil  staff   ${size}B  ${f}\n`;
+                });
+                printLine(list.trim());
+            }
+            break;
+
+        case 'pwd':
+            if (currentDir === '~') {
+                printLine('/home/souranil');
+            } else {
+                printLine('/home/souranil/portfolio');
+            }
+            break;
+
+        case 'cd':
+            const dir = args[1];
+            if (!dir || dir === '~' || dir === '/home/souranil') {
+                currentDir = '~';
+            } else if (dir === 'portfolio' || dir === './portfolio') {
+                if (currentDir === '~') {
+                    currentDir = 'portfolio';
+                } else {
+                    printLine('cd: already inside portfolio', 'terminal-warning');
+                }
+            } else if (dir === '..') {
+                currentDir = '~';
+            } else {
+                printLine(`cd: no such file or directory: ${dir}`, 'terminal-error');
+            }
+            
+            // Sync current prompt directory text
+            const dirLabel = document.querySelector('.zsh-dir');
+            if (dirLabel) dirLabel.textContent = currentDir;
+            break;
+
+        case 'echo':
+            printLine(args.slice(1).join(' '));
+            break;
+
+        case 'touch':
+            const newFile = args[1];
+            if (!newFile) {
+                printLine('touch: missing file operand', 'terminal-error');
+            } else {
+                files[newFile] = 'Empty mock file created via console touch command.';
+                printLine(`touch: File "${newFile}" created.`, 'terminal-info');
+            }
+            break;
+
+        case 'rm':
+            const targetFile = args[1];
+            if (!targetFile) {
+                printLine('rm: missing operand', 'terminal-error');
+            } else if (files[targetFile] !== undefined) {
+                delete files[targetFile];
+                printLine(`rm: File "${targetFile}" successfully deleted.`, 'terminal-info');
+            } else {
+                printLine(`rm: cannot remove '${targetFile}': No such file or directory`, 'terminal-error');
+            }
+            break;
+
+        case 'uname':
+            if (args[1] === '-a' || args.includes('-a')) {
+                printLine('Linux nxp-dv-station 5.14.0-427.13.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Wed May 1 19:11:23 EDT 2026 x86_64 GNU/Linux');
+            } else {
+                printLine('Linux');
+            }
+            break;
+
+        case 'uptime':
+            printLine(' 02:59:12 up 4:32,  1 user,  load average: 0.05, 0.08, 0.12');
+            break;
+
+        case 'sudo':
+            printLine('souranil is not in the sudoers file. This incident will be reported.', 'terminal-error');
+            break;
+
+        case 'cowsay':
+            const msg = args.slice(1).join(' ') || 'Moo!';
+            const cow = `
+ _________________________________________
+&lt; ${msg} &gt;
+ -----------------------------------------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+            `;
+            printLine(cow);
+            break;
+
+        case 'history':
+            let histOut = '';
+            cmdHistory.forEach((c, idx) => {
+                histOut += `  ${idx + 1}  ${c}\n`;
+            });
+            printLine(histOut.trim());
+            break;
+
+        case 'neofetch':
+            const neofetchOutput = `
+<span style="color: #cc0000; font-weight: bold;">           \`.-/::-.\`</span>          <span style="color: #50fa7b; font-weight: bold;">souranil</span>@<span style="color: #50fa7b; font-weight: bold;">nxp-dv-station</span>
+<span style="color: #cc0000; font-weight: bold;">        ./yhdmmmmmdhy/.</span>       -----------------------
+<span style="color: #cc0000; font-weight: bold;">      -odmmmmmmmmmmmmmdo-</span>     <span style="color: #8be9fd; font-weight: bold;">OS:</span> Red Hat Enterprise Linux 9.4 x86_64
+<span style="color: #cc0000; font-weight: bold;">    .sdmmmmmmmmmmmmmmmmmds.</span>   <span style="color: #8be9fd; font-weight: bold;">Host:</span> NXP DV-Workstation v2.0
+<span style="color: #cc0000; font-weight: bold;">   /mmmmmmmmmmmmmmmmmmmmmm/</span>   <span style="color: #8be9fd; font-weight: bold;">Kernel:</span> 5.14.0-427.13.1.el9_4.x86_64
+<span style="color: #cc0000; font-weight: bold;">  :mmmmmmmmNmmmmmmmmmmmmmm:</span>   <span style="color: #8be9fd; font-weight: bold;">Uptime:</span> 4 hours, 32 mins
+<span style="color: #cc0000; font-weight: bold;"> -mmmmmmmmNNNmmmmmmmmmmmmmd-</span>  <span style="color: #8be9fd; font-weight: bold;">Packages:</span> 1842 (rpm), 12 (flatpak)
+<span style="color: #cc0000; font-weight: bold;"> ymmmmmmmNNNNNmmmmmmmmmmmdmy</span>  <span style="color: #8be9fd; font-weight: bold;">Shell:</span> zsh 5.8.1
+<span style="color: #cc0000; font-weight: bold;">.mmmmmmmNNNNNNNmmmmmmmmmmmmm.</span> <span style="color: #8be9fd; font-weight: bold;">Resolution:</span> 1470x835
+<span style="color: #cc0000; font-weight: bold;"> ymmmmmmmNNNNNmmmmmmmmmmmdmy</span>  <span style="color: #8be9fd; font-weight: bold;">DE:</span> MATE 1.26.0 (Clearlooks-Phenix)
+<span style="color: #cc0000; font-weight: bold;"> -mmmmmmmmNNNmmmmmmmmmmmmmd-</span>  <span style="color: #8be9fd; font-weight: bold;">WM:</span> Metacity
+<span style="color: #cc0000; font-weight: bold;">  :mmmmmmmmNmmmmmmmmmmmmmm:</span>   <span style="color: #8be9fd; font-weight: bold;">Theme:</span> Clearlooks-Phenix
+<span style="color: #cc0000; font-weight: bold;">   /mmmmmmmmmmmmmmmmmmmmmm/</span>   <span style="color: #8be9fd; font-weight: bold;">Terminal:</span> zsh_terminal
+<span style="color: #cc0000; font-weight: bold;">    .sdmmmmmmmmmmmmmmmmmds.</span>   <span style="color: #8be9fd; font-weight: bold;">CPU:</span> Intel i7-13700H (20) @ 5.00GHz
+<span style="color: #cc0000; font-weight: bold;">      -odmmmmmmmmmmmmmdo-</span>     <span style="color: #8be9fd; font-weight: bold;">GPU:</span> NVIDIA GeForce RTX 4060 Mobile
+<span style="color: #cc0000; font-weight: bold;">        ./yhdmmmmmdhy/.</span>       <span style="color: #8be9fd; font-weight: bold;">Memory:</span> 5742MiB / 15720MiB (36%)
+<span style="color: #cc0000; font-weight: bold;">           \`.-/::-.\`</span>
+`;
+            printLine(neofetchOutput);
             break;
 
         case 'cat':
-            const targetFile = args[1];
-            if (!targetFile) {
+            const target = args[1];
+            if (!target) {
                 printLine('cat: missing operand. Usage: cat [filename]', 'terminal-error');
-            } else if (files[targetFile] !== undefined) {
-                if (targetFile.startsWith('open_') || targetFile === 'about_me.txt') {
-                    printLine(files[targetFile]);
-                    // Trigger launch for script files
-                    if (targetFile === 'open_projects.sh') openAppWindow('libreoffice');
-                    else if (targetFile === 'open_experience.sh') openAppWindow('pdfviewer');
-                    else if (targetFile === 'open_vscode.sh') openAppWindow('vscode');
-                    else if (targetFile === 'open_calculator.sh') openAppWindow('calculator');
+            } else if (files[target] !== undefined) {
+                if (target.startsWith('open_') || target === 'about_me.txt') {
+                    printLine(files[target]);
+                    if (target === 'open_projects.sh') openAppWindow('libreoffice');
+                    else if (target === 'open_experience.sh') openAppWindow('pdfviewer');
+                    else if (target === 'open_vscode.sh') openAppWindow('vscode');
+                    else if (target === 'open_calculator.sh') openAppWindow('calculator');
                 } else {
-                    printLine(files[targetFile]);
+                    printLine(files[target]);
                 }
             } else {
-                printLine(`cat: ${targetFile}: No such file or directory`, 'terminal-error');
+                printLine(`cat: ${target}: No such file or directory`, 'terminal-error');
             }
             break;
 

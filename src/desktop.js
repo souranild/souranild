@@ -479,8 +479,33 @@ function switchWorkspace(wId) {
         });
     }
 
-    // Toggle windows display based on active workspace assignments
     const windows = document.querySelectorAll('.desktop-window');
+    const terminal = document.getElementById('win-terminal');
+    
+    // Check if switching to Workspace 3
+    if (wId === 3) {
+        // Move terminal to Workspace 3 and maximize it
+        if (terminal) {
+            windowWorkspaces['terminal'] = 3;
+            terminal.classList.add('maximized');
+            terminal.dataset.isOpen = 'true';
+            terminal.dataset.isMinimized = 'false';
+            
+            // Execute neofetch in terminal
+            import('./zsh.js').then(module => {
+                module.runZshCommand('clear');
+                module.runZshCommand('neofetch');
+            });
+        }
+    } else {
+        // If switching away from Workspace 3, restore terminal workspace to 1
+        if (terminal && windowWorkspaces['terminal'] === 3) {
+            windowWorkspaces['terminal'] = 1;
+            terminal.classList.remove('maximized');
+        }
+    }
+
+    // Toggle windows display based on active workspace assignments
     windows.forEach(win => {
         const appId = win.id.replace('win-', '');
         const targetW = windowWorkspaces[appId] || 1;
