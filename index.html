@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Souranil Das | Red Hat RHEL & Cadence Verification Workstation</title>
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+    <!-- RHEL TOP PANEL (Active Window Tabs) -->
+    <header class="rhel-top-panel">
+        <div class="top-panel-left">
+            <span class="panel-icon">🔴</span>
+            <span class="panel-separator">|</span>
+            <div class="top-window-tabs" id="taskbar-window-tabs">
+                <span class="window-tab-badge active" data-toggle="terminal">🐚 souranil@nxp-dv-station: ~</span>
+                <span class="window-tab-badge" data-toggle="libreoffice">📝 LibreOffice Writer</span>
+                <span class="window-tab-badge" data-toggle="pdfviewer">📕 experience_resume.pdf</span>
+                <span class="window-tab-badge" data-toggle="vscode">💻 VS Code - papers</span>
+                <span class="window-tab-badge" data-toggle="verisium">🔬 Cadence Verisium Debug</span>
+                <span class="window-tab-badge" data-toggle="calculator">🧮 Calculator</span>
+                <span class="window-tab-badge" data-toggle="overleaf">🍃 resume.tex (Overleaf)</span>
+            </div>
+        </div>
+        <div class="top-panel-right">
+            <span class="cpu-load-badge">CPU: 4.8%</span>
+        </div>
+    </header>
+
+    <!-- Desktop Workspace Grid -->
+    <main class="desktop-area">
+        <!-- LEFT SIDE SHORTCUTS: External Web Links -->
+        <div class="desktop-grid-left">
+            <a href="https://www.linkedin.com/in/souranild/" target="_blank" class="desktop-icon link-icon-anchor">
+                <div class="icon-image linkedin-icon">🔗</div>
+                <div class="icon-label">LinkedIn.desktop</div>
+            </a>
+            <a href="https://github.com/souranild" target="_blank" class="desktop-icon link-icon-anchor">
+                <div class="icon-image github-icon">🐙</div>
+                <div class="icon-label">GitHub.desktop</div>
+            </a>
+            <a href="https://discord.com" target="_blank" class="desktop-icon link-icon-anchor">
+                <div class="icon-image discord-icon">💬</div>
+                <div class="icon-label">Discord.desktop</div>
+            </a>
+        </div>
+
+        <!-- RIGHT SIDE SHORTCUTS: Local Application Shortcuts -->
+        <div class="desktop-grid-right">
+            <div class="desktop-icon" data-open="terminal">
+                <div class="icon-image zsh-icon">🐚</div>
+                <div class="icon-label">zsh_terminal</div>
+            </div>
+            <div class="desktop-icon" data-open="libreoffice">
+                <div class="icon-image odt-icon">📝</div>
+                <div class="icon-label">projects.odt</div>
+            </div>
+            <div class="desktop-icon" data-open="pdfviewer">
+                <div class="icon-image pdf-icon">📕</div>
+                <div class="icon-label">experience.pdf</div>
+            </div>
+            <div class="desktop-icon" data-open="vscode">
+                <div class="icon-image code-icon">💻</div>
+                <div class="icon-label">research_papers.md</div>
+            </div>
+            <div class="desktop-icon" data-open="verisium">
+                <div class="icon-image debug-icon">🔬</div>
+                <div class="icon-label">verisium_debug</div>
+            </div>
+            <div class="desktop-icon" data-open="calculator">
+                <div class="icon-image calc-icon">🧮</div>
+                <div class="icon-label">gcalctool.desktop</div>
+            </div>
+            <div class="desktop-icon" data-open="overleaf">
+                <div class="icon-image tex-icon">📄</div>
+                <div class="icon-label">resume.tex</div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 1: ZSH TERMINAL (ABOUT ME)
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-terminal" style="top: 80px; left: 80px; width: 620px; height: 420px; z-index: 12;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">🐚</span>
+                    <span class="window-title">souranil@nxp-dv-station: ~ (zsh)</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="terminal" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="terminal" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="terminal" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body terminal-body-container">
+                <div class="terminal-history" id="zsh-display">
+                    <!-- Loaded dynamically via zsh.js -->
+                </div>
+                <div class="terminal-input-row" style="position: relative; display: flex; align-items: center; width: 100%;">
+                    <span class="zsh-prompt">➜  <span class="zsh-dir">portfolio</span> <span class="zsh-git">git:(<span class="git-branch">main</span>)</span> <span class="zsh-cross">✗</span> </span>
+                    <div style="position: relative; flex-grow: 1; display: flex; align-items: center; overflow: hidden; height: 20px;">
+                        <span id="zsh-suggest" style="position: absolute; left: 0.4rem; top: 50%; transform: translateY(-50%); color: #666; pointer-events: none; white-space: pre; font-family: var(--font-mono); font-size: 0.85rem; z-index: 1;"></span>
+                        <input type="text" id="zsh-input" class="zsh-input-field" style="background: transparent; color: inherit; position: relative; z-index: 2; font-family: var(--font-mono); font-size: 0.85rem; width: 100%; border: none; outline: none; margin-left: 0.4rem;" autofocus autocomplete="off" spellcheck="false">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 2: LIBREOFFICE WRITER (PROJECTS)
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-libreoffice" style="top: 120px; left: 180px; width: 700px; height: 500px; z-index: 5;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">📝</span>
+                    <span class="window-title">LibreOffice Writer - projects.odt</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="libreoffice" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="libreoffice" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="libreoffice" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body libreoffice-body">
+                <div class="lo-menubar">
+                    <span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Tools</span><span>Table</span><span>Help</span>
+                </div>
+                <div class="lo-toolbar">
+                    <span class="lo-tool-btn font-bold">B</span>
+                    <span class="lo-tool-btn font-italic">I</span>
+                    <span class="lo-tool-btn font-underline">U</span>
+                    <span class="lo-divider">|</span>
+                    <span class="lo-tool-btn">左</span>
+                    <span class="lo-tool-btn">中</span>
+                    <span class="lo-tool-btn">右</span>
+                    <span class="lo-divider">|</span>
+                    <span class="lo-tool-btn">💾 Save</span>
+                    <span class="lo-tool-btn">🖨️ Print</span>
+                </div>
+                <div class="lo-page-workspace">
+                    <div class="lo-paper-sheet">
+                        <h1 class="lo-doc-title">Project Directory - Souranil Das</h1>
+                        <p class="lo-doc-meta">Status: Released | Security: Internal</p>
+                        
+                        <h2 class="lo-section-title">1. AI-Enabled Hydroponics Cultivation System</h2>
+                        <p class="lo-text">
+                            An automated IoT vertical farming design optimized for cultivation of medicinal crop yields. Configured hardware sensory nodes reporting EC, pH, water temperatures, and air metrics directly to Azure IoT Hub.
+                        </p>
+                        <p class="lo-text">
+                            Data feeds were processed in Databricks where regression models adjusted lighting schedules and nutrient dosings automatically based on crop phase.
+                        </p>
+                        <div class="lo-tags">Tags: Azure IoT Hub, Databricks, Predictive AI, Hardware-Software Co-Design</div>
+
+                        <h2 class="lo-section-title">2. SMADE - Smart Medical Assist Device</h2>
+                        <p class="lo-text">
+                            An elderly-healthcare assistive IoT capsule. Automates medication dispensing cycles, sound reminders, and channels real-time patient vitals telemetry streams to a web-based portal.
+                        </p>
+                        <div class="lo-tags">Tags: IoT Telemetry, Embedded Systems, Microcontrollers</div>
+
+                        <h2 class="lo-section-title">3. async-cse Python Library</h2>
+                        <p class="lo-text">
+                            An asynchronous Python wrapper library interface querying the Google Custom Search JSON API. Engineered on top of asyncio to handle queries and return formatted JSON arrays.
+                        </p>
+                        <div class="lo-tags">Tags: Python, asyncio, API Wrapper, Open Source</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 3: PDF RESUME VIEWER (EXPERIENCES)
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-pdfviewer" style="top: 140px; left: 240px; width: 680px; height: 480px; z-index: 6;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">📕</span>
+                    <span class="window-title">Document Viewer - experience_resume.pdf</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="pdfviewer" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="pdfviewer" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="pdfviewer" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body pdf-body">
+                <div class="pdf-toolbar">
+                    <div class="pdf-toolbar-left">
+                        <button class="pdf-btn">◀</button>
+                        <span class="pdf-page-indicator">1 / 1</span>
+                        <button class="pdf-btn">▶</button>
+                        <span class="lo-divider">|</span>
+                        <button class="pdf-btn">🔍 Zoom In</button>
+                        <button class="pdf-btn">🔍 Zoom Out</button>
+                    </div>
+                    <div class="pdf-toolbar-right">
+                        <button class="pdf-btn">🖨️ Print</button>
+                        <button class="pdf-btn">⬇️ Download</button>
+                    </div>
+                </div>
+                <div class="pdf-workspace">
+                    <div class="pdf-sidebar">
+                        <div class="pdf-thumbnail active">
+                            <div class="thumb-page">📄</div>
+                            <div class="thumb-label">Page 1</div>
+                        </div>
+                    </div>
+                    <div class="pdf-viewer-pane">
+                        <div class="pdf-sheet">
+                            <div class="pdf-header-name">SOURANIL DAS</div>
+                            <div class="pdf-header-sub">Design Verification Engineer @ NXP Semiconductors</div>
+                            <hr class="pdf-line">
+                            
+                            <div class="pdf-section">EXPERIENCE</div>
+                            <div class="pdf-item">
+                                <div class="pdf-item-title">Design Verification (DV) Engineer | NXP Semiconductors</div>
+                                <div class="pdf-item-date">Bangalore, India | Jan 2024 - Present</div>
+                                <div class="pdf-item-desc">
+                                    - Verify complex System-on-Chips (SoCs) and digital logic IPs.<br>
+                                    - Construct functional simulation verification testbenches utilizing SystemVerilog and Universal Verification Methodology (UVM).<br>
+                                    - Set up stimulus drivers, functional coverage blocks, and registers validation checkers.<br>
+                                    - Drive functional coverage closure, analyzing RTL code and simulation assertions.
+                                </div>
+                            </div>
+
+                            <div class="pdf-section">EDUCATION</div>
+                            <div class="pdf-item">
+                                <div class="pdf-item-title">B.Tech in Electronics & Communication Engineering (ECE) | VIT Chennai</div>
+                                <div class="pdf-item-date">Graduated 2024</div>
+                                <div class="pdf-item-desc">
+                                    - Specializations: VLSI circuit layout design, Computer Architecture, Embedded Networks.<br>
+                                    - Student researcher investigating IoT cloud systems, smart telemetry, and embedded programming interfaces.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 4: VS CODE (RESEARCH PAPERS)
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-vscode" style="top: 100px; left: 320px; width: 750px; height: 500px; z-index: 8;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">💻</span>
+                    <span class="window-title">Visual Studio Code - research_papers.md</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="vscode" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="vscode" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="vscode" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body vscode-body">
+                <!-- VS Code sidebar -->
+                <div class="vscode-sidebar">
+                    <div class="vscode-activity-bar">
+                        <div class="act-icon active">📁</div>
+                        <div class="act-icon">🔍</div>
+                        <div class="act-icon">🌿</div>
+                        <div class="act-icon">⚙️</div>
+                    </div>
+                    <div class="vscode-file-explorer">
+                        <div class="explorer-header">EXPLORER: PORTFOLIO</div>
+                        <div class="explorer-section">
+                            <div class="file-item active">📄 research_papers.md</div>
+                            <div class="file-item">📄 projects.py</div>
+                            <div class="file-item">📄 about_me.sh</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- VS Code Editor layout -->
+                <div class="vscode-editor-container">
+                    <div class="editor-tabs">
+                        <div class="editor-tab active">research_papers.md <span class="tab-close">&times;</span></div>
+                    </div>
+                    <div class="editor-panes">
+                        <!-- Left Panel: Raw Markdown Code -->
+                        <div class="editor-pane left-pane">
+                            <div class="line-numbers">
+                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span>
+                            </div>
+                            <pre class="code-editor-area"><code><span class="md-h1"># Research Publications</span>
+
+<span class="md-h2">## Paper 1: AI Hydroponics</span>
+* **Title:** Revolutionizing Holy-Basil Cultivation with AI-Enabled Hydroponics System
+* **Publisher:** ResearchGate Publication (2023)
+* **Summary:** IoT sensory architecture automating environmental feeds to Azure Databricks regression solvers.
+
+<span class="md-h2">## Paper 2: SMADE IoT Assist</span>
+* **Title:** SMADE - Smart Medical Assist Device for Elders
+* **Publisher:** Conference Proceedings (2022)
+* **Summary:** Dosing dispenser telemetry logs and scheduling alarms.</code></pre>
+                        </div>
+                        
+                        <!-- Right Panel: Rendered HTML representation -->
+                        <div class="editor-pane right-pane">
+                            <div class="markdown-preview-header">Preview research_papers.md</div>
+                            <div class="markdown-preview-body">
+                                <h1>Research Publications</h1>
+                                <h2>Paper 1: AI Hydroponics</h2>
+                                <p><strong>Title:</strong> Revolutionizing Holy-Basil Cultivation with AI-Enabled Hydroponics System</p>
+                                <p><strong>Publisher:</strong> ResearchGate Publication (2023)</p>
+                                <p><strong>Summary:</strong> An IoT vertical agriculture sensor framework feeding water temperature, pH, and nutrient records directly to cloud databases, utilizing AI regression inside Azure Databricks to automatically optimize lighting arrays and dosage timelines.</p>
+                                
+                                <h2>Paper 2: SMADE IoT Assist</h2>
+                                <p><strong>Title:</strong> SMADE - Smart Medical Assist Device for Elders</p>
+                                <p><strong>Publisher:</strong> Conference Proceedings (2022)</p>
+                                <p><strong>Summary:</strong> Implementation details of an IoT medication alarm and pill dispenser system transmitting remote vitals telemetry records to secure web portal databases.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 5: CADENCE VERISIUM DEBUG (BACKGROUND SCREENSHOT APP)
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-verisium" style="top: 50px; left: 40px; width: 850px; height: 550px; z-index: 2;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">🔬</span>
+                    <span class="window-title">Cadence Verisium Debug - [demo_session:UVM_SESSION]</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="verisium" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="verisium" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="verisium" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body verisium-body">
+                <!-- Wallpaper image layer -->
+                <img src="./verisium_debug.png" class="verisium-screenshot-bg" alt="Verisium Debug Window">
+                
+                <!-- Slightly interactive overlays / hotspots -->
+                <div class="verisium-hotspot hotspot-smartlog" style="top: 5%; left: 40%; width: 20%; height: 6%;" title="SmartLog Filter Analysis Active"></div>
+                <div class="verisium-hotspot hotspot-simtime" style="top: 18%; left: 22%; width: 15%; height: 4%;" title="Simulation Time: 45,230,000 ns"></div>
+                <div class="verisium-hotspot hotspot-source" style="top: 25%; left: 62%; width: 35%; height: 25%;" title="UVM Source Code: tb_top.sv"></div>
+                <div class="verisium-hotspot hotspot-waveform" style="top: 60%; left: 1%; width: 98%; height: 35%;" title="Logic waveform scope: CLK, RESET, APB_BUS. Double click to toggle telemetry scan."></div>
+                
+                <!-- Interactive tooltip popup box -->
+                <div class="verisium-status-card" id="verisium-status-popup">
+                    <div class="status-card-header">Verisium Debug Panel</div>
+                    <div class="status-card-line">Session: <span class="status-green">vdebug_demo_sessions/03_RTL_session</span></div>
+                    <div class="status-card-line">UVM Test: <span class="status-green">test_device_write_passed</span></div>
+                    <div class="status-card-line">Simulation clock: 387,395 ns (Synchronized)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 6: RETRO CALCULATOR (GCALCTOOL)
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-calculator" style="top: 150px; left: 450px; width: 280px; height: 350px; z-index: 9; display: none;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">🧮</span>
+                    <span class="window-title">Calculator</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="calculator" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="calculator" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="calculator" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body calculator-body">
+                <div class="calc-screen-container">
+                    <input type="text" class="calc-screen" id="calc-display" readonly value="0">
+                </div>
+                <div class="calc-grid">
+                    <button class="calc-btn btn-clear">C</button>
+                    <button class="calc-btn btn-back">⌫</button>
+                    <button class="calc-btn btn-op">/</button>
+                    <button class="calc-btn btn-op">*</button>
+                    
+                    <button class="calc-btn btn-num">7</button>
+                    <button class="calc-btn btn-num">8</button>
+                    <button class="calc-btn btn-num">9</button>
+                    <button class="calc-btn btn-op">-</button>
+                    
+                    <button class="calc-btn btn-num">4</button>
+                    <button class="calc-btn btn-num">5</button>
+                    <button class="calc-btn btn-num">6</button>
+                    <button class="calc-btn btn-op">+</button>
+                    
+                    <button class="calc-btn btn-num">1</button>
+                    <button class="calc-btn btn-num">2</button>
+                    <button class="calc-btn btn-num">3</button>
+                    <button class="calc-btn btn-equals" style="grid-row: span 2; height: 100%;">=</button>
+                    
+                    <button class="calc-btn btn-num" style="grid-column: span 2;">0</button>
+                    <button class="calc-btn btn-num">.</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 7: OVERLEAF SIMULATOR (LATEX EDITOR)
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-overleaf" style="top: 60px; left: 120px; width: 850px; height: 550px; z-index: 18; display: none;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">🍃</span>
+                    <span class="window-title">Overleaf - projects/resume.tex</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="overleaf" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="overleaf" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="overleaf" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body overleaf-body">
+                <!-- Overleaf top bar -->
+                <div class="overleaf-top-bar">
+                    <button class="overleaf-btn btn-back">◀ Menu</button>
+                    <span class="overleaf-doc-title">resume.tex</span>
+                    <button class="overleaf-recompile-btn" id="overleaf-recompile">
+                        <span class="btn-spinner" id="overleaf-spinner" style="display: none;">🌀</span> Recompile
+                    </button>
+                </div>
+                <!-- Overleaf split panels -->
+                <div class="overleaf-workspace">
+                    <!-- Left: Raw LaTeX Textarea -->
+                    <div class="overleaf-editor-panel">
+                        <textarea class="overleaf-textarea" id="overleaf-latex-input" spellcheck="false">% Document structure loaded dynamically
+\documentclass{article}
+\begin{document}
+Loading...
+\end{document}</textarea>
+                    </div>
+                    <!-- Right: Styled PDF render -->
+                    <div class="overleaf-preview-panel">
+                        <div class="pdf-sheet" id="overleaf-pdf-sheet" style="box-shadow: none; padding: 2rem 1.5rem; margin: 0; min-height: auto; width: 100%;">
+                            <!-- Dynamically updated PDF layout -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- RHEL BOTTOM PANEL (Applications Menu & Workstation Clock) -->
+    <footer class="rhel-bottom-panel">
+        <div class="bottom-panel-left">
+            <button class="rhel-menu-btn" id="applications-menu-trigger">
+                <span class="menu-btn-logo">🔴</span> Applications Places System
+            </button>
+            <span class="panel-separator">|</span>
+            <div class="panel-launchers">
+                <span class="launcher-icon" data-open="terminal" title="Launch Terminal">🐚</span>
+                <span class="launcher-icon" data-open="libreoffice" title="Launch LibreOffice">📝</span>
+                <span class="launcher-icon" data-open="pdfviewer" title="Launch Evince Viewer">📕</span>
+                <span class="launcher-icon" data-open="vscode" title="Launch VS Code">💻</span>
+                <span class="launcher-icon" data-open="verisium" title="Launch Verisium Debug">🔬</span>
+                <span class="launcher-icon" data-open="calculator" title="Launch Calculator">🧮</span>
+                <span class="launcher-icon" data-open="overleaf" title="Launch Overleaf Editor">🍃</span>
+            </div>
+        </div>
+        <div class="bottom-panel-right">
+            <span class="panel-icon" id="network-btn-trigger" title="Network Connection">📶</span>
+            <span class="panel-icon" id="volume-btn-trigger" title="Audio Volume">🔊</span>
+            <span class="lang-badge">DE</span>
+            <span class="panel-separator">|</span>
+            <div class="workspace-switcher" id="workspace-switcher">
+                <span class="workspace-btn active" data-workspace="1" title="Workspace 1">1</span>
+                <span class="workspace-btn" data-workspace="2" title="Workspace 2">2</span>
+                <span class="workspace-btn" data-workspace="3" title="Workspace 3">3</span>
+                <span class="workspace-btn" data-workspace="4" title="Workspace 4">4</span>
+            </div>
+            <span class="panel-separator">|</span>
+            <span class="panel-clock" id="system-time">Thu Feb 1, 10:49</span>
+        </div>
+    </footer>
+
+    <!-- -------------------------------------------------------------
+       GNOME SYSTEM DROPDOWNS & POPUPS
+    ------------------------------------------------------------- -->
+    <!-- 1. Applications Dropdown Menu (Bottom Left) -->
+    <div class="rhel-popup-menu" id="apps-menu-popup">
+        <div class="menu-popup-item" data-app="terminal">🐚 ZSH Terminal Emulator</div>
+        <div class="menu-popup-item" data-app="libreoffice">📝 LibreOffice Writer (Projects)</div>
+        <div class="menu-popup-item" data-app="pdfviewer">📕 Evince PDF Reader (Experience)</div>
+        <div class="menu-popup-item" data-app="vscode">💻 Visual Studio Code (Papers)</div>
+        <div class="menu-popup-item" data-app="verisium">🔬 Cadence Verisium Debug</div>
+        <div class="menu-popup-item" data-app="calculator">🧮 Calculator (gcalctool)</div>
+        <div class="menu-popup-item" data-app="overleaf">🍃 Overleaf LaTeX Editor</div>
+        <hr class="menu-popup-divider">
+        <div class="menu-popup-item logout-item" onclick="alert('Session closed. Please refresh page to reboot.')">❌ Log Out souranil...</div>
+    </div>
+
+    <!-- 2. System Clock Calendar Popup (Bottom Right) -->
+    <div class="rhel-popup-menu calendar-popup-container" id="calendar-popup">
+        <div class="calendar-header" id="calendar-month-year">June 2026</div>
+        <div class="calendar-grid">
+            <div class="calendar-day-header">Su</div>
+            <div class="calendar-day-header">Mo</div>
+            <div class="calendar-day-header">Tu</div>
+            <div class="calendar-day-header">We</div>
+            <div class="calendar-day-header">Th</div>
+            <div class="calendar-day-header">Fr</div>
+            <div class="calendar-day-header">Sa</div>
+        </div>
+        <div class="calendar-days-grid" id="calendar-days-container">
+            <!-- Populated dynamically via desktop.js -->
+        </div>
+    </div>
+
+    <!-- 3. Network & Volume Control Tool (Bottom Right) -->
+    <div class="rhel-popup-menu settings-popup-container" id="settings-popup">
+        <div class="settings-title">Workstation Panel</div>
+        
+        <div class="settings-row">
+            <span class="settings-icon">📶</span>
+            <div class="settings-detail">
+                <div class="detail-bold">Wi-Fi Connection</div>
+                <div class="detail-small">Connected: NXP-SECURE-NET</div>
+            </div>
+        </div>
+        
+        <div class="settings-row">
+            <span class="settings-icon">🔊</span>
+            <div class="settings-detail">
+                <div class="detail-bold">Volume Output</div>
+                <input type="range" class="volume-slider" id="vol-slider" min="0" max="100" value="80">
+            </div>
+        </div>
+    </div>
+
+    <!-- Application script orchestrator -->
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>
