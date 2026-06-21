@@ -15,7 +15,9 @@ const windowWorkspaces = {
     'vscode': 1,
     'overleaf': 1,
     'calculator': 2,
-    'verisium': 2
+    'verisium': 2,
+    'games-folder': 1,
+    'emulator': 1
 };
 
 export function initDesktop() {
@@ -112,7 +114,10 @@ export function initDesktop() {
     // 10. Verisium Hotspots Interactivity
     setupVerisiumHotspots();
 
-    // 11. Default window position layouts and startup stacks
+    // 11. Games Folder & GBA Emulator setup
+    setupGamesApp();
+
+    // 12. Default window position layouts and startup stacks
     arrangeDefaultWindows();
 }
 
@@ -369,6 +374,13 @@ function setupWindowControls(win) {
     if (closeBtn) {
         closeBtn.onclick = (e) => {
             e.stopPropagation();
+            
+            // Clear GBA emulator iframe to stop game audio on close
+            if (win.id === 'win-emulator') {
+                const iframe = document.getElementById('emulator-iframe');
+                if (iframe) iframe.src = '';
+            }
+
             win.dataset.isAnimating = 'true';
             gsap.to(win, {
                 duration: 0.25,
@@ -960,6 +972,25 @@ function setupVerisiumHotspots() {
     });
 }
 
+function setupGamesApp() {
+    const launchBtn = document.getElementById('launch-pokemon');
+    const iframe = document.getElementById('emulator-iframe');
+    
+    if (launchBtn && iframe) {
+        // Use click / dblclick to open GBA emulator
+        const launchAction = (e) => {
+            e.stopPropagation();
+            if (!iframe.src || iframe.src === 'about:blank' || !iframe.src.includes('emulator.html')) {
+                iframe.src = '/emulator.html';
+            }
+            openAppWindow('emulator');
+        };
+        
+        launchBtn.addEventListener('click', launchAction);
+        launchBtn.addEventListener('dblclick', launchAction);
+    }
+}
+
 function arrangeDefaultWindows() {
     const terminal = document.getElementById('win-terminal');
     const lo = document.getElementById('win-libreoffice');
@@ -1062,8 +1093,37 @@ function arrangeDefaultWindows() {
             verisium.style.height = '600px';
             verisium.style.zIndex = '2'; // At the bottom of the stack!
         }
+
+        const gamesFolder = document.getElementById('win-games-folder');
+        const emulator = document.getElementById('win-emulator');
+
+        if (gamesFolder) {
+            gamesFolder.dataset.isOpen = 'false';
+            gamesFolder.dataset.isMinimized = 'false';
+            gamesFolder.style.display = 'none';
+            
+            gamesFolder.style.top = '180px';
+            gamesFolder.style.left = '200px';
+            gamesFolder.style.width = '450px';
+            gamesFolder.style.height = '320px';
+            gamesFolder.style.zIndex = '14';
+        }
+
+        if (emulator) {
+            emulator.dataset.isOpen = 'false';
+            emulator.dataset.isMinimized = 'false';
+            emulator.style.display = 'none';
+            
+            emulator.style.top = '80px';
+            emulator.style.left = '150px';
+            emulator.style.width = '680px';
+            emulator.style.height = '500px';
+            emulator.style.zIndex = '15';
+        }
     } else {
-        const wins = [overleaf, terminal, vscode, pdf, lo, calculator, verisium];
+        const gamesFolder = document.getElementById('win-games-folder');
+        const emulator = document.getElementById('win-emulator');
+        const wins = [overleaf, terminal, vscode, pdf, lo, calculator, verisium, gamesFolder, emulator];
         wins.forEach((win, index) => {
             if (win) {
                 win.dataset.isOpen = (win === lo) ? 'false' : 'true';

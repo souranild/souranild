@@ -98,6 +98,21 @@ function cleanLatex(str) {
         .trim();
 }
 
+// Extract skill categories from technical skills section
+function extractSkill(content, categoryName) {
+    // Regex for \resumeSubItem{CategoryName}{value} or \textbf{CategoryName}{: value}
+    const regex1 = new RegExp(`(?:\\\\resumeSubItem|\\\\textbf)\\s*\\{\\s*${categoryName}\\s*\\}\\s*\\{(?:\\s*:\\s*)?([^}]+)\\}`, 'i');
+    const match1 = content.match(regex1);
+    if (match1) return match1[1].trim();
+
+    // Regex for \textbf{CategoryName}: value or CategoryName: value
+    const regex2 = new RegExp(`(?:\\\\textbf\\s*\\{\\s*${categoryName}\\s*\\}|${categoryName})\\s*(?:\\{?\\s*:\\s*|\\s+)([^}\\\\\\n]+)`, 'i');
+    const match2 = content.match(regex2);
+    if (match2) return match2[1].trim();
+
+    return '';
+}
+
 // LaTeX string parser
 export function parseLaTeXString(tex) {
     if (!tex || tex.trim() === '') {
@@ -140,6 +155,12 @@ export function parseLaTeXString(tex) {
         skills: { ...FALLBACK_RESUME.skills }
     };
 
+    // Helper to find sections dynamically using substring match
+    const findSection = (keys) => {
+        const foundKey = Object.keys(sections).find(k => keys.some(key => k.includes(key)));
+        return foundKey ? sections[foundKey] : null;
+    };
+
     // 1. Parse Contact Info
     const emailMatch = cleanTex.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/);
     if (emailMatch) {
@@ -147,7 +168,7 @@ export function parseLaTeXString(tex) {
     }
 
     // 2. Parse Experience Section
-    const expContent = sections['experience'] || sections['work experience'] || sections['employment'];
+    const expContent = findSection(['experience', 'work', 'employment', 'history']);
     if (expContent) {
         resumeData.experience = parseJobOrEdItems(expContent);
     } else {
@@ -155,7 +176,7 @@ export function parseLaTeXString(tex) {
     }
 
     // 3. Parse Education Section
-    const edContent = sections['education'] || sections['academic background'];
+    const edContent = findSection(['education', 'academic', 'qualification']);
     if (edContent) {
         resumeData.education = parseJobOrEdItems(edContent);
     } else {
@@ -163,7 +184,7 @@ export function parseLaTeXString(tex) {
     }
 
     // 4. Parse Projects Section
-    const projContent = sections['projects'] || sections['personal projects'] || sections['academic projects'];
+    const projContent = findSection(['project']);
     if (projContent) {
         resumeData.projects = parseProjectItems(projContent);
     } else {
@@ -171,7 +192,7 @@ export function parseLaTeXString(tex) {
     }
 
     // 5. Parse Publications / Research Section
-    const pubContent = sections['publications'] || sections['research'] || sections['papers'] || sections['publications & research'];
+    const pubContent = findSection(['publication', 'research', 'paper']);
     if (pubContent) {
         resumeData.publications = parsePublicationItems(pubContent);
     } else {
@@ -179,19 +200,16 @@ export function parseLaTeXString(tex) {
     }
 
     // 6. Parse Skills Section
-    const skillsContent = sections['skills'] || sections['technical skills'];
+    const skillsContent = findSection(['skills', 'technical skills', 'skills summary', 'abilities']);
     if (skillsContent) {
-        const skillLines = skillsContent.split('\n');
-        let languages = '', frameworks = '', tools = '';
-        for (let line of skillLines) {
-            if (line.toLowerCase().includes('languages:')) {
-                languages = line.replace(/.*languages:/i, '');
-            } else if (line.toLowerCase().includes('frameworks:') || line.toLowerCase().includes('technologies:')) {
-                frameworks = line.replace(/.*(frameworks|technologies):/i, '');
-            } else if (line.toLowerCase().includes('tools:')) {
-                tools = line.replace(/.*tools:/i, '');
-            }
-        }
+        const languages = extractSkill(skillsContent, 'Languages');
+        const frameworks = extractSkill(skillsContent, 'Frameworks') || 
+                           extractSkill(skillsContent, 'Technologies') || 
+                           extractSkill(skillsContent, 'Technical Skills');
+        const tools = extractSkill(skillsContent, 'Tools') || 
+                      extractSkill(skillsContent, 'Developer Tools') || 
+                      extractSkill(skillsContent, 'Software');
+                      
         if (languages) resumeData.skills.languages = cleanLatex(languages);
         if (frameworks) resumeData.skills.frameworks = cleanLatex(frameworks);
         if (tools) resumeData.skills.tools = cleanLatex(tools);
@@ -205,6 +223,7 @@ export function parseLaTeXString(tex) {
 
     return resumeData;
 }
+
 
 // Main parser function
 export async function getResumeData() {
@@ -249,7 +268,7 @@ function parseJobOrEdItems(content) {
             const subContent = content.substring(block.endIndex, nextBlockStart);
             
             const bullets = [];
-            const itemRegex = /\\item\s*([^\n\\]*)/g;
+            const itemRegex = /\\item\s*([\s\S]*?)(?=\\item|\\end|\\resume|$)/g;
             let itemMatch;
             while ((itemMatch = itemRegex.exec(subContent)) !== null) {
                 const bulletText = itemMatch[1].trim();
@@ -339,7 +358,7 @@ function parseProjectItems(content) {
             const subContent = content.substring(block.endIndex, nextBlockStart);
             
             const bullets = [];
-            const itemRegex = /\\item\s*([^\n\\]*)/g;
+            const itemRegex = /\\item\s*([\s\S]*?)(?=\\item|\\end|\\resume|$)/g;
             let itemMatch;
             while ((itemMatch = itemRegex.exec(subContent)) !== null) {
                 const bulletText = itemMatch[1].trim();
