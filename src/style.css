@@ -1292,29 +1292,36 @@ body, html {
     border-bottom: 2px solid #555;
 }
 
-/* Workspace switcher widget in taskbar */
+/* Workspace switcher widget in taskbar (2x2 grid layout) */
 .workspace-switcher {
-    display: flex;
-    gap: 3px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 2px;
     background: #1c1e22;
     padding: 2px;
     border-radius: 3px;
     border: 1px solid #14161a;
+    width: 36px;
+    height: 26px;
+    align-items: center;
+    justify-items: center;
 }
 .workspace-btn {
-    width: 16px;
-    height: 16px;
-    font-size: 0.65rem;
+    width: 14px;
+    height: 10px;
+    font-size: 0.52rem;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 1.5px;
     background: #2b2e37;
     color: #888;
     font-weight: bold;
     user-select: none;
     transition: all 0.15s;
+    line-height: 1;
 }
 .workspace-btn:hover {
     background: #3c404d;

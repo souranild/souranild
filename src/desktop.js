@@ -1,6 +1,7 @@
 // Red Hat Workstation Desktop & Window Manager with Resizable Windows and Virtual Workspaces
 
 import { parseLaTeXString } from './resumeParser.js';
+import { gsap } from 'gsap';
 
 let topZIndex = 30;
 let isDraggingGlobal = false;
@@ -75,10 +76,7 @@ export function initDesktop() {
                     focusWindow(win);
                 } else {
                     // Minimize if clicking active open window
-                    win.style.display = 'none';
-                    win.classList.add('minimized');
-                    win.dataset.isMinimized = 'true';
-                    focusNextWindow();
+                    minimizeWindow(win);
                 }
             }
         };
@@ -167,18 +165,64 @@ export function openAppWindow(appId) {
             switchWorkspace(targetWorkspace);
         }
 
+        // If already open and focused in the active workspace, just focus it
+        if (win.style.display === 'flex' && win.style.zIndex == topZIndex && win.dataset.isMinimized !== 'true') {
+            return;
+        }
+
         win.style.display = 'flex';
+        win.classList.remove('minimized');
         win.dataset.isOpen = 'true';
         win.dataset.isMinimized = 'false';
         focusWindow(win);
         
-        // Filter tabs after launching
         updateTaskbarTabs();
 
-        if (appId === 'terminal') {
-            const input = document.getElementById('zsh-input');
-            if (input) setTimeout(() => input.focus(), 100);
+        // Animate expand from launcher/badge
+        const launcher = document.querySelector(`.launcher-icon[data-open="${appId}"]`) || 
+                         document.querySelector(`.window-tab-badge[data-toggle="${appId}"]`);
+                         
+        let startX = window.innerWidth / 2;
+        let startY = window.innerHeight;
+        
+        if (launcher) {
+            const rect = launcher.getBoundingClientRect();
+            startX = rect.left + rect.width / 2;
+            startY = rect.top + rect.height / 2;
         }
+        
+        const winRect = win.getBoundingClientRect();
+        const winCenterX = winRect.left + winRect.width / 2;
+        const winCenterY = winRect.top + winRect.height / 2;
+        
+        const deltaX = startX - winCenterX;
+        const deltaY = startY - winCenterY;
+        
+        win.dataset.isAnimating = 'true';
+        
+        gsap.set(win, {
+            x: deltaX,
+            y: deltaY,
+            scale: 0.05,
+            opacity: 0,
+            transformOrigin: "center center"
+        });
+        
+        gsap.to(win, {
+            duration: 0.45,
+            x: 0,
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            ease: "power2.out",
+            onComplete: () => {
+                win.dataset.isAnimating = 'false';
+                if (appId === 'terminal') {
+                    const input = document.getElementById('zsh-input');
+                    if (input) setTimeout(() => input.focus(), 100);
+                }
+            }
+        });
     }
 }
 
@@ -329,21 +373,28 @@ function setupWindowControls(win) {
     if (closeBtn) {
         closeBtn.onclick = (e) => {
             e.stopPropagation();
-            win.style.display = 'none';
-            win.dataset.isOpen = 'false';
-            updateTaskbarTabs();
-            focusNextWindow();
+            win.dataset.isAnimating = 'true';
+            gsap.to(win, {
+                duration: 0.25,
+                opacity: 0,
+                scale: 0.9,
+                ease: "power2.in",
+                onComplete: () => {
+                    win.style.display = 'none';
+                    win.dataset.isOpen = 'false';
+                    win.dataset.isAnimating = 'false';
+                    gsap.set(win, { scale: 1, opacity: 1 });
+                    updateTaskbarTabs();
+                    focusNextWindow();
+                }
+            });
         };
     }
 
     if (minBtn) {
         minBtn.onclick = (e) => {
             e.stopPropagation();
-            win.classList.add('minimized');
-            win.style.display = 'none';
-            win.dataset.isMinimized = 'true';
-            updateTaskbarTabs();
-            focusNextWindow();
+            minimizeWindow(win);
         };
     }
 
@@ -353,6 +404,54 @@ function setupWindowControls(win) {
             win.classList.toggle('maximized');
         };
     }
+}
+
+// macOS-style minimizing animation using GSAP
+function minimizeWindow(win) {
+    if (win.dataset.isAnimating === 'true') return;
+    
+    const appId = win.id.replace('win-', '');
+    const launcher = document.querySelector(`.launcher-icon[data-open="${appId}"]`) || 
+                     document.querySelector(`.window-tab-badge[data-toggle="${appId}"]`);
+    
+    let targetX = window.innerWidth / 2;
+    let targetY = window.innerHeight;
+    
+    if (launcher) {
+        const rect = launcher.getBoundingClientRect();
+        targetX = rect.left + rect.width / 2;
+        targetY = rect.top + rect.height / 2;
+    }
+    
+    const winRect = win.getBoundingClientRect();
+    const winCenterX = winRect.left + winRect.width / 2;
+    const winCenterY = winRect.top + winRect.height / 2;
+    
+    const deltaX = targetX - winCenterX;
+    const deltaY = targetY - winCenterY;
+    
+    win.dataset.isAnimating = 'true';
+    
+    gsap.to(win, {
+        duration: 0.45,
+        x: deltaX,
+        y: deltaY,
+        scale: 0.05,
+        opacity: 0,
+        transformOrigin: "center center",
+        ease: "power2.inOut",
+        onComplete: () => {
+            win.style.display = 'none';
+            win.classList.add('minimized');
+            win.dataset.isMinimized = 'true';
+            win.dataset.isOpen = 'true';
+            win.dataset.isAnimating = 'false';
+            // Reset scale/position values for normal state layout
+            gsap.set(win, { x: 0, y: 0, scale: 1, opacity: 1 });
+            updateTaskbarTabs();
+            focusNextWindow();
+        }
+    });
 }
 
 // Workspace switcher widget action
