@@ -27,24 +27,26 @@ const COMMANDS = [
 ];
 
 export function updateZshFiles(resumeData) {
-    const skillsList = `  - Languages : ${resumeData.skills.languages}\n  - Frameworks: ${resumeData.skills.frameworks}\n  - Tools     : ${resumeData.skills.tools}`;
+    const skillsList = `  <span style="color: #ffb86c; font-weight: bold;">• Languages :</span> <span style="color: #f8f8f2;">${resumeData.skills.languages}</span>
+  <span style="color: #ffb86c; font-weight: bold;">• Frameworks:</span> <span style="color: #f8f8f2;">${resumeData.skills.frameworks}</span>
+  <span style="color: #ffb86c; font-weight: bold;">• Tools     :</span> <span style="color: #f8f8f2;">${resumeData.skills.tools}</span>`;
     
     files['about_me.txt'] = `
-[SYSTEM CORE PROFILE]
-====================================================================
-NAME        : ${resumeData.name}
-ROLE        : ${resumeData.title}
-CONTACT     : ${resumeData.contact}
-====================================================================
+<span style="color: #50fa7b; font-weight: bold;">[SYSTEM CORE PROFILE]</span>
+<span style="color: #6272a4;">====================================================================</span>
+<span style="color: #8be9fd; font-weight: bold;">NAME</span>        : <span style="color: #f8f8f2; font-weight: bold;">${resumeData.name}</span>
+<span style="color: #8be9fd; font-weight: bold;">ROLE</span>        : <span style="color: #f8f8f2;">${resumeData.title}</span>
+<span style="color: #8be9fd; font-weight: bold;">CONTACT     :</span> <span style="color: #ff79c6;">${resumeData.contact}</span>
+<span style="color: #6272a4;">====================================================================</span>
 
-System logic check: ACTIVE
-Functional parameters verified: 100%
+<span style="color: #50fa7b;">✔ System logic check:</span> <span style="color: #f8f8f2; font-weight: bold; background: #282a36; padding: 0 4px; border-radius: 2px;">ACTIVE</span>
+<span style="color: #50fa7b;">✔ Functional parameters verified:</span> <span style="color: #f8f8f2; font-weight: bold; background: #282a36; padding: 0 4px; border-radius: 2px;">100%</span>
 
-Core Skills:
+<span style="color: #bd93f9; font-weight: bold; text-decoration: underline;">CORE SKILLS:</span>
 ${skillsList}
 
---------------------------------------------------------------------
-Type 'help' to view available commands.
+<span style="color: #6272a4;">--------------------------------------------------------------------</span>
+Type <span style="color: #50fa7b; font-weight: bold;">'help'</span> to view available console simulation commands.
 `;
 }
 
@@ -152,13 +154,13 @@ function runStartupSequence() {
     setTimeout(() => {
         printLine('zsh shell loaded successfully.', 'terminal-info');
         
-        // Animating ASCII Banner
+        // Animating ASCII Banner (Spelled SOURANIL correctly)
         const asciiArt = `
-  ____   ___  _   _ ____   ____  _   _ ___ _     
- / ___| / _ \\| | | |  _ \\ / ___|| \\ | |_ _| |    
- \\___ \\| | | | | | | |_) | |  _ |  \\| | | || |    
-  ___) | |_| | |_| |  _ <| |_| || |\\  | | || |___ 
- |____/ \\___/ \\___/|_| \\_\\\\____||_| \\_|___|_____|
+ ____   ___  _   _ ____    _   _   _ ___ _     
+/ ___| / _ \\\\| | | |  _ \\\\  / \\\\ | \\\\ | |_ _| |    
+\\___ \\\\| | | | | | | |_) |/ _ \\\\|  \\\\| | | || |    
+ ___) | |_| | |_| |  _ </ ___ \\\\ |\\\\  | | || |___ 
+|____/ \\___/ \\___/|_| \\_/_/   \\_\\_|_| \\_|___|_____|
         `;
         
         const bannerContainer = document.createElement('pre');
@@ -190,6 +192,79 @@ function runStartupSequence() {
                 // Show profile info
                 const profileInfo = files['about_me.txt'] || `Loading system profile...`;
                 printLine(profileInfo);
+                
+                // Print animating space shuttle rocket below text profile
+                const rocketContainer = document.createElement('pre');
+                rocketContainer.style.margin = '1rem 0';
+                rocketContainer.style.color = '#8be9fd';
+                rocketContainer.style.fontFamily = 'var(--font-mono)';
+                rocketContainer.style.fontSize = '0.75rem';
+                rocketContainer.style.lineHeight = '1.1';
+                displayContainer.appendChild(rocketContainer);
+                
+                const rocketFrames = [
+                    `*          /\\\\          +
+          /  \\\\
+   +     /____\\\\     .
+        |      |
+  .     | SOUR |
+        | ANIL |    *
+       /|  DV  |\\\\
+ *    / |======| \\\\
+     /  |      |  \\\\    .
+    |  /|      |\\\\  |
+ +  | / |      | \\\\ |
+    |/  |______|  \\\\|   +
+        /      \\\\
+       /        \\\\
+       (  ) ( ) (  )
+      (    )   )   )
+       (  (   )   )`,
+                    `    +      /\\\\        *
+  .       /  \\\\    .
+         /____\\\\
+   *    |      |
+        | SOUR |   +
+  .     | ANIL |
+       /|  DV  |\\\\   .
+      / |======| \\\\
+ +   /  |      |  \\\\
+    |  /|      |\\\\  |   *
+    | / |      | \\\\ |
+    |/  |______|  \\\\|
+        /      \\\\  +
+       /        \\\\
+        )  (  )  (
+       (    )  )  )
+        )  (  (  (`,
+                    ` .         /\\\\      +
+   *      /  \\\\
+         /____\\\\     .
+  +     |      |
+        | SOUR |
+        | ANIL |    *
+       /|  DV  |\\\\
+      / |======| \\\\   +
+     /  |      |  \\\\
+    |  /|      |\\\\  |
+ *  | / |      | \\\\ |  .
+    |/  |______|  \\\\|
+        /      \\\\
+       /        \\\\
+       |  | |  |  |
+       \\\\  / \\\\  /  /
+        \\\\/   \\\\/  /`
+                ];
+                
+                let frameIdx = 0;
+                const intervalId = setInterval(() => {
+                    if (!document.body.contains(rocketContainer)) {
+                        clearInterval(intervalId);
+                        return;
+                    }
+                    rocketContainer.textContent = rocketFrames[frameIdx];
+                    frameIdx = (frameIdx + 1) % rocketFrames.length;
+                }, 150);
             }
         }
         
