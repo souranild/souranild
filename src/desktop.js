@@ -551,6 +551,8 @@ function generateCalendar() {
 }
 
 // Desktop Background Hover Transparency Rule
+let hoverTimer = null;
+
 function setupHoverTransparency() {
     const desktopArea = document.querySelector('.desktop-area');
     if (!desktopArea) return;
@@ -559,16 +561,32 @@ function setupHoverTransparency() {
         if (isDraggingGlobal) return;
 
         const isOverWindow = e.target.closest('.desktop-window');
-        const windows = document.querySelectorAll('.desktop-window');
 
         if (isOverWindow) {
+            // Cancel any pending show-desktop timer
+            if (hoverTimer) {
+                clearTimeout(hoverTimer);
+                hoverTimer = null;
+            }
+            // Restore window opacity immediately
+            const windows = document.querySelectorAll('.desktop-window');
             windows.forEach(w => w.classList.remove('desktop-transparent'));
         } else {
-            windows.forEach(w => w.classList.add('desktop-transparent'));
+            // If they are hovering on the background, start a 2-second timer
+            if (!hoverTimer) {
+                hoverTimer = setTimeout(() => {
+                    const windows = document.querySelectorAll('.desktop-window');
+                    windows.forEach(w => w.classList.add('desktop-transparent'));
+                }, 2000); // 2 seconds
+            }
         }
     });
 
     desktopArea.addEventListener('mouseleave', () => {
+        if (hoverTimer) {
+            clearTimeout(hoverTimer);
+            hoverTimer = null;
+        }
         const windows = document.querySelectorAll('.desktop-window');
         windows.forEach(w => w.classList.remove('desktop-transparent'));
     });
