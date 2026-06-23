@@ -2613,18 +2613,20 @@ function initWeatherWidget() {
             lon = tzCities[tz].lon;
         }
 
-        try {
-            const geoRes = await fetch('https://ipapi.co/json/');
-            if (geoRes.ok) {
-                const geoData = await geoRes.json();
-                if (geoData.city && geoData.latitude && geoData.longitude) {
-                    city = geoData.city;
-                    lat = geoData.latitude;
-                    lon = geoData.longitude;
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            try {
+                const geoRes = await fetch('https://ipapi.co/json/');
+                if (geoRes.ok) {
+                    const geoData = await geoRes.json();
+                    if (geoData.city && geoData.latitude && geoData.longitude) {
+                        city = geoData.city;
+                        lat = geoData.latitude;
+                        lon = geoData.longitude;
+                    }
                 }
+            } catch (e) {
+                console.warn('Geo IP API failed, using timezone fallback', e);
             }
-        } catch (e) {
-            console.warn('Geo IP API failed, using timezone fallback', e);
         }
 
         try {
