@@ -11,99 +11,446 @@
     <link rel="stylesheet" href="./src/style.css">
 </head>
 <body>
+
+    <!-- ============================================================
+         RED HAT BOOT SCREEN — shown on first visit as onboarding
+         Phases: GRUB menu → systemd log → login card → desktop
+    ============================================================ -->
+    <div id="boot-overlay">
+
+        <!-- Phase 1: GRUB bootloader menu -->
+        <div id="boot-grub" class="boot-phase">
+            <div class="grub-header">GNU GRUB  version 2.06</div>
+            <div class="grub-box">
+                <div class="grub-entry grub-selected" id="grub-rhel">
+                    *Red Hat Enterprise Linux (5.14.0-427.13.1.el9_4.x86_64) 9.4
+                </div>
+                <div class="grub-entry">Red Hat Enterprise Linux (0-rescue-...) 9.4</div>
+                <div class="grub-entry dimmed">UEFI Firmware Settings</div>
+            </div>
+            <div class="grub-footer">
+                <span>Use the ↑ and ↓ keys to change the selection.</span><br>
+                <span>Press Enter to boot the selected OS.</span>
+            </div>
+            <div class="grub-countdown">Booting in <span id="grub-timer">5</span>s...</div>
+        </div>
+
+        <!-- Phase 2: systemd boot log -->
+        <div id="boot-log" class="boot-phase" style="display:none;">
+            <div id="boot-log-lines"></div>
+            <div id="boot-cursor">█</div>
+        </div>
+
+        <!-- Phase 3: Login / welcome card -->
+        <div id="boot-login" class="boot-phase" style="display:none;">
+            <div class="login-card">
+                <div class="login-avatar-wrap">
+                    <img src="/profile.png" alt="Souranil Das" class="login-avatar">
+                    <div class="login-avatar-ring"></div>
+                </div>
+                <div class="login-name">Souranil Das</div>
+                <div class="login-role">Design Verification Engineer · NXP Semiconductors</div>
+                <div class="login-tagline">
+                    <span class="login-tag">SystemVerilog</span>
+                    <span class="login-tag">Cadence Xcelium</span>
+                    <span class="login-tag">RTL Design</span>
+                    <span class="login-tag">Embedded Systems</span>
+                </div>
+                <p class="login-bio">
+                    Welcome to my interactive portfolio — styled as a Red Hat Linux workstation.<br>
+                    You can open apps, run terminal commands, drag windows, and explore my work.
+                </p>
+                <div class="login-hint">
+                    <span class="login-hint-key">↓ scroll</span>
+                    <span class="login-hint-key">drag windows</span>
+                    <span class="login-hint-key">click icons</span>
+                    to explore
+                </div>
+                <button id="boot-enter-btn" class="login-btn">
+                    <span>Enter Workstation</span>
+                    <span class="login-btn-arrow">→</span>
+                </button>
+                <div class="login-skip" id="boot-skip">Skip intro</div>
+            </div>
+            <div class="login-bg-label">Red Hat Enterprise Linux 9.4 — NXP DV-Workstation</div>
+        </div>
+
+    </div>
+    <!-- End boot overlay -->
+
     <!-- RHEL TOP PANEL (Active Window Tabs) -->
     <header class="rhel-top-panel">
         <div class="top-panel-left">
             <span class="panel-icon">🔴</span>
             <span class="panel-separator">|</span>
             <div class="top-window-tabs" id="taskbar-window-tabs">
-                <span class="window-tab-badge active" data-toggle="terminal">🐚 souranil@nxp-dv-station: ~</span>
-                <span class="window-tab-badge" data-toggle="libreoffice">📝 LibreOffice Writer</span>
-                <span class="window-tab-badge" data-toggle="pdfviewer">📕 experience_resume.pdf</span>
-                <span class="window-tab-badge" data-toggle="vscode">💻 VS Code - papers</span>
-                <span class="window-tab-badge" data-toggle="verisium">🔬 Cadence Verisium Debug</span>
+                <span class="window-tab-badge active" data-toggle="terminal">🐚 Terminal</span>
+                <span class="window-tab-badge" data-toggle="libreoffice">📝 Writer</span>
+                <span class="window-tab-badge" data-toggle="pdfviewer">📕 Reader</span>
+                <span class="window-tab-badge" data-toggle="vscode">💻 Papers</span>
+                <span class="window-tab-badge" data-toggle="verisium">🔬 Debug</span>
                 <span class="window-tab-badge" data-toggle="calculator">🧮 Calculator</span>
-                <span class="window-tab-badge" data-toggle="overleaf">🍃 resume.tex (Overleaf)</span>
-                <span class="window-tab-badge" data-toggle="games-folder">📂 Games</span>
-                <span class="window-tab-badge" data-toggle="emulator">🎮 Pokemon GBA Emulator</span>
+                <span class="window-tab-badge" data-toggle="overleaf">🍃 Editor</span>
+                <span class="window-tab-badge" data-toggle="emulator">🎮 Emulator</span>
             </div>
         </div>
         <div class="top-panel-right">
             <span class="cpu-load-badge">CPU: 4.8%</span>
+            <!-- Theme Switcher -->
+            <div class="theme-switcher-wrap" id="theme-switcher-wrap">
+                <button class="theme-btn" id="theme-btn" title="Change theme" aria-label="Theme switcher">
+                    <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
+                        <circle cx="10" cy="10" r="3.5"/>
+                        <path d="M10 1v2M10 17v2M1 10h2M17 10h2M3.22 3.22l1.42 1.42M15.36 15.36l1.42 1.42M3.22 16.78l1.42-1.42M15.36 4.64l1.42-1.42"/>
+                        <circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+                    </svg>
+                    Theme
+                </button>
+                <div class="theme-popover" id="theme-popover" aria-hidden="true">
+                    <div class="theme-popover-title">Choose Theme</div>
+                    <div class="theme-grid">
+                        <button class="theme-card active" data-theme="rhel" id="theme-rhel">
+                            <div class="theme-preview" style="background:linear-gradient(135deg,#12141a 50%,#cc0000 100%)">
+                                <span class="theme-preview-bar" style="background:#353945"></span>
+                                <span class="theme-preview-bar" style="background:#353945;margin-top:auto"></span>
+                            </div>
+                            <span class="theme-name">Red Hat</span>
+                            <span class="theme-check" id="check-rhel">✓</span>
+                        </button>
+                        <button class="theme-card" data-theme="kali" id="theme-kali">
+                            <div class="theme-preview" style="background:linear-gradient(135deg,#0a0a12 50%,#367bf0 100%)">
+                                <span class="theme-preview-bar" style="background:#1a1a2e"></span>
+                                <span class="theme-preview-bar" style="background:#1a1a2e;margin-top:auto"></span>
+                            </div>
+                            <span class="theme-name">Kali Linux</span>
+                            <span class="theme-check" id="check-kali"></span>
+                        </button>
+                        <button class="theme-card" data-theme="ubuntu" id="theme-ubuntu">
+                            <div class="theme-preview" style="background:linear-gradient(135deg,#2c001e 50%,#f26122 100%)">
+                                <span class="theme-preview-bar" style="background:#3b0025"></span>
+                                <span class="theme-preview-bar" style="background:#3b0025;margin-top:auto"></span>
+                            </div>
+                            <span class="theme-name">Ubuntu</span>
+                            <span class="theme-check" id="check-ubuntu"></span>
+                        </button>
+                        <button class="theme-card" data-theme="win7" id="theme-win7">
+                            <div class="theme-preview" style="background:linear-gradient(135deg,#1a3a6e 50%,#4a8fd8 100%)">
+                                <span class="theme-preview-bar" style="background:rgba(120,160,220,0.35);backdrop-filter:blur(4px)"></span>
+                                <span class="theme-preview-bar" style="background:rgba(120,160,220,0.35);margin-top:auto"></span>
+                            </div>
+                            <span class="theme-name">Windows 7</span>
+                            <span class="theme-check" id="check-win7"></span>
+                        </button>
+                        <button class="theme-card" data-theme="win10" id="theme-win10">
+                            <div class="theme-preview" style="background:linear-gradient(135deg,#001f3f 50%,#0078d4 100%)">
+                                <span class="theme-preview-bar" style="background:#1a1a1a"></span>
+                                <span class="theme-preview-bar" style="background:#1a1a1a;margin-top:auto"></span>
+                            </div>
+                            <span class="theme-name">Windows 10</span>
+                            <span class="theme-check" id="check-win10"></span>
+                        </button>
+                        <button class="theme-card" data-theme="win11" id="theme-win11">
+                            <div class="theme-preview" style="background:radial-gradient(circle,#1a3b68 30%,#0f1d3a 100%)">
+                                <span class="theme-preview-bar" style="background:rgba(30,30,30,0.6);backdrop-filter:blur(3px)"></span>
+                                <span class="theme-preview-bar" style="background:rgba(30,30,30,0.6);margin-top:auto"></span>
+                            </div>
+                            <span class="theme-name">Windows 11</span>
+                            <span class="theme-check" id="check-win11"></span>
+                        </button>
+                        <button class="theme-card" data-theme="macos" id="theme-macos">
+                            <div class="theme-preview" style="background:linear-gradient(135deg,#ff5e62 0%,#ff9966 50%,#1e90ff 100%)">
+                                <span class="theme-preview-bar" style="background:rgba(255,255,255,0.7)"></span>
+                                <span class="theme-preview-bar" style="background:rgba(40,40,40,0.8);margin-top:auto"></span>
+                            </div>
+                            <span class="theme-name">macOS</span>
+                            <span class="theme-check" id="check-macos"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
     <!-- Desktop Workspace Grid -->
     <main class="desktop-area">
-        <!-- LEFT SIDE SHORTCUTS: External Web Links -->
+        <!-- LEFT SIDE SHORTCUTS: System Apps Folder + User Files -->
         <div class="desktop-grid-left">
-            <a href="https://www.linkedin.com/in/souranild/" target="_blank" class="desktop-icon link-icon-anchor">
-                <div class="icon-image linkedin-icon">
-                    <svg viewBox="0 0 24 24" fill="#0077B5"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            <!-- System Apps Folder -->
+            <div class="desktop-icon" data-open="sysapps-folder">
+                <div class="linux-app-icon">
+                    <svg viewBox="0 0 48 48" width="48" height="48">
+                        <path d="M4 10h12l4 4h24c2.2 0 4 1.8 4 4v20c0 2.2-1.8 4-4 4H4c-2.2 0-4-1.8-4-4V14c0-2.2 1.8-4 4-4z" fill="#5c6bc0" stroke="#3f51b5" stroke-width="1.5"/>
+                        <path d="M0 18h48v20c0 2.2-1.8 4-4 4H4c-2.2 0-4-1.8-4-4V18z" fill="#7986cb" stroke="#3f51b5" stroke-width="1.5"/>
+                        <circle cx="16" cy="28" r="2.5" fill="#ffffff" opacity="0.8"/>
+                        <rect x="21" y="26" width="5" height="5" rx="1" fill="#ffffff" opacity="0.8"/>
+                        <polygon points="33,25.5 35.5,30.5 30.5,30.5" fill="#ffffff" opacity="0.8"/>
+                    </svg>
                 </div>
-                <div class="icon-label">LinkedIn.desktop</div>
-            </a>
-            <a href="https://github.com/souranild" target="_blank" class="desktop-icon link-icon-anchor">
-                <div class="icon-image github-icon">
-                    <svg viewBox="0 0 24 24" fill="#FFFFFF"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                <div class="icon-label">System Apps</div>
+            </div>
+            <!-- User File: resume.tex -->
+            <div class="desktop-icon desktop-file-icon" data-file-open="overleaf">
+                <div class="linux-app-icon">
+                    <svg viewBox="0 0 48 48" width="48" height="48">
+                        <path d="M10 6h20l10 10v26c0 2.2-1.8 4-4 4H10c-2.2 0-4-1.8-4-4V10c0-2.2 1.8-4 4-4z" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                        <path d="M30 6v10h10L30 6z" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+                        <text x="14" y="24" font-family="serif" font-size="10" font-weight="bold" fill="#0f172a">T</text>
+                        <text x="21" y="27" font-family="serif" font-size="8" font-weight="bold" fill="#ef4444">E</text>
+                        <text x="27" y="24" font-family="serif" font-size="10" font-weight="bold" fill="#0f172a">X</text>
+                        <line x1="12" y1="34" x2="36" y2="34" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="12" y1="39" x2="28" y2="39" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
                 </div>
-                <div class="icon-label">GitHub.desktop</div>
-            </a>
-            <a href="https://discord.com" target="_blank" class="desktop-icon link-icon-anchor">
-                <div class="icon-image discord-icon">
-                    <svg viewBox="0 0 24 24" fill="#5865F2"><rect width="24" height="24" rx="5" fill="#5865F2"/><path fill="#FFFFFF" d="M19.73 4.87a18.2 18.2 0 0 0-4.6-1.44.07.07 0 0 0-.07.03c-.19.34-.4.81-.55 1.19a16.82 16.82 0 0 0-5.02 0c-.15-.38-.37-.85-.56-1.19a.07.07 0 0 0-.07-.03 18.2 18.2 0 0 0-4.6 1.44.07.07 0 0 0-.03.03C1.04 9.87.27 14.74.6 19.55a.08.08 0 0 0 .03.05 18.3 18.3 0 0 0 5.53 2.76.08.08 0 0 0 .08-.02c.43-.57.8-1.18 1.11-1.82a.07.07 0 0 0-.04-.1 12 12 0 0 1-1.73-.83.07.07 0 0 1-.01-.12c.12-.09.24-.18.35-.27a.07.07 0 0 1 .08-.01c3.6 1.65 7.51 1.65 11.07 0a.07.07 0 0 1 .08.01c.11.09.23.18.35.27a.07.07 0 0 1-.01.12 11.83 11.83 0 0 1-1.73.83.08.08 0 0 0-.04.1c.32.64.69 1.25 1.11 1.82a.08.08 0 0 0 .08.02 18.29 18.29 0 0 0 5.53-2.76.07.07 0 0 0 .03-.05c.4-5.43-.67-10.27-2.82-14.65a.07.07 0 0 0-.03-.03zM8.02 15.33c-1.07 0-1.95-.98-1.95-2.18s.86-2.18 1.95-2.18 1.95.98 1.95 2.18-.86 2.18-1.95 2.18zm7.96 0c-1.07 0-1.95-.98-1.95-2.18s.86-2.18 1.95-2.18 1.95.98 1.95 2.18-.86 2.18-1.95 2.18z"/></svg>
-                </div>
-                <div class="icon-label">Discord.desktop</div>
-            </a>
-            <a href="mailto:souranil.das.2024@gmail.com" class="desktop-icon link-icon-anchor">
-                <div class="icon-image gmail-icon">
-                    <svg viewBox="0 0 24 24"><path fill="#EA4335" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/><path fill="#FBBC05" d="M22 6v12c0 1.1-.9 2-2 2h-2V8l-6 4-6-4v12H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2z"/><path fill="#34A853" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" opacity="0.1"/><path fill="#4285F4" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" opacity="0.2"/><path fill="#FFFFFF" d="M4 6l8 5.5L20 6v12H4V6z"/><path fill="#EA4335" d="M12 12.5L3.5 6.25c-.3-.2-.5-.5-.5-.85 0-.6.5-1.1 1.1-1.1.3 0 .5.1.7.25L12 10.75l7.2-5.7c.2-.15.4-.25.7-.25 1.1 0 1.1.8 1.1 1.1 0 .35-.2.65-.5.85L12 12.5z"/></svg>
-                </div>
-                <div class="icon-label">Gmail.desktop</div>
-            </a>
-            <a href="https://instagram.com/souranild" target="_blank" class="desktop-icon link-icon-anchor">
-                <div class="icon-image instagram-icon">
-                    <svg viewBox="0 0 24 24"><defs><radialGradient id="ig-grad" cx="30%" cy="107%" r="130%" fx="30%" fy="107%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><rect width="24" height="24" rx="5" fill="url(#ig-grad)"/><path fill="#FFFFFF" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                </div>
-                <div class="icon-label">Instagram.desktop</div>
-            </a>
-        </div>
-
-        <!-- RIGHT SIDE SHORTCUTS: Local Application Shortcuts -->
-        <div class="desktop-grid-right">
-            <div class="desktop-icon" data-open="terminal">
-                <div class="icon-image zsh-icon">🐚</div>
-                <div class="icon-label">zsh_terminal</div>
-            </div>
-            <div class="desktop-icon" data-open="libreoffice">
-                <div class="icon-image odt-icon">📝</div>
-                <div class="icon-label">projects.odt</div>
-            </div>
-            <div class="desktop-icon" data-open="pdfviewer">
-                <div class="icon-image pdf-icon">📕</div>
-                <div class="icon-label">experience.pdf</div>
-            </div>
-            <div class="desktop-icon" data-open="vscode">
-                <div class="icon-image code-icon">💻</div>
-                <div class="icon-label">research_papers.md</div>
-            </div>
-            <div class="desktop-icon" data-open="verisium">
-                <div class="icon-image debug-icon">🔬</div>
-                <div class="icon-label">verisium_debug</div>
-            </div>
-            <div class="desktop-icon" data-open="calculator">
-                <div class="icon-image calc-icon">🧮</div>
-                <div class="icon-label">gcalctool.desktop</div>
-            </div>
-            <div class="desktop-icon" data-open="overleaf">
-                <div class="icon-image tex-icon">📄</div>
                 <div class="icon-label">resume.tex</div>
             </div>
-            <div class="desktop-icon" data-open="games-folder">
-                <div class="icon-image games-icon">
-                    <svg viewBox="0 0 24 24" fill="#F4A261"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10h-2v2h-2v-2H8v-2h2v-2h2v2h2v2zm4.5-1.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            <!-- User File: about_me.sh (opens in terminal with ASCII art) -->
+            <div class="desktop-icon desktop-file-icon" data-file-action="run-aboutme">
+                <div class="linux-app-icon">
+                    <svg viewBox="0 0 48 48" width="48" height="48">
+                        <rect x="4" y="6" width="40" height="36" rx="4" fill="#1e293b" stroke="#0f172a" stroke-width="1.5"/>
+                        <path d="M4 10V10C4 7.79 5.79 6 8 6h32c2.21 0 4 1.79 4 4v2H4v-2z" fill="#10b981"/>
+                        <path d="M10 18l4 3-4 3" stroke="#5af78e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <text x="18" y="30" font-family="monospace" font-size="7" fill="#8be9fd">.sh</text>
+                        <rect x="10" y="34" width="14" height="2" rx="1" fill="#6272a4"/>
+                    </svg>
                 </div>
-                <div class="icon-label">games</div>
+                <div class="icon-label">about_me.sh</div>
+            </div>
+            <!-- User File: Souranil's Resume.pdf -->
+            <div class="desktop-icon desktop-file-icon" data-file-open="pdfviewer">
+                <div class="linux-app-icon">
+                    <svg viewBox="0 0 48 48" width="48" height="48">
+                        <path d="M10 6h20l10 10v26c0 2.2-1.8 4-4 4H10c-2.2 0-4-1.8-4-4V10c0-2.2 1.8-4 4-4z" fill="#fcfcfc" stroke="#f1a5a5" stroke-width="1.5"/>
+                        <path d="M30 6v10h10L30 6z" fill="#f1a5a5"/>
+                        <rect x="10" y="16" width="18" height="8" rx="1" fill="#c9222b"/>
+                        <text x="12" y="22" font-family="sans-serif" font-size="6" font-weight="bold" fill="#ffffff">PDF</text>
+                        <line x1="10" y1="28" x2="38" y2="28" stroke="#e11d48" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="10" y1="33" x2="38" y2="33" stroke="#fda4af" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="10" y1="38" x2="25" y2="38" stroke="#fda4af" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="icon-label">Souranil's Resume.pdf</div>
+            </div>
+            <!-- User File: projects.odt (LibreOffice doc) -->
+            <div class="desktop-icon desktop-file-icon" data-file-open="libreoffice">
+                <div class="linux-app-icon">
+                    <svg viewBox="0 0 48 48" width="48" height="48">
+                        <path d="M10 6h20l10 10v26c0 2.2-1.8 4-4 4H10c-2.2 0-4-1.8-4-4V10c0-2.2 1.8-4 4-4z" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <path d="M30 6v10h10L30 6z" fill="#cbd5e1"/>
+                        <rect x="10" y="16" width="12" height="6" rx="1" fill="#1b6ec2"/>
+                        <rect x="10" y="26" width="28" height="2" rx="1" fill="#64748b"/>
+                        <rect x="10" y="31" width="28" height="2" rx="1" fill="#64748b"/>
+                        <rect x="10" y="36" width="20" height="2" rx="1" fill="#64748b"/>
+                    </svg>
+                </div>
+                <div class="icon-label">projects.odt</div>
+            </div>
+            <!-- User File: profile.png -->
+            <div class="desktop-icon desktop-file-icon" data-file-open="photowidget">
+                <div class="linux-app-icon">
+                    <img src="/profile.png" alt="Profile" style="width: 48px; height: 48px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);">
+                </div>
+                <div class="icon-label">profile.png</div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE SHORTCUTS: External Web / Social Links -->
+        <div class="desktop-grid-right">
+            <!-- Row 1: Professional / Direct Contact -->
+            <div class="desktop-grid-right-row">
+                <a href="https://www.linkedin.com/in/souranild/" target="_blank" class="desktop-icon link-icon-anchor">
+                    <div class="linux-app-icon">
+                        <svg viewBox="0 0 48 48" width="48" height="48">
+                            <defs>
+                                <linearGradient id="linkedin-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#1493e6"/>
+                                    <stop offset="100%" stop-color="#005b94"/>
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#linkedin-grad)"/>
+                            <rect x="2.5" y="2.5" width="43" height="43" rx="9.5" fill="none" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1"/>
+                            <g transform="translate(9.6, 9.6) scale(0.6)">
+                                <path d="M15 19h-4v13h4V19zm-2-2.5c1.3 0 2.2-1 2.2-2.2s-1-2.2-2.2-2.2-2.2 1-2.2 2.2 1 2.2 2.2 2.2zM33 24.5c0-4-2.1-5.9-5-5.9-2.3 0-3.4 1.3-4 2.2v-1.8h-4c.1 1.1 0 13 0 13h4v-7.3c0-.4 0-.8.1-1.1.3-.8 1-1.6 2.2-1.6 1.6 0 2.2 1.2 2.2 3v7h4V24.5z" fill="#ffffff"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="icon-label">souranild</div>
+                </a>
+                <a href="https://github.com/souranild" target="_blank" class="desktop-icon link-icon-anchor">
+                    <div class="linux-app-icon">
+                        <svg viewBox="0 0 48 48" width="48" height="48">
+                            <defs>
+                                <linearGradient id="github-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#3c3c3c"/>
+                                    <stop offset="100%" stop-color="#141414"/>
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#github-grad)"/>
+                            <rect x="2.5" y="2.5" width="43" height="43" rx="9.5" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+                            <g transform="translate(9.6, 9.6) scale(0.6)">
+                                <path d="M24 8C15.2 8 8 15.2 8 24c0 7 4.5 13 10.8 15.1.8.1 1.1-.3 1.1-.8v-2.8c-4.4 1-5.4-2.1-5.4-2.1-.7-1.8-1.8-2.3-1.8-2.3-1.4-1 .1-1 .1-1 1.6.1 2.4 1.6 2.4 1.6 1.4 2.4 3.7 1.7 4.6 1.3.1-1 .5-1.7 1-2.1-3.6-.4-7.3-1.8-7.3-8 0-1.8.6-3.2 1.7-4.3-.2-.4-.7-2.1.2-4.2 0 0 1.4-.4 4.5 1.7 1.3-.4 2.7-.5 4.1-.5 1.4 0 2.8.2 4.1.5 3.1-2.1 4.5-1.7 4.5-1.7.9 2.1.3 3.8.2 4.2 1.1 1.1 1.7 2.5 1.7 4.3 0 6.2-3.8 7.6-7.4 8 .6.5 1.1 1.5 1.1 3v4.5c0 .5.3.9 1.1.8C35.5 37 40 31 40 24c0-8.8-7.2-16-16-16z" fill="#ffffff"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="icon-label">souranild</div>
+                </a>
+                <a href="mailto:souranil.das@gmail.com" class="desktop-icon link-icon-anchor">
+                    <div class="linux-app-icon">
+                        <svg viewBox="0 0 48 48" width="48" height="48">
+                            <defs>
+                                <linearGradient id="mail-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#42a5f5"/>
+                                    <stop offset="100%" stop-color="#1565c0"/>
+                                </linearGradient>
+                                <linearGradient id="env-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#ffffff"/>
+                                    <stop offset="100%" stop-color="#e0e0e0"/>
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#mail-grad)"/>
+                            <rect x="2.5" y="2.5" width="43" height="43" rx="9.5" fill="none" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1"/>
+                            <g transform="translate(8.4, 8.4) scale(0.65)">
+                                <rect x="9" y="14" width="30" height="20" rx="3" fill="url(#env-grad)"/>
+                                <path d="M9 16l15 10 15-10" fill="none" stroke="#1565c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 32l10-8m10 0l10 8" fill="none" stroke="#b0bec5" stroke-width="1.5" stroke-linecap="round"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="icon-label">souranil.das</div>
+                </a>
+            </div>
+            
+            <!-- Row 2: Chat / Social Media / Media -->
+            <div class="desktop-grid-right-row">
+                <a href="https://discord.com" target="_blank" class="desktop-icon link-icon-anchor">
+                    <div class="linux-app-icon">
+                        <svg viewBox="0 0 48 48" width="48" height="48">
+                            <defs>
+                                <linearGradient id="discord-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#7388da"/>
+                                    <stop offset="100%" stop-color="#4e5dcd"/>
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#discord-grad)"/>
+                            <rect x="2.5" y="2.5" width="43" height="43" rx="9.5" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1"/>
+                            <g transform="translate(9.6, 9.6) scale(0.6)">
+                                <path d="M32.8 17c-2.2-1.3-4.7-2.1-7.2-2.4-.1 0-.2.1-.3.2-.3.6-.6 1.3-.9 2-2.7-.4-5.3-.4-8 0-.3-.7-.6-1.4-.9-2-.1-.1-.2-.2-.3-.2-2.5.3-5 1.1-7.2 2.4 0 0-4.5 7.6-3.8 17 0 .1.1.2.2.2 3 2.2 5.9 3.5 8.7 4.4.1 0 .2 0 .3-.1.7-.9 1.3-1.9 1.8-3 .1-.1 0-.3-.1-.3-1-.4-1.9-.8-2.8-1.4-.1-.1-.1-.2 0-.3.2-.1.4-.3.6-.4.1 0 .2 0 .2.1 5.7 2.6 11.9 2.6 17.6 0 .1 0 .2-.1.2-.1.2.1.4.3.6.4.1.1 0 .2-.1.3-.9.6-1.8 1-2.8 1.4-.1 0-.2.2-.1.3.5 1.1 1.1 2.1 1.8 3 .1.1.2.1.3.1 2.8-.9 5.7-2.2 8.7-4.4.1-.1.1-.2.2-.2.8-10.7-3.7-18.3-3.7-18.3zM18.8 29c-1.7 0-3-1.5-3-3.4 0-1.9 1.3-3.4 3-3.4 1.7 0 3 1.5 3 3.4.1 1.9-1.3 3.4-3 3.4zm10.4 0c-1.7 0-3-1.5-3-3.4 0-1.9 1.3-3.4 3-3.4 1.7 0 3 1.5 3 3.4 0 1.9-1.3 3.4-3 3.4z" fill="#ffffff"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="icon-label">souranild</div>
+                </a>
+                <a href="https://instagram.com/souranild" target="_blank" class="desktop-icon link-icon-anchor">
+                    <div class="linux-app-icon">
+                        <svg viewBox="0 0 48 48" width="48" height="48">
+                            <defs>
+                                <radialGradient id="ig-grad-new" cx="30%" cy="107%" r="130%">
+                                    <stop offset="0%" stop-color="#fdf497"/>
+                                    <stop offset="45%" stop-color="#fd5949"/>
+                                    <stop offset="60%" stop-color="#d6249f"/>
+                                    <stop offset="90%" stop-color="#285aeb"/>
+                                </radialGradient>
+                            </defs>
+                            <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#ig-grad-new)"/>
+                            <rect x="2.5" y="2.5" width="43" height="43" rx="9.5" fill="none" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1"/>
+                            <g transform="translate(8.4, 8.4) scale(0.65)">
+                                <rect x="11" y="11" width="26" height="26" rx="7.5" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+                                <circle cx="24" cy="24" r="6" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+                                <circle cx="31.5" cy="16.5" r="1.75" fill="#ffffff"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="icon-label">souranild</div>
+                </a>
+                <a href="https://www.instagram.com/the.sourlens/" target="_blank" class="desktop-icon link-icon-anchor">
+                    <div class="linux-app-icon">
+                        <svg viewBox="0 0 48 48" width="48" height="48">
+                            <defs>
+                                <linearGradient id="lens-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#3a3d40"/>
+                                    <stop offset="50%" stop-color="#181a1b"/>
+                                    <stop offset="100%" stop-color="#050505"/>
+                                </linearGradient>
+                                <radialGradient id="lens-glass" cx="40%" cy="40%" r="60%">
+                                    <stop offset="0%" stop-color="#4facfe" stop-opacity="0.6"/>
+                                    <stop offset="40%" stop-color="#00f2fe" stop-opacity="0.3"/>
+                                    <stop offset="80%" stop-color="#000000" stop-opacity="0.95"/>
+                                    <stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+                                </radialGradient>
+                                <linearGradient id="lens-accent" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#fdf497"/>
+                                    <stop offset="50%" stop-color="#fd5949"/>
+                                    <stop offset="100%" stop-color="#d6249f"/>
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#lens-metal)"/>
+                            <rect x="2.5" y="2.5" width="43" height="43" rx="9.5" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+                            <g transform="translate(3.6, 3.6) scale(0.85)">
+                                <circle cx="24" cy="24" r="16" fill="none" stroke="url(#lens-accent)" stroke-width="1.5"/>
+                                <circle cx="24" cy="24" r="13" fill="#111" stroke="#222" stroke-width="1"/>
+                                <circle cx="24" cy="24" r="11" fill="url(#lens-glass)"/>
+                                <polygon points="20,18 28,18 25,23" fill="rgba(255, 255, 255, 0.15)"/>
+                                <polygon points="28,20 28,28 23,25" fill="rgba(255, 255, 255, 0.15)"/>
+                                <polygon points="26,29 18,29 21,24" fill="rgba(255, 255, 255, 0.15)"/>
+                                <polygon points="18,27 18,19 23,22" fill="rgba(255, 255, 255, 0.15)"/>
+                                <path d="M16 18c2-3 6-4 9-3" fill="none" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+                                <circle cx="29" cy="19" r="1.5" fill="#ffffff" opacity="0.4"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="icon-label">the.sourlens</div>
+                </a>
+                <a href="https://www.youtube.com/@thesourlens" target="_blank" class="desktop-icon link-icon-anchor">
+                    <div class="linux-app-icon">
+                        <svg viewBox="0 0 48 48" width="48" height="48">
+                            <defs>
+                                <linearGradient id="youtube-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#ff3333"/>
+                                    <stop offset="100%" stop-color="#cc0000"/>
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#youtube-grad)"/>
+                            <rect x="2.5" y="2.5" width="43" height="43" rx="9.5" fill="none" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1"/>
+                            <g transform="translate(9.6, 9.6) scale(0.6)">
+                                <polygon points="20,16 32,24 20,32" fill="#ffffff"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="icon-label">thesourlens</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- CENTER GAMES BOARD: Retro Games & Guide Icons -->
+        <div class="desktop-grid-center">
+            <!-- Games Desktop Folder -->
+            <div class="desktop-icon" data-open="games-folder">
+                <div class="linux-app-icon">
+                    <svg viewBox="0 0 48 48" width="48" height="48">
+                        <path d="M4 10h12l4 4h24c2.2 0 4 1.8 4 4v20c0 2.2-1.8 4-4 4H4c-2.2 0-4-1.8-4-4V14c0-2.2 1.8-4 4-4z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+                        <path d="M0 18h48v20c0 2.2-1.8 4-4 4H4c-2.2 0-4-1.8-4-4V18z" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+                        <path d="M16 26h16a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H16a3 3 0 0 1-3-3v-4a3 3 0 0 1 3-3z" fill="#1e2937"/>
+                        <circle cx="18" cy="31" r="1.5" fill="#ef4444"/>
+                        <circle cx="30" cy="31" r="1" fill="#3b82f6"/>
+                        <circle cx="32" cy="31" r="1" fill="#3b82f6"/>
+                    </svg>
+                </div>
+                <div class="icon-label">Games</div>
+            </div>
+            <!-- Controls Tex Guide Document -->
+            <div class="desktop-icon doc-launch-item" id="launch-controls-tex">
+                <div class="linux-app-icon">
+                    <svg viewBox="0 0 48 48" width="48" height="48">
+                        <path d="M10 6h20l10 10v26c0 2.2-1.8 4-4 4H10c-2.2 0-4-1.8-4-4V10c0-2.2 1.8-4 4-4z" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                        <path d="M30 6v10h10L30 6z" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+                        <text x="14" y="24" font-family="serif" font-size="10" font-weight="bold" fill="#0f172a">T</text>
+                        <text x="21" y="27" font-family="serif" font-size="8" font-weight="bold" fill="#ef4444">E</text>
+                        <text x="27" y="24" font-family="serif" font-size="10" font-weight="bold" fill="#0f172a">X</text>
+                        <line x1="12" y1="34" x2="36" y2="34" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="12" y1="39" x2="28" y2="39" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="icon-label">Controls Guide.tex</div>
             </div>
         </div>
 
@@ -130,7 +477,7 @@
                     <span class="zsh-prompt">➜  <span class="zsh-dir">portfolio</span> <span class="zsh-git">git:(<span class="git-branch">main</span>)</span> <span class="zsh-cross">✗</span> </span>
                     <div style="position: relative; flex-grow: 1; display: flex; align-items: center; overflow: hidden; height: 20px;">
                         <span id="zsh-suggest" style="position: absolute; left: 0.4rem; top: 50%; transform: translateY(-50%); color: #666; pointer-events: none; white-space: pre; font-family: var(--font-mono); font-size: 0.85rem; z-index: 1;"></span>
-                        <input type="text" id="zsh-input" class="zsh-input-field" style="background: transparent; color: inherit; position: relative; z-index: 2; font-family: var(--font-mono); font-size: 0.85rem; width: 100%; border: none; outline: none; margin-left: 0.4rem;" autofocus autocomplete="off" spellcheck="false">
+                        <input type="text" id="zsh-input" class="zsh-input-field" style="background: transparent; color: inherit; position: relative; z-index: 2; font-family: var(--font-mono); font-size: 0.85rem; width: 100%; border: none; outline: none; margin-left: 0.4rem;" autocomplete="off" spellcheck="false">
                     </div>
                 </div>
             </div>
@@ -204,7 +551,7 @@
             <div class="window-titlebar">
                 <div class="titlebar-left">
                     <span class="win-app-icon">📕</span>
-                    <span class="window-title">Document Viewer - experience_resume.pdf</span>
+                    <span class="window-title">Document Viewer - Souranil's Resume.pdf</span>
                 </div>
                 <div class="window-controls">
                     <span class="win-btn minimize" data-min="pdfviewer" title="Minimize">_</span>
@@ -212,58 +559,8 @@
                     <span class="win-btn close" data-close="pdfviewer" title="Close">✕</span>
                 </div>
             </div>
-            <div class="window-body pdf-body">
-                <div class="pdf-toolbar">
-                    <div class="pdf-toolbar-left">
-                        <button class="pdf-btn">◀</button>
-                        <span class="pdf-page-indicator">1 / 1</span>
-                        <button class="pdf-btn">▶</button>
-                        <span class="lo-divider">|</span>
-                        <button class="pdf-btn">🔍 Zoom In</button>
-                        <button class="pdf-btn">🔍 Zoom Out</button>
-                    </div>
-                    <div class="pdf-toolbar-right">
-                        <button class="pdf-btn">🖨️ Print</button>
-                        <button class="pdf-btn">⬇️ Download</button>
-                    </div>
-                </div>
-                <div class="pdf-workspace">
-                    <div class="pdf-sidebar">
-                        <div class="pdf-thumbnail active">
-                            <div class="thumb-page">📄</div>
-                            <div class="thumb-label">Page 1</div>
-                        </div>
-                    </div>
-                    <div class="pdf-viewer-pane">
-                        <div class="pdf-sheet">
-                            <div class="pdf-header-name">SOURANIL DAS</div>
-                            <div class="pdf-header-sub">Design Verification Engineer @ NXP Semiconductors</div>
-                            <hr class="pdf-line">
-                            
-                            <div class="pdf-section">EXPERIENCE</div>
-                            <div class="pdf-item">
-                                <div class="pdf-item-title">Design Verification (DV) Engineer | NXP Semiconductors</div>
-                                <div class="pdf-item-date">Bangalore, India | Jan 2024 - Present</div>
-                                <div class="pdf-item-desc">
-                                    - Verify complex System-on-Chips (SoCs) and digital logic IPs.<br>
-                                    - Construct functional simulation verification testbenches utilizing SystemVerilog and Universal Verification Methodology (UVM).<br>
-                                    - Set up stimulus drivers, functional coverage blocks, and registers validation checkers.<br>
-                                    - Drive functional coverage closure, analyzing RTL code and simulation assertions.
-                                </div>
-                            </div>
-
-                            <div class="pdf-section">EDUCATION</div>
-                            <div class="pdf-item">
-                                <div class="pdf-item-title">B.Tech in Electronics & Communication Engineering (ECE) | VIT Chennai</div>
-                                <div class="pdf-item-date">Graduated 2024</div>
-                                <div class="pdf-item-desc">
-                                    - Specializations: VLSI circuit layout design, Computer Architecture, Embedded Networks.<br>
-                                    - Student researcher investigating IoT cloud systems, smart telemetry, and embedded programming interfaces.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="window-body pdf-body" style="padding: 0; background: #525659; overflow: hidden; display: flex; flex-direction: column;">
+                <iframe src="/Souranil's Resume.pdf" style="width: 100%; height: 100%; border: none; flex-grow: 1;"></iframe>
             </div>
         </div>
 
@@ -294,9 +591,13 @@
                     <div class="vscode-file-explorer">
                         <div class="explorer-header">EXPLORER: PORTFOLIO</div>
                         <div class="explorer-section">
-                            <div class="file-item active">📄 research_papers.md</div>
-                            <div class="file-item">📄 projects.py</div>
+                            <div class="file-item">📄 about_me.txt</div>
                             <div class="file-item">📄 about_me.sh</div>
+                            <div class="file-item">📄 resume.tex</div>
+                            <div class="file-item">📄 Souranil's Resume.pdf</div>
+                            <div class="file-item">📄 projects.odt</div>
+                            <div class="file-item">📄 projects.py</div>
+                            <div class="file-item active">📄 research_papers.md</div>
                         </div>
                     </div>
                 </div>
@@ -304,25 +605,22 @@
                 <!-- VS Code Editor layout -->
                 <div class="vscode-editor-container">
                     <div class="editor-tabs">
-                        <div class="editor-tab active">research_papers.md <span class="tab-close">&times;</span></div>
+                        <div class="editor-tab active" data-file="research_papers.md">research_papers.md <span class="tab-close">&times;</span></div>
                     </div>
                     <div class="editor-panes">
                         <!-- Left Panel: Raw Markdown Code -->
                         <div class="editor-pane left-pane">
-                            <div class="line-numbers">
-                                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span>
-                            </div>
-                            <pre class="code-editor-area"><code><span class="md-h1"># Research Publications</span>
+                            <textarea class="code-editor-area" id="vscode-textarea" spellcheck="false" style="width: 100%; height: 100%; background: transparent; color: #d4d4d4; border: none; outline: none; resize: none; font-family: var(--font-mono); font-size: 0.9rem; white-space: pre; overflow: auto; padding: 0; line-height: 1.5;"># Research Publications
 
-<span class="md-h2">## Paper 1: AI Hydroponics</span>
+## Paper 1: AI Hydroponics
 * **Title:** Revolutionizing Holy-Basil Cultivation with AI-Enabled Hydroponics System
 * **Publisher:** ResearchGate Publication (2023)
 * **Summary:** IoT sensory architecture automating environmental feeds to Azure Databricks regression solvers.
 
-<span class="md-h2">## Paper 2: SMADE IoT Assist</span>
+## Paper 2: SMADE IoT Assist
 * **Title:** SMADE - Smart Medical Assist Device for Elders
 * **Publisher:** Conference Proceedings (2022)
-* **Summary:** Dosing dispenser telemetry logs and scheduling alarms.</code></pre>
+* **Summary:** Dosing dispenser telemetry logs and scheduling alarms.</textarea>
                         </div>
                         
                         <!-- Right Panel: Rendered HTML representation -->
@@ -461,11 +759,12 @@
 Loading...
 \end{document}</textarea>
                     </div>
+                    <!-- Resizer Handle -->
+                    <div class="overleaf-resizer" id="overleaf-resizer"></div>
                     <!-- Right: Styled PDF render -->
                     <div class="overleaf-preview-panel">
-                        <div class="pdf-sheet" id="overleaf-pdf-sheet" style="box-shadow: none; padding: 2rem 1.5rem; margin: 0; min-height: auto; width: 100%;">
-                            <!-- Dynamically updated PDF layout -->
-                        </div>
+                        <div class="pdf-sheet" id="overleaf-pdf-sheet-1"></div>
+                        <div class="pdf-sheet" id="overleaf-pdf-sheet-2"></div>
                     </div>
                 </div>
             </div>
@@ -474,10 +773,10 @@ Loading...
         <!-- -------------------------------------------------------------
            APPLICATION 8: GAMES FOLDER (NAUTILUS FILE MANAGER)
         ------------------------------------------------------------- -->
-        <div class="desktop-window" id="win-games-folder" style="top: 180px; left: 200px; width: 450px; height: 320px; z-index: 9; display: none;">
+        <div class="desktop-window" id="win-games-folder" style="top: 120px; left: 180px; width: 560px; height: 420px; z-index: 9; display: none;">
             <div class="window-titlebar">
                 <div class="titlebar-left">
-                    <span class="win-app-icon">📂</span>
+                    <span class="win-app-icon">📁</span>
                     <span class="window-title">Games</span>
                 </div>
                 <div class="window-controls">
@@ -493,11 +792,75 @@ Loading...
                     <span class="nautilus-path">📁 /home/souranil/desktop/games</span>
                 </div>
                 <div class="nautilus-grid">
-                    <div class="nautilus-item" id="launch-pokemon">
+                    <!-- Pokemon Fire Red GBA -->
+                    <div class="nautilus-item game-launch-item" data-game="1695 - Pokemon Fire Red (U)(Independent).zip" data-core="gba" data-title="Pokemon Fire Red (GBA)">
                         <div class="nautilus-item-icon">
-                            <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/004.png" alt="Charmander Pokeball" width="48" height="48" style="image-rendering: pixelated; object-fit: contain;">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co1y3b.jpg" alt="Pokemon Fire Red" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
                         </div>
                         <div class="nautilus-item-label">Pokemon Fire Red.gba</div>
+                    </div>
+                    <!-- Super Mario World SNES -->
+                    <div class="nautilus-item game-launch-item" data-game="Super Mario World (USA).zip" data-core="snes" data-title="Super Mario World (SNES)">
+                        <div class="nautilus-item-icon">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co1xft.jpg" alt="Super Mario World" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
+                        </div>
+                        <div class="nautilus-item-label">Super Mario World.sfc</div>
+                    </div>
+                    <!-- Super Mario Bros NES -->
+                    <div class="nautilus-item game-launch-item" data-game="Super Mario Bros. (Japan, USA).zip" data-core="nes" data-title="Super Mario Bros. (NES)">
+                        <div class="nautilus-item-icon">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co1x0e.jpg" alt="Super Mario Bros" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
+                        </div>
+                        <div class="nautilus-item-label">Super Mario Bros.nes</div>
+                    </div>
+                    <!-- GTA NDS -->
+                    <div class="nautilus-item game-launch-item" data-game="3517 - Grand Theft Auto - Chinatown Wars (US)(M5)(XenoPhobia).7z" data-core="nds" data-title="GTA Chinatown Wars (NDS)">
+                        <div class="nautilus-item-icon">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co20f1.jpg" alt="GTA Chinatown Wars" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
+                        </div>
+                        <div class="nautilus-item-label">GTA Chinatown.nds</div>
+                    </div>
+                    <!-- Mario Kart DS -->
+                    <div class="nautilus-item game-launch-item" data-game="0168 - Mario Kart DS (U)(SCZ).7z" data-core="nds" data-title="Mario Kart DS (NDS)">
+                        <div class="nautilus-item-icon">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co21x5.jpg" alt="Mario Kart DS" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
+                        </div>
+                        <div class="nautilus-item-label">Mario Kart DS.nds</div>
+                    </div>
+                    <!-- Metroid Fusion GBA -->
+                    <div class="nautilus-item game-launch-item" data-game="0690 - Metroid - Fusion (U)(GBANow).zip" data-core="gba" data-title="Metroid Fusion (GBA)">
+                        <div class="nautilus-item-icon">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co1yij.jpg" alt="Metroid Fusion" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
+                        </div>
+                        <div class="nautilus-item-label">Metroid Fusion.gba</div>
+                    </div>
+                    <!-- Legend of Zelda NES -->
+                    <div class="nautilus-item game-launch-item" data-game="Legend of Zelda, The (USA) (1).zip" data-core="nes" data-title="The Legend of Zelda (NES)">
+                        <div class="nautilus-item-icon">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co4156.jpg" alt="Legend of Zelda" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
+                        </div>
+                        <div class="nautilus-item-label">Legend of Zelda.nes</div>
+                    </div>
+                    <!-- Prince of Persia GB -->
+                    <div class="nautilus-item game-launch-item" data-game="Prince of Persia (U).zip" data-core="gb" data-title="Prince of Persia (Game Boy)">
+                        <div class="nautilus-item-icon">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co5pjz.jpg" alt="Prince of Persia" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
+                        </div>
+                        <div class="nautilus-item-label">Prince of Persia.gb</div>
+                    </div>
+                    <!-- Doom SNES -->
+                    <div class="nautilus-item game-launch-item" data-game="Doom (USA).zip" data-core="snes" data-title="Doom (SNES)">
+                        <div class="nautilus-item-icon">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co2l1b.jpg" alt="Doom" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
+                        </div>
+                        <div class="nautilus-item-label">Doom.sfc</div>
+                    </div>
+                    <!-- Tetris NES -->
+                    <div class="nautilus-item game-launch-item" data-game="Tetris (USA).zip" data-core="nes" data-title="Tetris (NES)">
+                        <div class="nautilus-item-icon">
+                            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co2kzx.jpg" alt="Tetris" style="width: 40px; height: 52px; object-fit: cover; border-radius: 4px; box-shadow: 0 3px 6px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.25);">
+                        </div>
+                        <div class="nautilus-item-label">Tetris.nes</div>
                     </div>
                 </div>
             </div>
@@ -522,40 +885,344 @@ Loading...
                 <iframe id="emulator-iframe" src="" style="width: 100%; height: 100%; border: none; background: #000;"></iframe>
             </div>
         </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 10: TEXT EDITOR (GEDIT)
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-texteditor" style="top: 150px; left: 200px; width: 600px; height: 450px; z-index: 7; display: none;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">📝</span>
+                    <span class="window-title">Text Editor - new_file.txt</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="texteditor" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="texteditor" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="texteditor" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body">
+                <textarea spellcheck="false" style="width: 100%; height: 100%; background: #ffffff; color: #333333; border: none; outline: none; resize: none; font-family: var(--font-sans); font-size: 1rem; padding: 1rem; line-height: 1.5;"></textarea>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 11: SYSTEM MONITOR
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-sysmonitor" style="top: 200px; left: 250px; width: 500px; height: 350px; z-index: 8; display: none;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">📈</span>
+                    <span class="window-title">System Monitor</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="sysmonitor" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="sysmonitor" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="sysmonitor" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body" style="background: #1e1e1e; color: #fff; padding: 1rem; font-family: var(--font-sans);">
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>CPU History</span><span>14.2%</span>
+                        </div>
+                        <div style="width: 100%; height: 60px; border: 1px solid #333; position: relative;">
+                            <svg viewBox="0 0 100 60" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                <path d="M0,60 L0,50 L10,40 L20,45 L30,30 L40,35 L50,20 L60,25 L70,10 L80,15 L90,5 L100,20 L100,60 Z" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="1.5"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Memory and Swap History</span><span>3.2 GiB (20.5%)</span>
+                        </div>
+                        <div style="width: 100%; height: 60px; border: 1px solid #333; position: relative;">
+                            <svg viewBox="0 0 100 60" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                <path d="M0,60 L0,40 L20,42 L40,38 L60,40 L80,39 L100,41 L100,60 Z" fill="rgba(139, 92, 246, 0.2)" stroke="#8b5cf6" stroke-width="1.5"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Network History</span><span>0 bytes/s</span>
+                        </div>
+                        <div style="width: 100%; height: 60px; border: 1px solid #333; position: relative;">
+                            <svg viewBox="0 0 100 60" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                <path d="M0,60 L0,58 L20,55 L40,59 L60,57 L80,58 L100,56 L100,60 Z" fill="rgba(239, 68, 68, 0.2)" stroke="#ef4444" stroke-width="1.5"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 12: SYSTEM APPS FOLDER (NAUTILUS FILE MANAGER)
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-sysapps-folder" style="top: 100px; left: 160px; width: 580px; height: 420px; z-index: 9; display: none;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">📁</span>
+                    <span class="window-title">System Apps</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="sysapps-folder" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="sysapps-folder" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="sysapps-folder" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body games-folder-body">
+                <div class="nautilus-toolbar">
+                    <button class="nautilus-btn" disabled>◀</button>
+                    <button class="nautilus-btn" disabled>▶</button>
+                    <span class="nautilus-path">📁 /usr/share/applications</span>
+                </div>
+                <div class="nautilus-grid sysapps-grid">
+                    <!-- Terminal -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="terminal">
+                        <div class="nautilus-item-icon">
+                            <svg viewBox="0 0 48 48" width="40" height="40">
+                                <rect x="4" y="8" width="40" height="32" rx="4" fill="#2d3238" stroke="#1c1f22" stroke-width="1.5"/>
+                                <path d="M4 12V12C4 9.79 5.79 8 8 8h32c2.21 0 4 1.79 4 4v2H4v-2z" fill="#c9222b"/>
+                                <path d="M10 20l4 3-4 3" stroke="#5af78e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                <rect x="17" y="24" width="8" height="2" fill="#f1f1f1"/>
+                            </svg>
+                        </div>
+                        <div class="nautilus-item-label">Terminal</div>
+                    </div>
+                    <!-- VS Code / Papers -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="vscode">
+                        <div class="nautilus-item-icon">
+                            <svg viewBox="0 0 48 48" width="40" height="40">
+                                <rect x="6" y="6" width="36" height="36" rx="6" fill="#1e1e24" stroke="#2b2b35" stroke-width="1.5"/>
+                                <path d="M14 6v36L8 36V12l6-6z" fill="#007acc" opacity="0.8"/>
+                                <path d="M22 18l-5 4 5 4M26 18l5 4-5 4" stroke="#569cd6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="nautilus-item-label">VS Code</div>
+                    </div>
+                    <!-- Overleaf / LaTeX Editor -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="overleaf">
+                        <div class="nautilus-item-icon">
+                            <svg viewBox="0 0 48 48" width="40" height="40">
+                                <path d="M38 10C26 10 18 18 10 38c20 0 28-8 28-28z" fill="#10b981" stroke="#059669" stroke-width="1.5"/>
+                                <path d="M10 38c8-12 16-16 28-28" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                <text x="18" y="26" font-family="sans-serif" font-size="10" font-weight="bold" fill="#ffffff" opacity="0.9">LT</text>
+                            </svg>
+                        </div>
+                        <div class="nautilus-item-label">Overleaf</div>
+                    </div>
+                    <!-- LibreOffice Writer -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="libreoffice">
+                        <div class="nautilus-item-icon">
+                            <svg viewBox="0 0 48 48" width="40" height="40">
+                                <path d="M10 6h20l10 10v26c0 2.2-1.8 4-4 4H10c-2.2 0-4-1.8-4-4V10c0-2.2 1.8-4 4-4z" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <path d="M30 6v10h10L30 6z" fill="#cbd5e1"/>
+                                <rect x="10" y="16" width="12" height="6" rx="1" fill="#1b6ec2"/>
+                                <rect x="10" y="26" width="28" height="2" rx="1" fill="#64748b"/>
+                                <rect x="10" y="31" width="28" height="2" rx="1" fill="#64748b"/>
+                            </svg>
+                        </div>
+                        <div class="nautilus-item-label">Writer</div>
+                    </div>
+                    <!-- PDF Viewer -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="pdfviewer">
+                        <div class="nautilus-item-icon">
+                            <svg viewBox="0 0 48 48" width="40" height="40">
+                                <path d="M10 6h20l10 10v26c0 2.2-1.8 4-4 4H10c-2.2 0-4-1.8-4-4V10c0-2.2 1.8-4 4-4z" fill="#fcfcfc" stroke="#f1a5a5" stroke-width="1.5"/>
+                                <path d="M30 6v10h10L30 6z" fill="#f1a5a5"/>
+                                <rect x="10" y="16" width="18" height="8" rx="1" fill="#c9222b"/>
+                                <text x="12" y="22" font-family="sans-serif" font-size="6" font-weight="bold" fill="#ffffff">PDF</text>
+                            </svg>
+                        </div>
+                        <div class="nautilus-item-label">Reader</div>
+                    </div>
+                    <!-- Verisium Debug -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="verisium">
+                        <div class="nautilus-item-icon">
+                            <svg viewBox="0 0 48 48" width="40" height="40">
+                                <rect x="14" y="12" width="20" height="24" rx="10" fill="#a855f7" stroke="#8b5cf6" stroke-width="1.5"/>
+                                <circle cx="24" cy="11" r="5" fill="#8b5cf6"/>
+                                <circle cx="24" cy="22" r="3" fill="#ffffff" opacity="0.3"/>
+                                <line x1="24" y1="29" x2="24" y2="33" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="nautilus-item-label">Debug</div>
+                    </div>
+                    <!-- Calculator -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="calculator">
+                        <div class="nautilus-item-icon">
+                            <svg viewBox="0 0 48 48" width="40" height="40">
+                                <rect x="8" y="6" width="32" height="36" rx="4" fill="#374151" stroke="#1f2937" stroke-width="1.5"/>
+                                <rect x="12" y="10" width="24" height="8" rx="2" fill="#059669"/>
+                                <rect x="12" y="22" width="6" height="4" rx="1" fill="#4b5563"/>
+                                <rect x="21" y="22" width="6" height="4" rx="1" fill="#4b5563"/>
+                                <rect x="30" y="22" width="6" height="4" rx="1" fill="#f59e0b"/>
+                            </svg>
+                        </div>
+                        <div class="nautilus-item-label">Calculator</div>
+                    </div>
+                    <!-- Text Editor -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="texteditor">
+                        <div class="nautilus-item-icon">
+                            <svg viewBox="0 0 48 48" width="40" height="40">
+                                <path d="M8 8h32v32H8z" fill="#fdfdfd" stroke="#cbd5e1" stroke-width="2"/>
+                                <path d="M12 14h24M12 20h24M12 26h18" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="nautilus-item-label">gedit</div>
+                    </div>
+                    <!-- System Monitor -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="sysmonitor">
+                        <div class="nautilus-item-icon">
+                            <svg viewBox="0 0 48 48" width="40" height="40">
+                                <rect x="6" y="8" width="36" height="32" rx="2" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
+                                <path d="M10 24h6l4-10 6 20 4-10h8" fill="none" stroke="#10b981" stroke-width="2" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="nautilus-item-label">Monitor</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- System Status Desktop Widget -->
+        <div class="desktop-widget" id="sys-widget" style="right: 290px; top: 220px;">
+            <div class="widget-body">
+                <div class="widget-stat">
+                    <span class="stat-label">OS:</span>
+                    <span class="stat-val" style="grid-column: span 2;">RHEL 9.4</span>
+                </div>
+                <div class="widget-stat">
+                    <span class="stat-label">CPU:</span>
+                    <div class="stat-progress-bar"><div class="stat-progress-fill" id="widget-cpu-fill" style="width: 0%;"></div></div>
+                    <span class="stat-val" id="widget-cpu-text">0%</span>
+                </div>
+                <div class="widget-canvas-container" style="grid-column: span 3; margin: 0.2rem 0 0.6rem 0; width: 100%;">
+                    <canvas id="widget-cpu-canvas" width="220" height="40"></canvas>
+                </div>
+                <div class="widget-stat">
+                    <span class="stat-label">RAM:</span>
+                    <div class="stat-progress-bar"><div class="stat-progress-fill" id="widget-ram-fill" style="width: 0%; background: #a855f7;"></div></div>
+                    <span class="stat-val" id="widget-ram-text">0 GiB</span>
+                </div>
+                <div class="widget-stat">
+                    <span class="stat-label">DISK:</span>
+                    <div class="stat-progress-bar"><div class="stat-progress-fill" style="width: 40.1%; background: #eab308;"></div></div>
+                    <span class="stat-val">48.2G/120G</span>
+                </div>
+                <div class="widget-stat" style="grid-template-columns: 80px 1fr;">
+                    <span class="stat-label">TEMP:</span>
+                    <span class="stat-val" id="widget-temp-text" style="color: #22c55e;">40°C</span>
+                </div>
+                <div class="widget-stat" style="grid-template-columns: 80px 1fr;">
+                    <span class="stat-label">UPTIME:</span>
+                    <span class="stat-val" id="widget-uptime-text" style="font-size: 0.75rem;">0h 0m 0s</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- World Clock Desktop Widget -->
+        <div class="desktop-widget" id="clock-widget" style="right: 25px; top: 220px;">
+            <div class="widget-body" style="display: flex; flex-direction: column; gap: 0.6rem;">
+                <div class="clock-row" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="stat-label">Bengaluru (IST)</span>
+                    <span class="stat-val" id="clock-bengaluru" style="font-weight: bold; color: #50fa7b; font-family: var(--font-mono);">--:-- --</span>
+                </div>
+                <div class="clock-row" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="stat-label">New York (EDT)</span>
+                    <span class="stat-val" id="clock-newyork" style="font-weight: bold; color: #ff79c6; font-family: var(--font-mono);">--:-- --</span>
+                </div>
+                <div class="clock-row" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="stat-label">Amsterdam (CEST)</span>
+                    <span class="stat-val" id="clock-amsterdam" style="font-weight: bold; color: #8be9fd; font-family: var(--font-mono);">--:-- --</span>
+                </div>
+                <div class="clock-row" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="stat-label">Tokyo (JST)</span>
+                    <span class="stat-val" id="clock-japan" style="font-weight: bold; color: #f1fa8c; font-family: var(--font-mono);">--:-- --</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Desktop Widget -->
+        <div class="desktop-widget" id="weather-widget" style="right: 25px; top: 405px;">
+            <div class="widget-body" style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.2rem; min-width: 110px;">
+                    <span id="weather-city" style="font-size: 0.9rem; font-weight: bold; color: #f8f8f2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;">Loading...</span>
+                    <span id="weather-desc" class="stat-label" style="font-size: 0.73rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;">Detecting...</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span id="weather-icon" style="font-size: 1.8rem;">🌍</span>
+                    <span id="weather-temp" style="font-size: 1.2rem; font-weight: bold; color: #ffb86c;">--°C</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Desktop Widget -->
+        <div class="desktop-widget" id="photo-widget" style="right: 290px; top: 465px;">
+            <div class="widget-body" style="display: flex; flex-direction: column; align-items: center; gap: 0.6rem;">
+                <img src="/profile.png" alt="Souranil Das" style="width: 100%; height: 130px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="text-align: center;">
+                    <div style="font-size: 0.9rem; font-weight: bold; color: #f8f8f2;">Souranil Das</div>
+                    <div class="stat-label" style="font-size: 0.73rem; color: #8be9fd;">Design Verification Engineer</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop Right-Click Context Menu -->
+        <div class="desktop-context-menu" id="desktop-menu" style="display: none;">
+            <div class="menu-item" id="menu-open-terminal">🐚 Open Terminal</div>
+            <div class="menu-item" id="menu-toggle-widgets">📊 Toggle Widgets</div>
+            <div class="menu-item" id="menu-clean-icons">🧹 Clean Icons</div>
+            <hr class="menu-separator">
+            <div class="menu-item submenu-trigger">🖼️ Change Wallpaper
+                <div class="submenu">
+                    <div class="submenu-item" data-wallpaper="sonoma">Sonoma</div>
+                    <div class="submenu-item" data-wallpaper="sequoia">Sequoia</div>
+                    <div class="submenu-item" data-wallpaper="rhel">Red Hat Enterprise</div>
+                    <div class="submenu-item" data-wallpaper="cyberpunk">Cyberpunk Grid</div>
+                    <div class="submenu-item" data-wallpaper="darkmatter">Dark Matter</div>
+                </div>
+            </div>
+            <hr class="menu-separator">
+            <div class="menu-item" id="menu-diagnostics">⚙️ Diagnostics</div>
+        </div>
     </main>
 
     <!-- RHEL BOTTOM PANEL (Applications Menu & Workstation Clock) -->
     <footer class="rhel-bottom-panel">
         <div class="bottom-panel-left">
             <button class="rhel-menu-btn" id="applications-menu-trigger">
-                <span class="menu-btn-logo">🔴</span> Applications Places System
+                <span class="menu-btn-logo">🔴</span> All applications
             </button>
             <span class="panel-separator">|</span>
             <div class="panel-launchers">
                 <span class="launcher-icon" data-open="terminal" title="Launch Terminal">🐚</span>
-                <span class="launcher-icon" data-open="libreoffice" title="Launch LibreOffice">📝</span>
-                <span class="launcher-icon" data-open="pdfviewer" title="Launch Evince Viewer">📕</span>
-                <span class="launcher-icon" data-open="vscode" title="Launch VS Code">💻</span>
-                <span class="launcher-icon" data-open="verisium" title="Launch Verisium Debug">🔬</span>
+                <span class="launcher-icon" data-open="libreoffice" title="Launch Writer">📝</span>
+                <span class="launcher-icon" data-open="pdfviewer" title="Launch Reader">📕</span>
+                <span class="launcher-icon" data-open="vscode" title="Launch Papers">💻</span>
+                <span class="launcher-icon" data-open="verisium" title="Launch Debug">🔬</span>
                 <span class="launcher-icon" data-open="calculator" title="Launch Calculator">🧮</span>
-                <span class="launcher-icon" data-open="overleaf" title="Launch Overleaf Editor">🍃</span>
+                <span class="launcher-icon" data-open="overleaf" title="Launch Editor">🍃</span>
             </div>
-        </div>
-        <div class="bottom-panel-right">
-            <span class="panel-icon" id="network-btn-trigger" title="Network Connection">📶</span>
-            <span class="panel-icon" id="volume-btn-trigger" title="Audio Volume">🔊</span>
-            <span class="lang-badge">DE</span>
-            <span class="panel-separator">|</span>
-            <div class="workspace-switcher" id="workspace-switcher">
-                <span class="workspace-btn active" data-workspace="1" title="Workspace 1">1</span>
-                <span class="workspace-btn" data-workspace="2" title="Workspace 2">2</span>
-                <span class="workspace-btn" data-workspace="3" title="Workspace 3">3</span>
-                <span class="workspace-btn" data-workspace="4" title="Workspace 4">4</span>
-            </div>
-            <span class="panel-separator">|</span>
-            <span class="panel-clock" id="system-time">Thu Feb 1, 10:49</span>
         </div>
     </footer>
+
+    <!-- Direct body child clock/status tray to escape footer transform containing-blocks -->
+    <div class="bottom-panel-right">
+        <span class="panel-icon" id="network-btn-trigger" title="Network Connection">📶</span>
+        <span class="panel-icon" id="volume-btn-trigger" title="Audio Volume">🔊</span>
+        <span class="lang-badge">DE</span>
+        <span class="panel-separator">|</span>
+        <div class="workspace-switcher" id="workspace-switcher">
+            <span class="workspace-btn active" data-workspace="1" title="Workspace 1">1</span>
+            <span class="workspace-btn" data-workspace="2" title="Workspace 2">2</span>
+            <span class="workspace-btn" data-workspace="3" title="Workspace 3">3</span>
+            <span class="workspace-btn" data-workspace="4" title="Workspace 4">4</span>
+        </div>
+        <span class="panel-separator">|</span>
+        <span class="panel-clock" id="system-time">Thu Feb 1, 10:49</span>
+    </div>
 
     <!-- -------------------------------------------------------------
        GNOME SYSTEM DROPDOWNS & POPUPS
@@ -568,9 +1235,8 @@ Loading...
         <div class="menu-popup-item" data-app="vscode">💻 Visual Studio Code (Papers)</div>
         <div class="menu-popup-item" data-app="verisium">🔬 Cadence Verisium Debug</div>
         <div class="menu-popup-item" data-app="calculator">🧮 Calculator (gcalctool)</div>
-        <div class="menu-popup-item" data-app="overleaf">🍃 Overleaf LaTeX Editor</div>
+        <div class="menu-popup-item" data-app="overleaf">🍃 Editor</div>
         <div class="menu-popup-item" data-app="games-folder">🎮 Games Folder</div>
-        <hr class="menu-popup-divider">
         <div class="menu-popup-item logout-item" onclick="alert('Session closed. Please refresh page to reboot.')">❌ Log Out souranil...</div>
     </div>
 

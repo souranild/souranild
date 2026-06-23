@@ -335,8 +335,67 @@ function parseJobOrEdItems(content) {
     return items.length > 0 ? items : FALLBACK_RESUME.experience;
 }
 
+function extractBracedArguments(str, startIndex = 0) {
+    const args = [];
+    let i = startIndex;
+    while (i < str.length && args.length < 2) {
+        const openIdx = str.indexOf('{', i);
+        if (openIdx === -1) break;
+        
+        let depth = 1;
+        let closeIdx = openIdx + 1;
+        while (closeIdx < str.length && depth > 0) {
+            if (str[closeIdx] === '{') depth++;
+            else if (str[closeIdx] === '}') depth--;
+            closeIdx++;
+        }
+        if (depth === 0) {
+            args.push(str.substring(openIdx + 1, closeIdx - 1));
+            i = closeIdx;
+        } else {
+            break;
+        }
+    }
+    return { args, endIndex: i };
+}
+
 function parseProjectItems(content) {
     const projects = [];
+    
+    // Try parsing \resumeSubItem
+    let searchIndex = 0;
+    while (true) {
+        const subItemIdx = content.indexOf('\\resumeSubItem', searchIndex);
+        if (subItemIdx === -1) break;
+        
+        const { args, endIndex } = extractBracedArguments(content, subItemIdx + 14);
+        if (args.length === 2) {
+            const rawTitle = args[0];
+            const rawDesc = args[1];
+            
+            let name = rawTitle;
+            let tags = 'Development';
+            
+            const tagsMatch = rawTitle.match(/\(([^)]+)\)\s*$/);
+            if (tagsMatch) {
+                tags = tagsMatch[1].trim();
+                name = rawTitle.substring(0, tagsMatch.index).trim();
+            }
+            
+            projects.push({
+                name: cleanLatex(name),
+                tags: cleanLatex(tags),
+                description: cleanLatex(rawDesc)
+            });
+            searchIndex = endIndex;
+        } else {
+            searchIndex = subItemIdx + 14;
+        }
+    }
+    
+    if (projects.length > 0) {
+        return projects;
+    }
     
     const projectHeadingRegex = /\\resumeProjectHeading\s*\{([^}]*)\}\s*\{([^}]*)\}/g;
     let projMatch;

@@ -1,9 +1,14 @@
 import { initDesktop } from './desktop.js';
 import { initZsh, updateZshFiles } from './zsh.js';
 import { getResumeData } from './resumeParser.js';
+import { initBootScreen } from './boot.js';
+import { initThemeSwitcher } from './theme.js';
 
 // Application entry orchestrator
 window.addEventListener('DOMContentLoaded', async () => {
+    // 0. Boot screen (GRUB → systemd → login card) — runs on top of everything
+    initBootScreen();
+
     // 1. Fetch and parse resume.tex
     const resumeData = await getResumeData();
     window.resumeData = resumeData;
@@ -20,48 +25,76 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // 5. Sync and start Gnome system clock ticks
     startClock();
+
+    // 6. Initialise the Theme Switcher
+    initThemeSwitcher();
 });
 
 function updateWindowsWithResume(resumeData) {
-    // 1. Evince PDF Resume Document Viewer
-    const pdfSheet = document.querySelector('.pdf-sheet');
-    if (pdfSheet) {
-        let expHtml = '';
-        resumeData.experience.forEach(job => {
-            expHtml += `
-                <div class="pdf-item">
-                    <div class="pdf-item-title">${job.role} | ${job.company}</div>
-                    <div class="pdf-item-date">${job.location} | ${job.date}</div>
-                    <div class="pdf-item-desc">
-                        ${job.bullets.map(b => `- ${b}`).join('<br>')}
-                    </div>
-                </div>
-            `;
-        });
-        
-        let edHtml = '';
-        resumeData.education.forEach(edu => {
-            edHtml += `
-                <div class="pdf-item">
-                    <div class="pdf-item-title">${edu.degree} | ${edu.school}</div>
-                    <div class="pdf-item-date">${edu.location} | ${edu.date}</div>
-                    <div class="pdf-item-desc">
-                        ${edu.bullets.map(b => `- ${b}`).join('<br>')}
-                    </div>
-                </div>
-            `;
-        });
+    // 1. Evince PDF Resume Document Viewer - Now displays papers.pdf
+    const sheet1 = document.getElementById('pdf-sheet-1');
+    const sheet2 = document.getElementById('pdf-sheet-2');
+    if (sheet1 && sheet2) {
+        // Sheet 1: Paper 1 (AI Hydroponics)
+        sheet1.innerHTML = `
+            <div class="pdf-header-name" style="font-size:1.1rem; text-align:center; line-height:1.3; font-weight:800;">
+                REVOLUTIONIZING HOLY-BASIL CULTIVATION WITH AI-ENABLED HYDROPONICS SYSTEM
+            </div>
+            <div style="font-size:0.75rem; text-align:center; color:#555; margin-top:0.3rem;">
+                Souranil Das, et al. | IEEE Access (2023)
+            </div>
+            <div style="text-align:center; margin-top:0.25rem; font-size:0.7rem;">
+                <a href="https://ieeexplore.ieee.org/document/10198435" target="_blank" style="color:#0284c7; text-decoration:underline; font-weight:bold;">Open Article (IEEE Xplore)</a>
+            </div>
+            <hr class="pdf-line" style="margin: 0.5rem 0 0.8rem 0;">
+            
+            <div style="font-size:0.75rem; font-weight:bold; color:#111; margin-bottom:0.3rem;">ABSTRACT</div>
+            <p style="font-size:0.7rem; line-height:1.4; text-align:justify; margin:0 0 0.8rem 0; color:#222;">
+                Traditional cultivation of medicinal crops such as Holy-Basil (Ocimum tenuiflorum) often struggles with inconsistent environmental factors, leading to variable chemical yields. This paper presents an automated vertical farming hydroponics framework coupled with cloud machine learning. Utilizing Azure IoT Hub, sensory readings for pH, Electrical Conductivity (EC), temperature, and air quality are logged in real-time. The gathered telemetry datasets are subsequently analyzed in Azure Databricks, where predictive regression models optimize lighting arrays and automated nutrient dosing schedules dynamically, yielding a highly controlled and efficient cultivation cycle.
+            </p>
+            
+            <div style="font-size:0.75rem; font-weight:bold; color:#111; margin-bottom:0.3rem;">SYSTEM ARCHITECTURE</div>
+            <p style="font-size:0.7rem; line-height:1.4; text-align:justify; margin:0 0 0.8rem 0; color:#222;">
+                The hardware-software co-design consists of local sensory nodes wired to microcontrollers that handle telemetry packetization. A secure gateway uploads data to Azure. Databricks runs regression scripts every hour to adjust lighting duration and pH balance pump intervals automatically.
+            </p>
+            
+            <div style="font-size:0.75rem; font-weight:bold; color:#111; margin-bottom:0.3rem;">KEY RESULTS & CONTRIBUTION</div>
+            <p style="font-size:0.7rem; line-height:1.4; text-align:justify; margin:0 0 0 0; color:#222;">
+                - Automated pH and EC maintenance loops reduced manual labor overhead by 92%.<br>
+                - Regression modeling achieved 14% faster biomass growth compared to baseline static control schedules.<br>
+                - Real-time plant vitals telemetry scoring enabled early detection of nutrient deficiencies.
+            </p>
+        `;
 
-        pdfSheet.innerHTML = `
-            <div class="pdf-header-name">${resumeData.name}</div>
-            <div class="pdf-header-sub">${resumeData.title}</div>
-            <hr class="pdf-line">
+        // Sheet 2: Paper 2 (SMADE IoT Assist)
+        sheet2.innerHTML = `
+            <div class="pdf-header-name" style="font-size:1.1rem; text-align:center; line-height:1.3; font-weight:800;">
+                SMADE - SMART MEDICAL ASSIST DEVICE FOR ELDERS
+            </div>
+            <div style="font-size:0.75rem; text-align:center; color:#555; margin-top:0.3rem;">
+                Souranil Das, et al. | Springer, ICCCSP Proceedings (2022)
+            </div>
+            <div style="text-align:center; margin-top:0.25rem; font-size:0.7rem;">
+                <a href="https://doi.org/10.1007/978-3-031-11633-9_19" target="_blank" style="color:#0284c7; text-decoration:underline; font-weight:bold;">Open Article (Springer Link)</a>
+            </div>
+            <hr class="pdf-line" style="margin: 0.5rem 0 0.8rem 0;">
             
-            <div class="pdf-section">EXPERIENCE</div>
-            ${expHtml}
+            <div style="font-size:0.75rem; font-weight:bold; color:#111; margin-bottom:0.3rem;">ABSTRACT</div>
+            <p style="font-size:0.7rem; line-height:1.4; text-align:justify; margin:0 0 0.8rem 0; color:#222;">
+                Adherence to medication regimens is critical for geriatric healthcare. SMADE (Smart Medical Assist Device) is an embedded, assistive IoT capsule that automates multi-dose pill dispensing cycles. By integrating microcontrollers with vital sensors (photoplethysmogram for heart rate, thermal sensors), SMADE monitors patient vitals during dispensing interactions. Real-time telemetry streams are logged to secure web portal databases, raising automated alarm logs for caregivers upon detection of critical vital thresholds or missed medication cycles.
+            </p>
             
-            <div class="pdf-section">EDUCATION</div>
-            ${edHtml}
+            <div style="font-size:0.75rem; font-weight:bold; color:#111; margin-bottom:0.3rem;">HARDWARE & EMBEDDED LOGIC</div>
+            <p style="font-size:0.7rem; line-height:1.4; text-align:justify; margin:0 0 0.8rem 0; color:#222;">
+                The device houses an automated rotary pill dispenser mechanism calibrated with micro-servos. It leverages a low-power microcontroller with built-in Wi-Fi, executing local timing loops synchronized with network NTP servers to assure absolute schedule accuracy.
+            </p>
+            
+            <div style="font-size:0.75rem; font-weight:bold; color:#111; margin-bottom:0.3rem;">KEY RESULTS & CONTRIBUTION</div>
+            <p style="font-size:0.7rem; line-height:1.4; text-align:justify; margin:0 0 0 0; color:#222;">
+                - Pill dispensing accuracy rate of 99.8% across 500 test trials.<br>
+                - Vital signs monitoring triggers SMS/Email warnings to registered medical personnel within 1.2 seconds of telemetry anomalies.<br>
+                - Dual power options (mains & auxiliary battery backup) ensure uninterrupted active service.
+            </p>
         `;
     }
 
@@ -85,14 +118,14 @@ function updateWindowsWithResume(resumeData) {
     }
 
     // 3. VS Code Papers Split-Editor
-    const codeEditor = document.querySelector('.code-editor-area code');
+    const codeEditor = document.getElementById('vscode-textarea');
     const previewBody = document.querySelector('.markdown-preview-body');
     if (codeEditor && previewBody) {
-        let rawMd = `<span class="md-h1"># Research Publications</span>\n\n`;
+        let rawMd = `# Research Publications\n\n`;
         let previewHtml = `<h1>Research Publications</h1>`;
 
         resumeData.publications.forEach((pub, idx) => {
-            rawMd += `<span class="md-h2">## Paper ${idx + 1}: ${pub.title.split(':')[0]}</span>\n`;
+            rawMd += `## Paper ${idx + 1}: ${pub.title.split(':')[0]}\n`;
             rawMd += `* **Title:** ${pub.title}\n`;
             rawMd += `* **Publisher:** ${pub.publisher}\n`;
             rawMd += `* **Summary:** ${pub.summary}\n\n`;
@@ -105,8 +138,13 @@ function updateWindowsWithResume(resumeData) {
             `;
         });
 
-        codeEditor.innerHTML = rawMd;
+        codeEditor.value = rawMd;
         previewBody.innerHTML = previewHtml;
+        
+        // Update live state in terminalFiles and vsCodeFileContents
+        if (window.terminalFiles) {
+            window.terminalFiles['research_papers.md'] = rawMd;
+        }
         
         // Update line numbers dynamically
         const lineNumbers = document.querySelector('.line-numbers');

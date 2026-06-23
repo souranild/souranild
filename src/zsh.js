@@ -11,11 +11,19 @@ let cmdHistory = [];
 // Live filesystem assets updated dynamically from LaTeX
 const files = {
     'about_me.txt': '',
+    'resume.tex': 'LaTeX resume source file. Open with Overleaf or view in VS Code.',
+    'resume.desktop': `[Desktop Entry]
+Name=resume.tex
+Comment=Resume LaTeX Document
+Exec=overleaf /resume.tex
+Icon=text-x-tex
+Terminal=false
+Type=Application`,
     'projects.odt': 'LibreOffice document projects.odt. Run "./open_projects.sh" or click the LibreOffice icon.',
-    'experience.pdf': 'PDF Document experience.pdf. Run "./open_experience.sh" or click the PDF Viewer icon.',
+    "Souranil's Resume.pdf": 'PDF Document Souranil\'s Resume.pdf. Run "./open_resume.sh" or click the PDF Viewer icon.',
     'research_papers.md': 'Markdown document research_papers.md. Run "./open_vscode.sh" or click the VS Code icon.',
     'open_projects.sh': 'Launcher script for LibreOffice projects.odt. Running...',
-    'open_experience.sh': 'Launcher script for experience_resume.pdf. Running...',
+    'open_resume.sh': "Launcher script for Souranil's Resume.pdf. Running...",
     'open_vscode.sh': 'Launcher script for VS Code editor. Running...',
     'open_calculator.sh': 'Launcher script for Calculator app. Running...'
 };
@@ -23,40 +31,78 @@ const files = {
 const COMMANDS = [
     'help', 'ls', 'clear', 'whoami', 'date', 'git status',
     'libreoffice', 'evince', 'pdf', 'code', 'vscode', 'calculator', 'neofetch',
-    'cat about_me.txt', 'cat projects.odt', 'cat experience.pdf', 'cat research_papers.md',
-    'cat open_projects.sh', 'cat open_experience.sh', 'cat open_vscode.sh',
-    './open_projects.sh', './open_experience.sh', './open_vscode.sh', './open_calculator.sh',
+    'cat about_me.txt', 'cat projects.odt', 'cat "Souranil\'s Resume.pdf"', 'cat research_papers.md',
+    'cat open_projects.sh', 'cat open_resume.sh', 'cat open_vscode.sh',
+    './open_projects.sh', './open_resume.sh', './open_vscode.sh', './open_calculator.sh',
     'pwd', 'cd', 'uname -a', 'uptime', 'history', 'sudo', 'cowsay'
 ];
 
 export function updateZshFiles(resumeData) {
-    const skillsList = `  <span style="color: #ffb86c; font-weight: bold;">• Languages :</span> <span style="color: #f8f8f2;">${resumeData.skills.languages}</span>
-  <span style="color: #ffb86c; font-weight: bold;">• Frameworks:</span> <span style="color: #f8f8f2;">${resumeData.skills.frameworks}</span>
-  <span style="color: #ffb86c; font-weight: bold;">• Tools     :</span> <span style="color: #f8f8f2;">${resumeData.skills.tools}</span>`;
+    const border = 'color: #bd93f9;';
+    const textPurple = 'color: #bd93f9; font-weight: bold;';
+    const textPink = 'color: #ff79c6; font-weight: bold;';
+    const textCyan = 'color: #8be9fd; font-weight: bold;';
+    const textGreen = 'color: #50fa7b; font-weight: bold;';
+    const textYellow = 'color: #f1fa8c; font-weight: bold;';
+    const textOrange = 'color: #ffb86c; font-weight: bold;';
+    const comment = 'color: #6272a4;';
     
-    files['about_me.txt'] = `
-<span style="color: #50fa7b; font-weight: bold;">[SYSTEM CORE PROFILE]</span>
-<span style="color: #6272a4;">====================================================================</span>
-<span style="color: #8be9fd; font-weight: bold;">NAME</span>        : <span style="color: #f8f8f2; font-weight: bold;">${resumeData.name}</span>
-<span style="color: #8be9fd; font-weight: bold;">ROLE</span>        : <span style="color: #f8f8f2;">${resumeData.title}</span>
-<span style="color: #8be9fd; font-weight: bold;">CONTACT     :</span> <span style="color: #ff79c6;">${resumeData.contact}</span>
-<span style="color: #6272a4;">====================================================================</span>
-
-<span style="color: #50fa7b;">✔ System logic check:</span> <span style="color: #f8f8f2; font-weight: bold; background: #282a36; padding: 0 4px; border-radius: 2px;">ACTIVE</span>
-<span style="color: #50fa7b;">✔ Functional parameters verified:</span> <span style="color: #f8f8f2; font-weight: bold; background: #282a36; padding: 0 4px; border-radius: 2px;">100%</span>
-
-<span style="color: #bd93f9; font-weight: bold; text-decoration: underline;">CORE SKILLS:</span>
-${skillsList}
-
-<span style="color: #6272a4;">--------------------------------------------------------------------</span>
-Type <span style="color: #50fa7b; font-weight: bold;">'help'</span> to view available console simulation commands.
-`;
+    files['about_me.txt'] = `<span style="${border}">_________________________________________________________________________________________</span>
+<span style="${border}">/\\</span>                                                                                       <span style="${border}">\\</span>
+<span style="${border}">\\_|</span>  <span style="${textPink}">____   ___  _   _ ____    _   _   _ ___ _       ____    _    ____ </span>                   <span style="${border}">|</span>
+<span style="${border}">  |</span> <span style="${textPink}">/ ___| / _ \\| | | |  _ \\  / \\ | \\ | |_ _| |     |  _ \\  / \\  / ___|</span>                   <span style="${border}">|</span>
+<span style="${border}">  |</span> <span style="${textCyan}">\\___ \\| | | | | | | |_) |/ _ \\|  \\| || || |     | | | |/ _ \\ \\___ \\</span>                   <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${textGreen}">___) | |_| | |_| |  _ &lt;| ___ \\ |\\  || || |___  | |_| / ___ \\ ___) |</span>                  <span style="${border}">|</span>
+<span style="${border}">  |</span> <span style="${textYellow}">|____/ \\___/ \\___/|_| \\_\\_/   \\_|_| \\_|___|_____| |____/_/   \\_\\____/</span>                  <span style="${border}">|</span>
+<span style="${border}">  |</span>                                                                                       <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${textOrange}">======================== [ SYSTEM CORE INITIALIZED ] ========================</span>        <span style="${border}">|</span>
+<span style="${border}">  |</span>                                                                                       <span style="${border}">|</span>
+<span style="${border}">  |</span>   <span style="color: #f8f8f2;">STATUS: ACTIVE [</span><span style="${textGreen}">██████████████████████████████</span><span style="color: #f8f8f2;">] 100% SECURE</span>                         <span style="${border}">|</span>
+<span style="${border}">  |</span>   <span style="${textCyan}">LOGIC CHECK: PASSED (V_CORE = 1.2V)</span>                                                 <span style="${border}">|</span>
+<span style="${border}">  |</span>                                                                                       <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${comment}">-----------------------------------------------------------------------------------</span>  <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${textPurple}">► USER PROFILE</span>                                                                       <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${comment}">-----------------------------------------------------------------------------------</span>  <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textCyan}">[IDENTITY]</span>     : <span style="color: #f8f8f2; font-weight: bold;">${resumeData.name}</span>                                                      <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textCyan}">[DESIGNATION]</span>  : <span style="color: #f8f8f2;">Design Verification Engineer - G2</span>                                 <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textCyan}">[DEPLOYMENT]</span>   : <span style="color: #f8f8f2;">NXP Semiconductors</span>                                                <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textCyan}">[LOCATION]</span>     : <span style="color: #f8f8f2;">Bangalore, India</span>                                                  <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textCyan}">[COMMS]</span>        : <span style="color: #f8f8f2;">${resumeData.contact}</span>                                            <span style="${border}">|</span>
+<span style="${border}">  |</span>                                                                                       <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${comment}">-----------------------------------------------------------------------------------</span>  <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${textPurple}">► HARDWARE &amp; SOFTWARE SPECIFICATIONS (CORE SKILLS)</span>                                   <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${comment}">-----------------------------------------------------------------------------------</span>  <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textGreen}">&lt;/&gt; LANGUAGES</span>  ::  <span style="color: #f8f8f2;">SystemVerilog ── C/C++ ── Python ── Bash</span>                        <span style="${border}">|</span>
+<span style="${border}">  |</span>                                                                                       <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textGreen}">⚙️  DOMAINS</span>    ::  <span style="color: #f8f8f2;">RTL Design ── Embedded Systems ── IoT</span>                           <span style="${border}">|</span>
+<span style="${border}">  |</span>                       <span style="color: #f8f8f2;">Automation ── JTAG ── Ethernet</span>                                  <span style="${border}">|</span>
+<span style="${border}">  |</span>                                                                                       <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textGreen}">🔧 TOOLS</span>       ::  <span style="color: #f8f8f2;">Cadence Xcelium ── Verisium Debug ── VS Code</span>                    <span style="${border}">|</span>
+<span style="${border}">  |</span>                       <span style="color: #f8f8f2;">Git ── LibreOffice ── LaTeX</span>                                     <span style="${border}">|</span>
+<span style="${border}">  |</span>                                                                                       <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${comment}">-----------------------------------------------------------------------------------</span>  <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${textPurple}">► BACKGROUND THREADS (BEYOND THE CODE)</span>                                               <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${comment}">-----------------------------------------------------------------------------------</span>  <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textYellow}">🎤 [SINGING]</span>       <span style="color: #f8f8f2;">Loves to sing — from Bollywood to classic rock</span>                  <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textYellow}">📸 [PHOTOGRAPHY]</span>   <span style="color: #f8f8f2;">Street &amp; landscape photography (@the.sourlens)</span>                  <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textYellow}">🎬 [VIDEOGRAPHY]</span>   <span style="color: #f8f8f2;">Short films, reels, and cinematic edits</span>                         <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textYellow}">🎸 [GUITAR]</span>        <span style="color: #f8f8f2;">Acoustic &amp; electric — instrumental covers on YouTube</span>            <span style="${border}">|</span>
+<span style="${border}">  |</span>    <span style="${textYellow}">🎨 [DRAWING]</span>       <span style="color: #f8f8f2;">Sketches &amp; illustrations when the mood strikes</span>                  <span style="${border}">|</span>
+<span style="${border}">  |</span>                                                                                       <span style="${border}">|</span>
+<span style="${border}">  |</span>  <span style="${textOrange}">=============================================================================</span>        <span style="${border}">|</span>
+<span style="${border}">  |</span>   <span style="${comment}">[CTRL+C to exit session]</span>                                                            <span style="${border}">|</span>
+<span style="${border}">  \\_|_____________________________________________________________________________________/</span>`;
 }
+
+let historyIndex = -1; // -1 = not browsing history
 
 export function initZsh() {
     displayContainer = document.getElementById('zsh-display');
     inputField = document.getElementById('zsh-input');
     suggestSpan = document.getElementById('zsh-suggest');
+
+    // Share the terminal files globally for sync with desktop apps
+    window.terminalFiles = files;
 
     if (!displayContainer || !inputField) return;
 
@@ -74,8 +120,62 @@ export function initZsh() {
     // Input text listener for syntax highlighting and autocomplete
     inputField.addEventListener('input', handleInput);
 
-    // Key handlers for executing commands and autocompleting
+    // Key handlers for executing commands, Ctrl+C, Ctrl+L, history navigation
     inputField.addEventListener('keydown', (e) => {
+        // Ctrl+C — interrupt: print ^C and a fresh prompt line
+        if (e.ctrlKey && e.key === 'c') {
+            e.preventDefault();
+            const interrupted = inputField.value;
+            inputField.value = '';
+            if (suggestSpan) suggestSpan.textContent = '';
+            historyIndex = -1;
+            const ctrlLine = document.createElement('div');
+            ctrlLine.className = 'prompt-line';
+            ctrlLine.innerHTML = `
+                <span class="zsh-prompt">➜  <span class="zsh-dir">${currentDir}</span> <span class="zsh-git">git:(<span class="git-branch">main</span>)</span> <span class="zsh-cross">✗</span> </span>
+                <span class="prompt-cmd">${escapeHTML(interrupted)}</span><span style="color:#ff5555;"> ^C</span>
+            `;
+            displayContainer.appendChild(ctrlLine);
+            const terminalBody = displayContainer.parentElement;
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            return;
+        }
+
+        // Ctrl+L — clear screen
+        if (e.ctrlKey && e.key === 'l') {
+            e.preventDefault();
+            displayContainer.innerHTML = '';
+            return;
+        }
+
+        // Up arrow — browse history backwards
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (cmdHistory.length === 0) return;
+            if (historyIndex === -1) historyIndex = cmdHistory.length - 1;
+            else if (historyIndex > 0) historyIndex--;
+            inputField.value = cmdHistory[historyIndex];
+            handleInput();
+            // move cursor to end
+            setTimeout(() => inputField.setSelectionRange(inputField.value.length, inputField.value.length), 0);
+            return;
+        }
+
+        // Down arrow — browse history forwards
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex === -1) return;
+            if (historyIndex < cmdHistory.length - 1) {
+                historyIndex++;
+                inputField.value = cmdHistory[historyIndex];
+            } else {
+                historyIndex = -1;
+                inputField.value = '';
+            }
+            handleInput();
+            return;
+        }
+
         if (e.key === 'Tab' || e.key === 'ArrowRight') {
             if (suggestSpan && suggestSpan.textContent) {
                 e.preventDefault();
@@ -86,6 +186,7 @@ export function initZsh() {
             const cmd = inputField.value;
             inputField.value = '';
             if (suggestSpan) suggestSpan.textContent = '';
+            historyIndex = -1;
             
             if (cmd.trim()) {
                 executeCommand(cmd.trim());
@@ -99,8 +200,15 @@ export function runZshCommand(commandLine) {
     if (!displayContainer) {
         displayContainer = document.getElementById('zsh-display');
     }
+    if (!inputField) {
+        inputField = document.getElementById('zsh-input');
+    }
     if (displayContainer) {
         executeCommand(commandLine);
+        // Always re-focus the input so the user can type immediately after
+        if (inputField) {
+            setTimeout(() => inputField.focus(), 50);
+        }
     }
 }
 
@@ -117,7 +225,7 @@ function handleInput() {
         const validFirstWords = [
             'help', 'ls', 'clear', 'whoami', 'date', 'git', 'libreoffice',
             'evince', 'pdf', 'code', 'vscode', 'calculator', 'cat', 'neofetch',
-            './open_projects.sh', './open_experience.sh', './open_vscode.sh', './open_calculator.sh',
+            './open_projects.sh', './open_resume.sh', './open_vscode.sh', './open_calculator.sh',
             'pwd', 'cd', 'uname', 'uptime', 'history', 'sudo', 'cowsay', 'echo', 'touch', 'rm'
         ];
         
@@ -168,121 +276,127 @@ function runStartupSequence() {
     setTimeout(() => {
         printLine('zsh shell loaded successfully.', 'terminal-info');
         
-        // Animating ASCII Banner (Spelled SOURANIL correctly)
-        const asciiArt = `
- ____   ___  _   _ ____    _   _   _ ___ _     
-/ ___| / _ \\\\| | | |  _ \\\\  / \\\\ | \\\\ | |_ _| |    
-\\___ \\\\| | | | | | | |_) |/ _ \\\\|  \\\\| | | || |    
- ___) | |_| | |_| |  _ </ ___ \\\\ |\\\\  | | || |___ 
-|____/ \\___/ \\___/|_| \\_/_/   \\_\\_|_| \\_|___|_____|
-        `;
+        // Show profile info (about_me.txt) directly without duplicate name banner
+        const profileInfo = files['about_me.txt'] || `Loading system profile...`;
+        printLine(profileInfo);
         
-        const bannerContainer = document.createElement('pre');
-        bannerContainer.style.margin = '1rem 0';
-        bannerContainer.style.color = 'var(--rhel-red)';
-        bannerContainer.style.fontWeight = 'bold';
-        bannerContainer.style.lineHeight = '1.2';
-        displayContainer.appendChild(bannerContainer);
-        
-        const lines = asciiArt.split('\n');
-        let currentLine = 0;
-        
-        // Print logo line-by-line
-        function printLogoLine() {
-            if (currentLine < lines.length) {
-                bannerContainer.textContent += lines[currentLine] + '\n';
-                currentLine++;
-                const terminalBody = displayContainer.parentElement;
-                terminalBody.scrollTop = terminalBody.scrollHeight;
-                setTimeout(printLogoLine, 60);
-            } else {
-                // Animate colors after logo is drawn
-                let hue = 0;
-                setInterval(() => {
-                    hue = (hue + 2) % 360;
-                    bannerContainer.style.color = `hsl(${hue}, 90%, 55%)`;
-                }, 40);
-                
-                // Show profile info
-                const profileInfo = files['about_me.txt'] || `Loading system profile...`;
-                printLine(profileInfo);
-                
-                // Print animating space shuttle rocket below text profile
-                const rocketContainer = document.createElement('pre');
-                rocketContainer.style.margin = '1rem 0';
-                rocketContainer.style.color = '#8be9fd';
-                rocketContainer.style.fontFamily = 'var(--font-mono)';
-                rocketContainer.style.fontSize = '0.75rem';
-                rocketContainer.style.lineHeight = '1.1';
-                displayContainer.appendChild(rocketContainer);
-                
-                const rocketFrames = [
-                    `*          /\\\\          +
-          /  \\\\
-   +     /____\\\\     .
-        |      |
-  .     |      |
-        |      |    *
-       /|      |\\\\
- *    / |======| \\\\
-     /  |      |  \\\\    .
-    |  /|      |\\\\  |
- +  | / |      | \\\\ |
-    |/  |______|  \\\\|   +
-        /      \\\\
-       /        \\\\
-       (  ) ( ) (  )
-      (    )   )   )
-       (  (   )   )`,
-                    `    +      /\\\\        *
-  .       /  \\\\    .
-         /____\\\\
-   *    |      |
-        |      |   +
-  .     |      |
-       /|      |\\\\   .
-      / |======| \\\\
- +   /  |      |  \\\\
-    |  /|      |\\\\  |   *
-    | / |      | \\\\ |
-    |/  |______|  \\\\|
-        /      \\\\  +
-       /        \\\\
-        )  (  )  (
-       (    )  )  )
-        )  (  (  (`,
-                    ` .         /\\\\      +
-   *      /  \\\\
-         /____\\\\     .
-  +     |      |
-        |      |
-        |      |    *
-       /|      |\\\\
-      / |======| \\\\   +
-     /  |      |  \\\\
-    |  /|      |\\\\  |
- *  | / |      | \\\\ |  .
-    |/  |______|  \\\\|
-        /      \\\\
-       /        \\\\
-       |  | |  |  |
-       \\\\  / \\\\  /  /
-        \\\\/   \\\\/  /`
-                ];
-                
-                let frameIdx = 0;
-                const intervalId = setInterval(() => {
-                    if (!document.body.contains(rocketContainer)) {
-                        clearInterval(intervalId);
-                        return;
+        // Game of Life seeded from user ASCII art
+        const golContainer = document.createElement('pre');
+        golContainer.style.margin = '1rem 0';
+        golContainer.style.fontFamily = 'var(--font-mono)';
+        golContainer.style.fontSize = '0.72rem';
+        golContainer.style.lineHeight = '1.15';
+        golContainer.style.letterSpacing = '0.02em';
+        golContainer.style.userSelect = 'none';
+        displayContainer.appendChild(golContainer);
+
+        // ── Seed pattern (user art) ──────────────────────────────────────
+        // Non-space, non-dot chars are ALIVE cells.
+        const SEED = [
+            '                    .   .xXXXX+.   .                   ',
+            '               .   ..   xXXXX+.-   ..   .              ',
+            '         .   ..  ... ..xXXXX+. --.. ...  ..   .        ',
+            '     .   ..  ... .....xXXXX+.  -.-..... ...  ..   .    ',
+            '   .   ..  ... ......xXXXX+.  . .--...... ...  ..   .  ',
+            '  .   ..  ... ......xXXXX+.    -.- -...... ...  ..   . ',
+            ' .   ..  ... ......xXXXX+.   .-+-.-.-...... ...  ..   .',
+            ' .   ..  ... .....xXXXX+. . --xx+.-.--..... ...  ..   .',
+            '.   ..  ... .....xXXXX+. - .-xxxx+- .-- .... ...  ..   ',
+            ' .   ..  ... ...xXXXX+.  -.-xxxxxx+ .---... ...  ..   .',
+            ' .   ..  ... ..xXXXX+. .---..xxxxxx+-..--.. ...  ..   .',
+            '  .   ..  ... xXXXX+. . --....xxxxxx+  -.- ...  ..   . ',
+            '   .   ..  ..xXXXX+. . .-......xxxxxx+-. --..  ..   .  ',
+            '     .   .. xXXXXXXXXXXXXXXXXXXXxxxxxx+. .-- ..   .    ',
+            '         . xXXXXXXXXXXXXXXXXXXXXXxxxxxx+.  -- .        ',
+            '           xxxxxxxxxxxxxxxxxxxxxxxxxxxxx+.--             ',
+            '            xxxxxxxxxxxxxxxxxxxxxxxxxxxxx+-   Ojosh!ro   ',
+        ];
+
+        const DEAD_CHARS  = new Set([' ', '.']);
+        const COLS = SEED[0].length;
+        const ROWS = SEED.length;
+
+        // Build initial grid: 1 = alive, 0 = dead
+        let grid = SEED.map(row =>
+            Array.from(row.padEnd(COLS, ' ')).map(ch => DEAD_CHARS.has(ch) ? 0 : 1)
+        );
+        // Pad to ROWS rows if shorter
+        while (grid.length < ROWS) grid.push(new Array(COLS).fill(0));
+
+        // ── GoL step ────────────────────────────────────────────────────
+        function golStep(g) {
+            return g.map((row, r) =>
+                row.map((cell, c) => {
+                    let n = 0;
+                    for (let dr = -1; dr <= 1; dr++) {
+                        for (let dc = -1; dc <= 1; dc++) {
+                            if (dr === 0 && dc === 0) continue;
+                            const nr = r + dr, nc = c + dc;
+                            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) n += g[nr][nc];
+                        }
                     }
-                    rocketContainer.textContent = rocketFrames[frameIdx];
-                    frameIdx = (frameIdx + 1) % rocketFrames.length;
-                }, 150);
-            }
+                    if (cell) return (n === 2 || n === 3) ? 1 : 0;
+                    return n === 3 ? 1 : 0;
+                })
+            );
         }
-        
-        printLogoLine();
+
+        // ── Neighbour count (for colour mapping) ────────────────────────
+        function neighborCount(g, r, c) {
+            let n = 0;
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    if (dr === 0 && dc === 0) continue;
+                    const nr = r + dr, nc = c + dc;
+                    if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) n += g[nr][nc];
+                }
+            }
+            return n;
+        }
+
+        // ── Render grid as coloured HTML ─────────────────────────────────
+        // Colour ramp: sparse (1-2) → cyan, medium (3-4) → purple, dense (5-8) → red/orange
+        const COLORS = ['', '#8be9fd','#8be9fd','#bd93f9','#bd93f9','#ffb86c','#ff79c6','#ff5555','#ff5555'];
+        // Char ramp by neighbour count
+        const CHARS  = [' ', '·', '░', '▒', '▓', '+', 'x', 'X', '█'];
+
+        function renderGrid(g) {
+            let html = '';
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (g[r][c]) {
+                        const n = neighborCount(g, r, c);
+                        const ch  = CHARS[Math.min(n, 8)];
+                        const col = COLORS[Math.min(n, 8)];
+                        html += `<span style="color:${col}">${ch}</span>`;
+                    } else {
+                        html += ' ';
+                    }
+                }
+                html += '\n';
+            }
+            return html;
+        }
+
+        // ── Animation loop ───────────────────────────────────────────────
+        let generation = 0;
+        const golInterval = setInterval(() => {
+            if (!document.body.contains(golContainer)) {
+                clearInterval(golInterval);
+                return;
+            }
+            golContainer.innerHTML = renderGrid(grid);
+            grid = golStep(grid);
+            generation++;
+            // After 300 generations reset to seed to keep it alive forever
+            if (generation >= 300) {
+                generation = 0;
+                grid = SEED.map(row =>
+                    Array.from(row.padEnd(COLS, ' ')).map(ch => DEAD_CHARS.has(ch) ? 0 : 1)
+                );
+                while (grid.length < ROWS) grid.push(new Array(COLS).fill(0));
+            }
+        }, 120);
     }, 400);
 }
 
@@ -459,11 +573,15 @@ Available commands:
             const target = args[1];
             if (!target) {
                 printLine('cat: missing operand. Usage: cat [filename]', 'terminal-error');
+            } else if (target === 'resume.tex') {
+                const textarea = document.getElementById('overleaf-latex-input');
+                const content = textarea ? textarea.value : '% LaTeX source code';
+                printLine(escapeHTML(content));
             } else if (files[target] !== undefined) {
                 if (target.startsWith('open_') || target === 'about_me.txt') {
                     printLine(files[target]);
                     if (target === 'open_projects.sh') openAppWindow('libreoffice');
-                    else if (target === 'open_experience.sh') openAppWindow('pdfviewer');
+                    else if (target === 'open_resume.sh') openAppWindow('pdfviewer');
                     else if (target === 'open_vscode.sh') openAppWindow('vscode');
                     else if (target === 'open_calculator.sh') openAppWindow('calculator');
                 } else {
@@ -473,14 +591,14 @@ Available commands:
                 printLine(`cat: ${target}: No such file or directory`, 'terminal-error');
             }
             break;
-
+ 
         case './open_projects.sh':
         case 'libreoffice':
             printLine('Launching LibreOffice Writer...', 'terminal-info');
             openAppWindow('libreoffice');
             break;
-
-        case './open_experience.sh':
+ 
+        case './open_resume.sh':
         case 'evince':
         case 'pdf':
             printLine('Launching Evince Document Viewer...', 'terminal-info');

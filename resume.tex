@@ -1,0 +1,186 @@
+%------------------------
+% Resume Template
+% Author : Anubhav Singh
+% Github : https://github.com/xprilion
+% License : MIT
+%------------------------
+
+\documentclass[a4paper,20pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[pdftex]{hyperref}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.530in}
+\addtolength{\evensidemargin}{-0.375in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.45in}
+\addtolength{\textheight}{1in}
+
+\urlstyle{rm}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-10pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-6pt}]
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[2]{
+  \item\small{
+    \textbf{#1}{: #2 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeItemWithoutTitle}[1]{
+  \item\small{
+    {\vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{#3} & \textit{#4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+
+\newcommand{\resumeSubItem}[2]{\resumeItem{#1}{#2}\vspace{-3pt}}
+
+\renewcommand{\labelitemii}{$\circ$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=*]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-----------------------------
+%%%%%%  CV STARTS HERE  %%%%%%
+
+\begin{document}
+
+%----------HEADING-----------------
+\begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+  \textbf{{\LARGE Souranil Das}} & Email: \href{mailto:souranil.das@gmail.com}{souranil.das@gmail.com}\\
+  \href{https://linkedin.com/in/souranild}{LinkedIn: linkedin.com/in/souranild} & Mobile:~~~+91-700-8459-203 \\
+  \href{https://github.com/souranild}{Github: ~~github.com/souranild} \\
+\end{tabular*}
+
+%-----------EDUCATION-----------------
+\section{~~Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Vellore Institute of Technology}{Chennai, India}
+      {Bachelor of Technology - Electronics and Communication;  GPA: 3.23/4.0}{2019 - 2023}
+      {\scriptsize \textit{ \footnotesize{\newline{}\textbf{Courses:} Data Structures \& Algorithms, VLSI, IOT, Computer Networks}}}
+    \resumeSubHeadingListEnd
+	    
+\vspace{-5pt}
+\section{Skills Summary}
+	\resumeSubHeadingListStart
+	\resumeSubItem{Languages}{~~~~~~SystemVerilog, C/C++, Python, Bash}
+	\resumeSubItem{Technologies}{~~~~IoT, Embedded Systems, RTL Design, Automation, JTAG, Ethernet}
+	\resumeSubItem{Verification}{~~~~Functional Verification, Assertion-Based Verification, UVM, SystemVerilog}
+
+\resumeSubHeadingListEnd
+\vspace{-5pt}
+\section{Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading{NXP Semiconductors}{Bengaluru, India}
+    {Design Verification Engineer - G2}{Apr 2024 – Present}
+    \resumeItemListStart
+        \item \textbf{Working} on an ethernet based multi interface automotive hub.
+        \item \textbf{Working} on an internal tool for simplifying test running, and monitoring.
+        \item Successfully completed \textbf{4} tape-outs.
+      \resumeItemListEnd
+    \resumeSubheading{NXP Semiconductors}{Bengaluru, India}
+    {Design Verification Engineer - G1}{Jul 2023 – Apr 2024}
+    \resumeItemListStart
+        \item \textbf{Worked} on updates on Matrix LED Controller, which provides smart automotive headlights and backlights.
+        \item Completed \textbf{two} incremental tape-outs.
+        \item \textbf{Automated} and made DV work environments better by bringing in things learnt from Software Validation.
+      \resumeItemListEnd
+\vspace{-5pt}
+    \resumeSubheading
+		{NXP Semiconductors}{Hyderabad, India}
+		{Software Validation \& Automation Intern}{Sept 2022 – July 2023}
+		\resumeItemListStart
+        \item \textbf{Developed} tests and automation scripts for Realtime Edge IoT platform
+        \item \textbf{Shipped} \textbf{3} successful releases with fully automated regression setups
+		\resumeItemListEnd
+    \resumeSubheading
+		{Samsung Electronics}{Bengaluru, India}
+		{Project Intern}{June 2021 – Jan 2022}
+		\resumeItemListStart
+        \item \textbf{Developed} an internal web application using ReactJS, Flask, and TensorFlow for image and video annotation.
+        \item \textbf{Integrated} Advanced ML Models: Incorporated SSD, RCNN, and YOLOv3 for data testing and batch processing workflows.
+		\resumeItemListEnd
+    \resumeSubheading
+		{Yuan-Ze University}{Taoyuan, Taiwan}
+		{IoT Research Intern}{June 2022 – March 2023}
+		\resumeItemListStart
+        \item \textbf{Collaborated} with YZU Taiwan students to design a Smart Hydroponic System with sensors and automation for basil growth.
+        \item \textbf{Developed} a Smart Hydroponic System, involving hardware and software co-creation. Achieved a fully automated system for monitoring indoor organic vegetable growth, including testing various hydroponic solutions, sensor combinations and reporting plant vitals.
+		\resumeItemListEnd
+    \resumeSubheading
+		{IEEE Photonics}{Chennai, India}
+		{Vice President}{July 2020 – July 2021}
+		\resumeItemListStart
+        \item \textbf{Headed} the development of the society's website and collaborating on tasks such as scheduling talks.
+        \item \textbf{Managed} administrative functions, contributing to the smooth operation of the Society.
+		\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------------
+\vspace{-5pt}
+\section{Projects}
+\resumeSubHeadingListStart
+\resumeSubItem{\href{https://docs.google.com/document/d/1O1YsuZPpMzv1nlXXJV094MKD4nJhtZU2g33nz0zF3LI/edit}{AI Annotation Tool for Data Testing} (ReactJS, Flask, TensorFlow, SSD, RCNN, YOLOv3)}{Developed a full-stack web application for image and video annotation. Integrated object detection models. Deployed internally for data testing and batch processing workflows. (Jun 2021 - Jan 2022)}
+\vspace{2pt}
+\resumeSubItem{\href{https://github.com/souranild/8051sec}{Access Control System using 8051 Microcontroller and DC Motor} (Microcontroller, RFID)}{Developed an RFID-based access control system using 8051 microcontroller. Enabled motor control for authorized entries, unauthorized access alerts, and real-time entry count tracking. (Feb 2021 – Jun 2021)}
+\vspace{2pt}
+\resumeSubItem{\href{https://docs.google.com/document/d/1T75HzlptJYIZZojti-dx1BhP0im88-l5l7B-8dgqOQI/edit?usp=sharing}{Remote Video Surveillance Wireless Robot} (Wi-Fi, Video Streaming, Object Detection)}{Built a Wi-Fi controlled robot with live video streaming, object/person detection, and intrusion alerts. Controlled via web server and Android app for remote surveillance. (Feb 2021 – Jun 2021)}
+\vspace{2pt}
+\resumeSubItem{\href{https://docs.google.com/document/d/1x4zfeQhCVb3S7J35QM56Sth9_4soquWMxKuBpIZtCDQ/edit?usp=sharing}{Garduino - Automatic Garden Management with Arduino} (Arduino, IoT, Wi-Fi)}{Designed and built an Arduino-based smart garden system with both manual and automatic plant watering capabilities. Enabled remote monitoring and control via smartphone using Wi-Fi, providing real-time plant status updates and user interaction. (Apr 2020 – Sep 2020)}
+\resumeSubHeadingListEnd
+\vspace{-5pt}
+\section{Publications}
+\resumeSubHeadingListStart
+\resumeSubItem{\href{https://ieeexplore.ieee.org/document/10198435}{Revolutionizing Holy-Basil Cultivation with AI-Enabled Hydroponics System} (IEEE Access, 2023)}{Co-authored the paper published in IEEE Access, vol. 11, pp. 82624–82639. The work integrates hydroponics, IoT, and machine learning to optimize holy-basil cultivation with real-time monitoring and healthiness scoring.}
+\vspace{2pt}
+\resumeSubItem{\href{https://doi.org/10.1007/978-3-031-11633-9_19}{SMADE - Smart Medical Assist Device} (Springer, 2022)}{Co-authored the paper published in Computer, Communication, and Signal Processing (ICCCSP 2022), IFIP AICT vol. 651. Developed a device for elderly care integrating medication scheduling and real-time vitals monitoring.}
+\resumeSubHeadingListEnd
+\vspace{-5pt}
+%-----------CERTIFICATIONS-----------------
+\section{Certifications}
+\begin{description}[font=$\bullet$]
+\item {\href{https://verificationacademy.com/courses/assertion-based-verification}{Assertion-Based Verification} - Mentor Graphics, Sep 2023}
+\vspace{-5pt}
+\item {\href{https://www.linkedin.com/in/souranild/details/certifications/1635541591437/single-media-viewer}{Essential SystemVerilog for UVM} - Cadence, Sep 2023}
+\vspace{-5pt}
+\item {\href{https://www.credential.net/6c3989e0-fd5c-456a-b3a6-d2a782bca74f}{Designing and Modelling of IoT, AI \& ML Systems} - Arm, Aug 2022}
+\vspace{-5pt}
+\item {\href{https://www.credly.com/badges/dba3eefa-3ac0-44e8-849f-2ccfcf4cf768/public_url}{AWS Certified Cloud Practitioner} - Amazon Web Services, Jun 2022}
+\end{description}
+
+\end{document}
