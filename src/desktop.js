@@ -1325,7 +1325,7 @@ function getDefaultLatexTemplate() {
 \\begin{document}
 
 \\centerline{\\Huge \\bf SOURANIL DAS}
-\\centerline{Bangalore, India | souranil.das.2024@gmail.com}
+\\centerline{Bangalore, India | souranil.das@gmail.com}
 
 \\section{Experience}
 \\resumeSubheading{NXP Semiconductors}{Bangalore, India}{Design Verification Engineer}{Jan 2024 - Present}

@@ -20,7 +20,7 @@
 - 🔭 I’m currently working on **System-on-Chip (SoC) Design Verification** at **NXP Semiconductors**.
 - 🌱 I’m currently exploring **IoT Systems**, **Hardware-Software Co-Design**, and **Advanced UVM Verification**.
 - 👯 I’m looking to collaborate on **Embedded Systems** and **Open Source Hardware** projects.
-- 📫 How to reach me: **[souranil.das.2024@gmail.com](mailto:souranil.das.2024@gmail.com)**
+- 📫 How to reach me: **[souranil.das@gmail.com](mailto:souranil.das@gmail.com)**
 
 <br/>
 

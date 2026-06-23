@@ -3,7 +3,7 @@
 export const FALLBACK_RESUME = {
     name: "SOURANIL DAS",
     title: "Design Verification Engineer @ NXP Semiconductors",
-    contact: "Bangalore, India | souranil.das.2024@gmail.com",
+    contact: "Bangalore, India | souranil.das@gmail.com",
     experience: [
         {
             role: "Design Verification (DV) Engineer",
