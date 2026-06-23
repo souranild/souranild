@@ -1094,7 +1094,7 @@ function setupOverleaf() {
 async function initOverleafContent() {
     let text = '';
     try {
-        const response = await fetch('/resume.tex');
+        const response = await fetch('./resume.tex');
         if (response.ok) {
             text = await response.text();
         }

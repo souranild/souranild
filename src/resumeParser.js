@@ -228,7 +228,7 @@ export function parseLaTeXString(tex) {
 // Main parser function
 export async function getResumeData() {
     try {
-        const response = await fetch('/resume.tex');
+        const response = await fetch('./resume.tex');
         if (!response.ok) {
             console.warn("Could not load resume.tex, falling back to static data.");
             return FALLBACK_RESUME;
