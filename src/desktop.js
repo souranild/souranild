@@ -18,7 +18,11 @@ const windowWorkspaces = {
     'verisium': 2,
     'games-folder': 4,
     'emulator': 4,
-    'sysapps-folder': 1
+    'sysapps-folder': 1,
+    'sysmonitor': 2,
+    'clock': 2,
+    'weather': 2,
+    'imageviewer': 1
 };
 
 export function initDesktop() {
@@ -183,6 +187,11 @@ export function initDesktop() {
     // 18. Text Editor & LibreOffice usability setups
     setupTextEditor();
     setupLibreOffice();
+    
+    // 19. New desktop helper apps setup
+    setupClockApp();
+    setupWeatherApp();
+    setupImageViewerApp();
     
     // Final default window arrangement
     arrangeDefaultWindows();
@@ -2106,7 +2115,11 @@ function saveSessionState() {
         };
     });
 
-    localStorage.setItem('rhel_desktop_session_state', JSON.stringify(state));
+    try {
+        localStorage.setItem('rhel_desktop_session_state', JSON.stringify(state));
+    } catch (e) {
+        console.warn('localStorage write blocked:', e);
+    }
 }
 
 function arrangeDefaultWindows() {
@@ -2121,7 +2134,12 @@ function arrangeDefaultWindows() {
     const emulator = document.getElementById('win-emulator');
 
     // Attempt to load from persisted session
-    const saved = localStorage.getItem('rhel_desktop_session_state');
+    let saved = null;
+    try {
+        saved = localStorage.getItem('rhel_desktop_session_state');
+    } catch (e) {
+        console.warn('localStorage read blocked:', e);
+    }
     if (saved) {
         try {
             const state = JSON.parse(saved);
@@ -2423,6 +2441,17 @@ function initSystemWidget() {
 
     setupWidgetDrag(widget);
 
+    // Click handler (distinguish from drag)
+    let dragMove = false;
+    widget.addEventListener('mousedown', () => { dragMove = false; });
+    widget.addEventListener('mousemove', () => { dragMove = true; });
+    widget.addEventListener('mouseup', (e) => {
+        if (!dragMove) {
+            e.stopPropagation();
+            openAppWindow('sysmonitor');
+        }
+    });
+
     const cpuFill = document.getElementById('widget-cpu-fill');
     const cpuText = document.getElementById('widget-cpu-text');
     const ramFill = document.getElementById('widget-ram-fill');
@@ -2431,6 +2460,14 @@ function initSystemWidget() {
     const uptimeText = document.getElementById('widget-uptime-text');
     const cpuBadge = document.querySelector('.cpu-load-badge');
     const canvas = document.getElementById('widget-cpu-canvas');
+    
+    if (cpuBadge) {
+        cpuBadge.style.cursor = 'pointer';
+        cpuBadge.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openAppWindow('sysmonitor');
+        });
+    }
 
     const startTime = Date.now();
     const cpuHistory = new Array(40).fill(8);
@@ -2536,6 +2573,17 @@ function initClockWidget() {
     if (!widget) return;
     setupWidgetDrag(widget);
 
+    // Click handler (distinguish from drag)
+    let clockDrag = false;
+    widget.addEventListener('mousedown', () => { clockDrag = false; });
+    widget.addEventListener('mousemove', () => { clockDrag = true; });
+    widget.addEventListener('mouseup', (e) => {
+        if (!clockDrag) {
+            e.stopPropagation();
+            openAppWindow('clock');
+        }
+    });
+
     const bengaluruElem = document.getElementById('clock-bengaluru');
     const newyorkElem = document.getElementById('clock-newyork');
     const amsterdamElem = document.getElementById('clock-amsterdam');
@@ -2563,6 +2611,17 @@ function initWeatherWidget() {
     const widget = document.getElementById('weather-widget');
     if (!widget) return;
     setupWidgetDrag(widget);
+
+    // Click handler (distinguish from drag)
+    let weatherDrag = false;
+    widget.addEventListener('mousedown', () => { weatherDrag = false; });
+    widget.addEventListener('mousemove', () => { weatherDrag = true; });
+    widget.addEventListener('mouseup', (e) => {
+        if (!weatherDrag) {
+            e.stopPropagation();
+            openAppWindow('weather');
+        }
+    });
 
     const cityElem = document.getElementById('weather-city');
     const descElem = document.getElementById('weather-desc');
@@ -2666,4 +2725,354 @@ function initPhotoWidget() {
     const widget = document.getElementById('photo-widget');
     if (!widget) return;
     setupWidgetDrag(widget);
+
+    const photoImg = widget.querySelector('img');
+    if (photoImg) {
+        photoImg.style.cursor = 'pointer';
+        photoImg.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openAppWindow('imageviewer');
+        });
+    }
+}
+
+// ─── New Applications Setups ──────────────────────────────────────────────
+
+function setupClockApp() {
+    const localTimeEl = document.getElementById('clock-local-time');
+    const localDateEl = document.getElementById('clock-local-date');
+    const appNy = document.getElementById('clock-app-ny');
+    const appLondon = document.getElementById('clock-app-london');
+    const appTokyo = document.getElementById('clock-app-tokyo');
+    const appBlr = document.getElementById('clock-app-blr');
+
+    // 1. Time ticking
+    function tick() {
+        const now = new Date();
+        if (localTimeEl) {
+            localTimeEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+        if (localDateEl) {
+            localDateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        if (appNy) {
+            appNy.textContent = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit' });
+        }
+        if (appLondon) {
+            appLondon.textContent = now.toLocaleTimeString('en-US', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit' });
+        }
+        if (appTokyo) {
+            appTokyo.textContent = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit' });
+        }
+        if (appBlr) {
+            appBlr.textContent = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' });
+        }
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    // 2. Tabs logic
+    const tabBtns = document.querySelectorAll('.clock-tab-btn');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => {
+                b.classList.remove('active');
+                b.style.borderBottomColor = 'transparent';
+                b.style.color = '#aaa';
+            });
+            btn.classList.add('active');
+            btn.style.borderBottomColor = '#ef4444';
+            btn.style.color = '#fff';
+
+            const targetTab = btn.getAttribute('data-tab');
+            document.querySelectorAll('.clock-tab-content').forEach(c => c.style.display = 'none');
+            const activeContent = document.getElementById(`tab-${targetTab}`);
+            if (activeContent) activeContent.style.display = 'flex';
+        });
+    });
+
+    // 3. Stopwatch logic
+    let stopwatchInterval = null;
+    let stopwatchStart = 0;
+    let stopwatchElapsed = 0;
+    let stopwatchRunning = false;
+    let lapCount = 0;
+
+    const stopwatchDisplay = document.getElementById('stopwatch-display');
+    const stopwatchStartBtn = document.getElementById('stopwatch-start');
+    const stopwatchLapBtn = document.getElementById('stopwatch-lap');
+    const stopwatchResetBtn = document.getElementById('stopwatch-reset');
+    const stopwatchLapsContainer = document.getElementById('stopwatch-laps');
+
+    function formatStopwatchTime(ms) {
+        const minutes = Math.floor(ms / 60000);
+        const seconds = Math.floor((ms % 60000) / 1000);
+        const centiseconds = Math.floor((ms % 1000) / 10);
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(centiseconds).padStart(2, '0')}`;
+    }
+
+    if (stopwatchStartBtn) {
+        stopwatchStartBtn.addEventListener('click', () => {
+            if (stopwatchRunning) {
+                // Pause
+                stopwatchRunning = false;
+                stopwatchElapsed += Date.now() - stopwatchStart;
+                clearInterval(stopwatchInterval);
+                stopwatchStartBtn.textContent = 'Start';
+                stopwatchStartBtn.style.background = '#10b981';
+                if (stopwatchLapBtn) stopwatchLapBtn.disabled = true;
+            } else {
+                // Start
+                stopwatchRunning = true;
+                stopwatchStart = Date.now();
+                stopwatchInterval = setInterval(() => {
+                    const elapsed = stopwatchElapsed + (Date.now() - stopwatchStart);
+                    if (stopwatchDisplay) stopwatchDisplay.textContent = formatStopwatchTime(elapsed);
+                }, 10);
+                stopwatchStartBtn.textContent = 'Pause';
+                stopwatchStartBtn.style.background = '#ef4444';
+                if (stopwatchLapBtn) stopwatchLapBtn.disabled = false;
+            }
+        });
+    }
+
+    if (stopwatchLapBtn) {
+        stopwatchLapBtn.addEventListener('click', () => {
+            if (!stopwatchRunning) return;
+            const elapsed = stopwatchElapsed + (Date.now() - stopwatchStart);
+            lapCount++;
+            const lapDiv = document.createElement('div');
+            lapDiv.style.cssText = 'display: flex; justify-content: space-between; border-bottom: 1px solid #2d3748; padding: 0.25rem 0; font-size: 0.85rem; font-family: monospace; color: #fff;';
+            lapDiv.innerHTML = `<span>Lap ${lapCount}</span><span>${formatStopwatchTime(elapsed)}</span>`;
+            if (stopwatchLapsContainer) {
+                stopwatchLapsContainer.appendChild(lapDiv);
+                stopwatchLapsContainer.scrollTop = stopwatchLapsContainer.scrollHeight;
+            }
+        });
+    }
+
+    if (stopwatchResetBtn) {
+        stopwatchResetBtn.addEventListener('click', () => {
+            stopwatchRunning = false;
+            clearInterval(stopwatchInterval);
+            stopwatchElapsed = 0;
+            lapCount = 0;
+            if (stopwatchDisplay) stopwatchDisplay.textContent = '00:00.00';
+            if (stopwatchStartBtn) {
+                stopwatchStartBtn.textContent = 'Start';
+                stopwatchStartBtn.style.background = '#ef4444';
+            }
+            if (stopwatchLapBtn) stopwatchLapBtn.disabled = true;
+            if (stopwatchLapsContainer) stopwatchLapsContainer.innerHTML = '';
+        });
+    }
+}
+
+function setupWeatherApp() {
+    const searchInput = document.getElementById('weather-search-input');
+    const appCity = document.getElementById('weather-app-city');
+    const appTemp = document.getElementById('weather-app-temp');
+    const appDesc = document.getElementById('weather-app-desc');
+    const appIcon = document.getElementById('weather-app-icon');
+    const appHumidity = document.getElementById('weather-app-humidity');
+    const appWind = document.getElementById('weather-app-wind');
+    const appVisibility = document.getElementById('weather-app-visibility');
+    const forecastContainer = document.getElementById('weather-forecast-container');
+
+    const simulatedCities = {
+        'bangalore': { name: 'Bangalore', lat: 12.9716, lon: 77.5946, humidity: '62%', wind: '11 km/h', visibility: '10 km' },
+        'blr': { name: 'Bangalore', lat: 12.9716, lon: 77.5946, humidity: '62%', wind: '11 km/h', visibility: '10 km' },
+        'bengaluru': { name: 'Bangalore', lat: 12.9716, lon: 77.5946, humidity: '62%', wind: '11 km/h', visibility: '10 km' },
+        'mumbai': { name: 'Mumbai', lat: 19.0760, lon: 72.8777, humidity: '80%', wind: '18 km/h', visibility: '6 km' },
+        'delhi': { name: 'New Delhi', lat: 28.6139, lon: 77.2090, humidity: '45%', wind: '8 km/h', visibility: '4 km' },
+        'london': { name: 'London', lat: 51.5074, lon: -0.1278, humidity: '72%', wind: '15 km/h', visibility: '10 km' },
+        'new york': { name: 'New York', lat: 40.7128, lon: -74.0060, humidity: '55%', wind: '12 km/h', visibility: '10 km' },
+        'ny': { name: 'New York', lat: 40.7128, lon: -74.0060, humidity: '55%', wind: '12 km/h', visibility: '10 km' },
+        'tokyo': { name: 'Tokyo', lat: 35.6762, lon: 139.6503, humidity: '50%', wind: '9 km/h', visibility: '10 km' },
+        'paris': { name: 'Paris', lat: 48.8566, lon: 2.3522, humidity: '58%', wind: '14 km/h', visibility: '10 km' },
+        'munich': { name: 'Munich', lat: 48.1351, lon: 11.5820, humidity: '65%', wind: '10 km/h', visibility: '10 km' },
+        'austin': { name: 'Austin', lat: 30.2672, lon: -97.7431, humidity: '40%', wind: '7 km/h', visibility: '10 km' },
+        'san jose': { name: 'San Jose', lat: 37.3382, lon: -121.8863, humidity: '48%', wind: '8 km/h', visibility: '10 km' }
+    };
+
+    function getWeatherIcon(code, isDay) {
+        if ([0].includes(code)) return isDay ? '☀️' : '🌙';
+        if ([1, 2, 3].includes(code)) return isDay ? '⛅' : '☁️';
+        if ([45, 48].includes(code)) return '🌫️';
+        if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return '🌧️';
+        if ([71, 73, 75, 85, 86].includes(code)) return '❄️';
+        if ([95, 96, 99].includes(code)) return '⛈️';
+        return '☁️';
+    }
+
+    function getWeatherDesc(code) {
+        if (code === 0) return 'Clear Sky';
+        if (code === 1 || code === 2) return 'Partly Cloudy';
+        if (code === 3) return 'Overcast';
+        if (code === 45 || code === 48) return 'Foggy';
+        if (code === 51 || code === 53 || code === 55) return 'Light Drizzle';
+        if (code === 61 || code === 63 || code === 65) return 'Rainy';
+        if (code === 71 || code === 73 || code === 75) return 'Snowy';
+        if (code === 80 || code === 81 || code === 82) return 'Rain Showers';
+        if (code === 95 || code === 96 || code === 99) return 'Thunderstorm';
+        return 'Cloudy';
+    }
+
+    async function loadCityWeather(cityName, lat, lon, metadata) {
+        try {
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto`);
+            if (res.ok) {
+                const data = await res.json();
+                const cur = data.current_weather;
+                if (cur) {
+                    const temp = Math.round(cur.temperature);
+                    const code = cur.weathercode;
+                    const isDay = cur.is_day === 1;
+
+                    if (appCity) appCity.textContent = cityName;
+                    if (appTemp) appTemp.textContent = `${temp}°C`;
+                    if (appDesc) appDesc.textContent = getWeatherDesc(code);
+                    if (appIcon) appIcon.textContent = getWeatherIcon(code, isDay);
+                    if (appHumidity) appHumidity.textContent = metadata?.humidity || '60%';
+                    if (appWind) appWind.textContent = metadata?.wind || '10 km/h';
+                    if (appVisibility) appVisibility.textContent = metadata?.visibility || '10 km';
+
+                    // Forecast
+                    if (forecastContainer && data.daily) {
+                        forecastContainer.innerHTML = '';
+                        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        for (let i = 0; i < 5; i++) {
+                            const date = new Date(data.daily.time[i]);
+                            const dayName = i === 0 ? 'Today' : days[date.getDay()];
+                            const fCode = data.daily.weathercode[i];
+                            const fMin = Math.round(data.daily.temperature_2m_min[i]);
+                            const fMax = Math.round(data.daily.temperature_2m_max[i]);
+
+                            const fItem = document.createElement('div');
+                            fItem.style.cssText = 'background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.04); border-radius: 6px; padding: 0.6rem 0.4rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem; font-size: 0.75rem;';
+                            fItem.innerHTML = `
+                                <div style="color: #94a3b8; font-weight: bold;">${dayName}</div>
+                                <div style="font-size: 1.25rem; margin: 0.1rem 0;">${getWeatherIcon(fCode, true)}</div>
+                                <div style="font-weight: 800;">${fMax}°</div>
+                                <div style="color: #64748b;">${fMin}°</div>
+                            `;
+                            forecastContainer.appendChild(fItem);
+                        }
+                    }
+                    return;
+                }
+            }
+        } catch (e) {
+            console.warn('Weather App fetch failed', e);
+        }
+
+        // Fallback simulated load
+        if (appCity) appCity.textContent = cityName;
+        if (appTemp) appTemp.textContent = '24°C';
+        if (appDesc) appDesc.textContent = 'Partly Cloudy';
+        if (appIcon) appIcon.textContent = '⛅';
+        if (forecastContainer) {
+            forecastContainer.innerHTML = '';
+            const days = ['Today', 'Mon', 'Tue', 'Wed', 'Thu'];
+            for (let i = 0; i < 5; i++) {
+                const fItem = document.createElement('div');
+                fItem.style.cssText = 'background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.04); border-radius: 6px; padding: 0.6rem 0.4rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem; font-size: 0.75rem;';
+                fItem.innerHTML = `
+                    <div style="color: #94a3b8; font-weight: bold;">${days[i]}</div>
+                    <div style="font-size: 1.25rem; margin: 0.1rem 0;">⛅</div>
+                    <div style="font-weight: 800;">28°</div>
+                    <div style="color: #64748b;">20°</div>
+                `;
+                forecastContainer.appendChild(fItem);
+            }
+        }
+    }
+
+    // Default load
+    loadCityWeather('Bangalore', 12.9716, 77.5946, { humidity: '62%', wind: '11 km/h', visibility: '10 km' });
+
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const term = searchInput.value.trim().toLowerCase();
+                if (term) {
+                    if (simulatedCities[term]) {
+                        const cityObj = simulatedCities[term];
+                        loadCityWeather(cityObj.name, cityObj.lat, cityObj.lon, cityObj);
+                    } else {
+                        // Simulated search search response
+                        const stylizedName = searchInput.value.trim().charAt(0).toUpperCase() + searchInput.value.trim().slice(1);
+                        loadCityWeather(stylizedName, 40 + Math.random()*10, -70 - Math.random()*20, {
+                            humidity: `${Math.round(40 + Math.random()*40)}%`,
+                            wind: `${Math.round(5 + Math.random()*15)} km/h`,
+                            visibility: '10 km'
+                        });
+                    }
+                }
+            }
+        });
+    }
+}
+
+function setupImageViewerApp() {
+    const img = document.getElementById('imageviewer-img');
+    const zoomInBtn = document.getElementById('img-zoom-in');
+    const zoomOutBtn = document.getElementById('img-zoom-out');
+    const resetBtn = document.getElementById('img-reset');
+    const rotLeftBtn = document.getElementById('img-rotate-left');
+    const rotRightBtn = document.getElementById('img-rotate-right');
+    const zoomLevelEl = document.getElementById('img-zoom-level');
+
+    let currentScale = 1.0;
+    let currentRotation = 0;
+
+    function applyTransforms() {
+        if (img) {
+            img.style.transform = `scale(${currentScale}) rotate(${currentRotation}deg)`;
+        }
+        if (zoomLevelEl) {
+            zoomLevelEl.textContent = `${Math.round(currentScale * 100)}%`;
+        }
+    }
+
+    if (zoomInBtn) {
+        zoomInBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentScale = Math.min(3.0, currentScale + 0.1);
+            applyTransforms();
+        });
+    }
+
+    if (zoomOutBtn) {
+        zoomOutBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentScale = Math.max(0.2, currentScale - 0.1);
+            applyTransforms();
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentScale = 1.0;
+            currentRotation = 0;
+            applyTransforms();
+        });
+    }
+
+    if (rotLeftBtn) {
+        rotLeftBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentRotation -= 90;
+            applyTransforms();
+        });
+    }
+
+    if (rotRightBtn) {
+        rotRightBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentRotation += 90;
+            applyTransforms();
+        });
+    }
 }

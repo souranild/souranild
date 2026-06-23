@@ -12,7 +12,12 @@ export function initThemeSwitcher() {
     if (!btn || !popover) return;
 
     // Restore saved theme
-    const saved = localStorage.getItem(STORAGE_KEY) || 'rhel';
+    let saved = 'rhel';
+    try {
+        saved = localStorage.getItem(STORAGE_KEY) || 'rhel';
+    } catch (e) {
+        console.warn('localStorage read blocked:', e);
+    }
     applyTheme(saved);
 
     // Toggle popover
@@ -37,7 +42,11 @@ export function initThemeSwitcher() {
         if (card) {
             card.addEventListener('click', () => {
                 applyTheme(id);
-                localStorage.setItem(STORAGE_KEY, id);
+                try {
+                    localStorage.setItem(STORAGE_KEY, id);
+                } catch (e) {
+                    console.warn('localStorage write blocked:', e);
+                }
                 // Brief delay then close popover
                 setTimeout(() => {
                     popover.classList.remove('open');
@@ -48,7 +57,7 @@ export function initThemeSwitcher() {
     });
 }
 
-function applyTheme(id) {
+export function applyTheme(id) {
     document.body.setAttribute('data-theme', id);
 
     // Update active card highlight and checkmarks

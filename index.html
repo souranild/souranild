@@ -22,17 +22,27 @@
         <div id="boot-grub" class="boot-phase">
             <div class="grub-header">GNU GRUB  version 2.06</div>
             <div class="grub-box">
-                <div class="grub-entry grub-selected" id="grub-rhel">
-                    *Red Hat Enterprise Linux (5.14.0-427.13.1.el9_4.x86_64) 9.4
+                <div class="grub-entry grub-selected" data-os="rhel">
+                    *Red Hat Enterprise Linux 9.4
                 </div>
-                <div class="grub-entry">Red Hat Enterprise Linux (0-rescue-...) 9.4</div>
-                <div class="grub-entry dimmed">UEFI Firmware Settings</div>
+                <div class="grub-entry" data-os="ubuntu">
+                     Ubuntu 22.04 LTS
+                </div>
+                <div class="grub-entry" data-os="kali">
+                     Kali Linux (2024.1)
+                </div>
+                <div class="grub-entry" data-os="win11">
+                     Windows 11 Workstation
+                </div>
+                <div class="grub-entry" data-os="macos">
+                     macOS Sonoma
+                </div>
             </div>
             <div class="grub-footer">
                 <span>Use the ↑ and ↓ keys to change the selection.</span><br>
                 <span>Press Enter to boot the selected OS.</span>
             </div>
-            <div class="grub-countdown">Booting in <span id="grub-timer">5</span>s...</div>
+            <div class="grub-countdown">Booting in <span id="grub-timer">2</span>s...</div>
         </div>
 
         <!-- Phase 2: systemd boot log -->
@@ -78,6 +88,79 @@
     </div>
     <!-- End boot overlay -->
 
+    <!-- Theme Switcher (Global body child to prevent parent-hiding across themes) -->
+    <div class="theme-switcher-wrap" id="theme-switcher-wrap">
+        <button class="theme-btn" id="theme-btn" title="Change theme" aria-label="Theme switcher">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
+                <circle cx="10" cy="10" r="3.5"/>
+                <path d="M10 1v2M10 17v2M1 10h2M17 10h2M3.22 3.22l1.42 1.42M15.36 15.36l1.42 1.42M3.22 16.78l1.42-1.42M15.36 4.64l1.42-1.42"/>
+                <circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+            </svg>
+            Theme
+        </button>
+        <div class="theme-popover" id="theme-popover" aria-hidden="true">
+            <div class="theme-popover-title">Choose Theme</div>
+            <div class="theme-grid">
+                <button class="theme-card active" data-theme="rhel" id="theme-rhel">
+                    <div class="theme-preview" style="background:linear-gradient(135deg,#12141a 50%,#cc0000 100%)">
+                        <span class="theme-preview-bar" style="background:#353945"></span>
+                        <span class="theme-preview-bar" style="background:#353945;margin-top:auto"></span>
+                    </div>
+                    <span class="theme-name">Red Hat</span>
+                    <span class="theme-check" id="check-rhel">✓</span>
+                </button>
+                <button class="theme-card" data-theme="kali" id="theme-kali">
+                    <div class="theme-preview" style="background:linear-gradient(135deg,#0a0a12 50%,#367bf0 100%)">
+                        <span class="theme-preview-bar" style="background:#1a1a2e"></span>
+                        <span class="theme-preview-bar" style="background:#1a1a2e;margin-top:auto"></span>
+                    </div>
+                    <span class="theme-name">Kali Linux</span>
+                    <span class="theme-check" id="check-kali"></span>
+                </button>
+                <button class="theme-card" data-theme="ubuntu" id="theme-ubuntu">
+                    <div class="theme-preview" style="background:linear-gradient(135deg,#2c001e 50%,#f26122 100%)">
+                        <span class="theme-preview-bar" style="background:#3b0025"></span>
+                        <span class="theme-preview-bar" style="background:#3b0025;margin-top:auto"></span>
+                    </div>
+                    <span class="theme-name">Ubuntu</span>
+                    <span class="theme-check" id="check-ubuntu"></span>
+                </button>
+                <button class="theme-card" data-theme="win7" id="theme-win7">
+                    <div class="theme-preview" style="background:linear-gradient(135deg,#1a3a6e 50%,#4a8fd8 100%)">
+                        <span class="theme-preview-bar" style="background:rgba(120,160,220,0.35);backdrop-filter:blur(4px)"></span>
+                        <span class="theme-preview-bar" style="background:rgba(120,160,220,0.35);margin-top:auto"></span>
+                    </div>
+                    <span class="theme-name">Windows 7</span>
+                    <span class="theme-check" id="check-win7"></span>
+                </button>
+                <button class="theme-card" data-theme="win10" id="theme-win10">
+                    <div class="theme-preview" style="background:linear-gradient(135deg,#001f3f 50%,#0078d4 100%)">
+                        <span class="theme-preview-bar" style="background:#1a1a2a"></span>
+                        <span class="theme-preview-bar" style="background:#1a1a2a;margin-top:auto"></span>
+                    </div>
+                    <span class="theme-name">Windows 10</span>
+                    <span class="theme-check" id="check-win10"></span>
+                </button>
+                <button class="theme-card" data-theme="win11" id="theme-win11">
+                    <div class="theme-preview" style="background:radial-gradient(circle,#1a3b68 30%,#0f1d3a 100%)">
+                        <span class="theme-preview-bar" style="background:rgba(30,30,30,0.6);backdrop-filter:blur(3px)"></span>
+                        <span class="theme-preview-bar" style="background:rgba(30,30,30,0.6);margin-top:auto"></span>
+                    </div>
+                    <span class="theme-name">Windows 11</span>
+                    <span class="theme-check" id="check-win11"></span>
+                </button>
+                <button class="theme-card" data-theme="macos" id="theme-macos">
+                    <div class="theme-preview" style="background:linear-gradient(135deg,#ff5e62 0%,#ff9966 50%,#1e90ff 100%)">
+                        <span class="theme-preview-bar" style="background:rgba(255,255,255,0.7)"></span>
+                        <span class="theme-preview-bar" style="background:rgba(40,40,40,0.8);margin-top:auto"></span>
+                    </div>
+                    <span class="theme-name">macOS</span>
+                    <span class="theme-check" id="check-macos"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- RHEL TOP PANEL (Active Window Tabs) -->
     <header class="rhel-top-panel">
         <div class="top-panel-left">
@@ -92,82 +175,14 @@
                 <span class="window-tab-badge" data-toggle="calculator">🧮 Calculator</span>
                 <span class="window-tab-badge" data-toggle="overleaf">🍃 Editor</span>
                 <span class="window-tab-badge" data-toggle="emulator">🎮 Emulator</span>
+                <span class="window-tab-badge" data-toggle="sysmonitor" style="display: none;">📈 Monitor</span>
+                <span class="window-tab-badge" data-toggle="clock" style="display: none;">🕒 Clock</span>
+                <span class="window-tab-badge" data-toggle="weather" style="display: none;">🌤️ Weather</span>
+                <span class="window-tab-badge" data-toggle="imageviewer" style="display: none;">🖼️ Viewer</span>
             </div>
         </div>
         <div class="top-panel-right">
             <span class="cpu-load-badge">CPU: 4.8%</span>
-            <!-- Theme Switcher -->
-            <div class="theme-switcher-wrap" id="theme-switcher-wrap">
-                <button class="theme-btn" id="theme-btn" title="Change theme" aria-label="Theme switcher">
-                    <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
-                        <circle cx="10" cy="10" r="3.5"/>
-                        <path d="M10 1v2M10 17v2M1 10h2M17 10h2M3.22 3.22l1.42 1.42M15.36 15.36l1.42 1.42M3.22 16.78l1.42-1.42M15.36 4.64l1.42-1.42"/>
-                        <circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
-                    </svg>
-                    Theme
-                </button>
-                <div class="theme-popover" id="theme-popover" aria-hidden="true">
-                    <div class="theme-popover-title">Choose Theme</div>
-                    <div class="theme-grid">
-                        <button class="theme-card active" data-theme="rhel" id="theme-rhel">
-                            <div class="theme-preview" style="background:linear-gradient(135deg,#12141a 50%,#cc0000 100%)">
-                                <span class="theme-preview-bar" style="background:#353945"></span>
-                                <span class="theme-preview-bar" style="background:#353945;margin-top:auto"></span>
-                            </div>
-                            <span class="theme-name">Red Hat</span>
-                            <span class="theme-check" id="check-rhel">✓</span>
-                        </button>
-                        <button class="theme-card" data-theme="kali" id="theme-kali">
-                            <div class="theme-preview" style="background:linear-gradient(135deg,#0a0a12 50%,#367bf0 100%)">
-                                <span class="theme-preview-bar" style="background:#1a1a2e"></span>
-                                <span class="theme-preview-bar" style="background:#1a1a2e;margin-top:auto"></span>
-                            </div>
-                            <span class="theme-name">Kali Linux</span>
-                            <span class="theme-check" id="check-kali"></span>
-                        </button>
-                        <button class="theme-card" data-theme="ubuntu" id="theme-ubuntu">
-                            <div class="theme-preview" style="background:linear-gradient(135deg,#2c001e 50%,#f26122 100%)">
-                                <span class="theme-preview-bar" style="background:#3b0025"></span>
-                                <span class="theme-preview-bar" style="background:#3b0025;margin-top:auto"></span>
-                            </div>
-                            <span class="theme-name">Ubuntu</span>
-                            <span class="theme-check" id="check-ubuntu"></span>
-                        </button>
-                        <button class="theme-card" data-theme="win7" id="theme-win7">
-                            <div class="theme-preview" style="background:linear-gradient(135deg,#1a3a6e 50%,#4a8fd8 100%)">
-                                <span class="theme-preview-bar" style="background:rgba(120,160,220,0.35);backdrop-filter:blur(4px)"></span>
-                                <span class="theme-preview-bar" style="background:rgba(120,160,220,0.35);margin-top:auto"></span>
-                            </div>
-                            <span class="theme-name">Windows 7</span>
-                            <span class="theme-check" id="check-win7"></span>
-                        </button>
-                        <button class="theme-card" data-theme="win10" id="theme-win10">
-                            <div class="theme-preview" style="background:linear-gradient(135deg,#001f3f 50%,#0078d4 100%)">
-                                <span class="theme-preview-bar" style="background:#1a1a1a"></span>
-                                <span class="theme-preview-bar" style="background:#1a1a1a;margin-top:auto"></span>
-                            </div>
-                            <span class="theme-name">Windows 10</span>
-                            <span class="theme-check" id="check-win10"></span>
-                        </button>
-                        <button class="theme-card" data-theme="win11" id="theme-win11">
-                            <div class="theme-preview" style="background:radial-gradient(circle,#1a3b68 30%,#0f1d3a 100%)">
-                                <span class="theme-preview-bar" style="background:rgba(30,30,30,0.6);backdrop-filter:blur(3px)"></span>
-                                <span class="theme-preview-bar" style="background:rgba(30,30,30,0.6);margin-top:auto"></span>
-                            </div>
-                            <span class="theme-name">Windows 11</span>
-                            <span class="theme-check" id="check-win11"></span>
-                        </button>
-                        <button class="theme-card" data-theme="macos" id="theme-macos">
-                            <div class="theme-preview" style="background:linear-gradient(135deg,#ff5e62 0%,#ff9966 50%,#1e90ff 100%)">
-                                <span class="theme-preview-bar" style="background:rgba(255,255,255,0.7)"></span>
-                                <span class="theme-preview-bar" style="background:rgba(40,40,40,0.8);margin-top:auto"></span>
-                            </div>
-                            <span class="theme-name">macOS</span>
-                            <span class="theme-check" id="check-macos"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     </header>
 
@@ -246,7 +261,7 @@
                 <div class="icon-label">projects.odt</div>
             </div>
             <!-- User File: profile.png -->
-            <div class="desktop-icon desktop-file-icon" data-file-open="photowidget">
+            <div class="desktop-icon desktop-file-icon" data-file-open="imageviewer">
                 <div class="linux-app-icon">
                     <img src="/profile.png" alt="Profile" style="width: 48px; height: 48px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);">
                 </div>
@@ -958,6 +973,147 @@ Loading...
         </div>
 
         <!-- -------------------------------------------------------------
+           APPLICATION 11B: CLOCK APP
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-clock" style="top: 120px; left: 220px; width: 480px; height: 380px; z-index: 10; display: none;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">🕒</span>
+                    <span class="window-title">Clock</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="clock" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="clock" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="clock" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body clock-window-body" style="background: #1e1e1e; color: #fff; display: flex; flex-direction: column; font-family: var(--font-sans); padding: 0;">
+                <div class="clock-tabs" style="display: flex; background: #2a2a2a; border-bottom: 1px solid #3a3a3a; padding: 0 0.5rem;">
+                    <button class="clock-tab-btn active" data-tab="world-clock">World Clock</button>
+                    <button class="clock-tab-btn" data-tab="stopwatch">Stopwatch</button>
+                </div>
+                <div class="clock-tab-content" id="tab-world-clock">
+                    <div id="clock-local-time" style="font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem; font-family: monospace; letter-spacing: 1px;">00:00:00 AM</div>
+                    <div id="clock-local-date" style="font-size: 0.9rem; color: #aaa; margin-bottom: 1.5rem;">Tuesday, June 23, 2026</div>
+                    <div class="world-times-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 0.75rem; color: #aaa;">New York</div>
+                                <div style="font-size: 0.7rem; color: #888;">EDT (UTC-4)</div>
+                            </div>
+                            <div id="clock-app-ny" style="font-size: 1.25rem; font-weight: bold; font-family: monospace;">00:00 AM</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 0.75rem; color: #aaa;">London</div>
+                                <div style="font-size: 0.7rem; color: #888;">BST (UTC+1)</div>
+                            </div>
+                            <div id="clock-app-london" style="font-size: 1.25rem; font-weight: bold; font-family: monospace;">00:00 AM</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 0.75rem; color: #aaa;">Tokyo</div>
+                                <div style="font-size: 0.7rem; color: #888;">JST (UTC+9)</div>
+                            </div>
+                            <div id="clock-app-tokyo" style="font-size: 1.25rem; font-weight: bold; font-family: monospace;">00:00 AM</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 0.75rem; color: #aaa;">Bangalore</div>
+                                <div style="font-size: 0.7rem; color: #888;">IST (UTC+5.5)</div>
+                            </div>
+                            <div id="clock-app-blr" style="font-size: 1.25rem; font-weight: bold; font-family: monospace;">00:00 AM</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clock-tab-content" id="tab-stopwatch" style="display: none;">
+                    <div id="stopwatch-display" style="font-size: 3rem; font-weight: bold; margin-bottom: 1.5rem; font-family: monospace;">00:00.00</div>
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <button id="stopwatch-start" style="background: #ef4444; border: none; border-radius: 4px; color: #fff; padding: 0.5rem 1.5rem; font-weight: bold; cursor: pointer; min-width: 80px;">Start</button>
+                        <button id="stopwatch-lap" style="background: #374151; border: none; border-radius: 4px; color: #fff; padding: 0.5rem 1.5rem; font-weight: bold; cursor: pointer; min-width: 80px;" disabled>Lap</button>
+                        <button id="stopwatch-reset" style="background: #374151; border: none; border-radius: 4px; color: #fff; padding: 0.5rem 1.5rem; font-weight: bold; cursor: pointer; min-width: 80px;">Reset</button>
+                    </div>
+                    <div id="stopwatch-laps" style="width: 100%; max-height: 120px; overflow-y: auto; border: 1px solid #374151; border-radius: 4px; padding: 0.5rem;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 11C: WEATHER APP
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-weather" style="top: 140px; left: 240px; width: 500px; height: 420px; z-index: 10; display: none;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">🌤️</span>
+                    <span class="window-title">Weather</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="weather" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="weather" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="weather" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body weather-window-body" style="color: #fff; font-family: var(--font-sans); display: flex; flex-direction: column; padding: 1.2rem; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); padding: 0.25rem 0.6rem; border-radius: 6px; width: 220px;">
+                        <span style="font-size: 0.9rem;">🔍</span>
+                        <input id="weather-search-input" type="text" placeholder="Search City..." style="background: none; border: none; outline: none; color: #fff; font-size: 0.85rem; width: 100%;">
+                    </div>
+                    <span id="weather-app-city" style="font-size: 1.3rem; font-weight: bold;">Bangalore</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding: 0.5rem 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span id="weather-app-icon" style="font-size: 3.5rem;">⛅</span>
+                        <div>
+                            <div id="weather-app-temp" style="font-size: 2.8rem; font-weight: 800; line-height: 1;">27°C</div>
+                            <div id="weather-app-desc" style="font-size: 0.95rem; color: #cbd5e1; margin-top: 0.2rem;">Partly Cloudy</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #94a3b8; text-align: right; display: flex; flex-direction: column; gap: 0.25rem;">
+                        <div>Humidity: <span id="weather-app-humidity">65%</span></div>
+                        <div>Wind: <span id="weather-app-wind">12 km/h</span></div>
+                        <div>Visibility: <span id="weather-app-visibility">10 km</span></div>
+                    </div>
+                </div>
+                <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 0 0 1.2rem 0;">
+                <div style="font-size: 0.85rem; font-weight: bold; margin-bottom: 0.8rem; color: #e2e8f0;">5-Day Forecast</div>
+                <div id="weather-forecast-container" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem;">
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 11D: IMAGE VIEWER APP
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-imageviewer" style="top: 160px; left: 260px; width: 550px; height: 460px; z-index: 10; display: none;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">🖼️</span>
+                    <span class="window-title">Image Viewer - profile.png</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="imageviewer" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="imageviewer" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="imageviewer" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body imageviewer-window-body" style="background: #181818; display: flex; flex-direction: column; padding: 0; overflow: hidden; height: 100%;">
+                <div class="imageviewer-toolbar" style="background: #252525; padding: 0.5rem; display: flex; gap: 0.6rem; align-items: center; border-bottom: 1px solid #333;">
+                    <button id="img-zoom-in" title="Zoom In">➕ Zoom In</button>
+                    <button id="img-zoom-out" title="Zoom Out">➖ Zoom Out</button>
+                    <button id="img-reset" title="Actual Size">🔄 Reset</button>
+                    <button id="img-rotate-left" title="Rotate Left">↩️ Rotate L</button>
+                    <button id="img-rotate-right" title="Rotate Right">↪️ Rotate R</button>
+                    <span style="color: #888; font-size: 0.75rem; margin-left: auto;" id="img-zoom-level">100%</span>
+                </div>
+                <div class="imageviewer-viewport" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: auto; padding: 1.5rem; position: relative;">
+                    <img id="imageviewer-img" src="/profile.png" alt="Profile Image" style="max-width: 80%; max-height: 80%; object-fit: contain; box-shadow: 0 8px 24px rgba(0,0,0,0.5); transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: center center;">
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
            APPLICATION 12: SYSTEM APPS FOLDER (NAUTILUS FILE MANAGER)
         ------------------------------------------------------------- -->
         <div class="desktop-window" id="win-sysapps-folder" style="top: 100px; left: 160px; width: 580px; height: 420px; z-index: 9; display: none;">
@@ -1082,6 +1238,27 @@ Loading...
                             </svg>
                         </div>
                         <div class="nautilus-item-label">Monitor</div>
+                    </div>
+                    <!-- Clock -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="clock">
+                        <div class="nautilus-item-icon">
+                            <span style="font-size: 32px; line-height: 40px;">🕒</span>
+                        </div>
+                        <div class="nautilus-item-label">Clock</div>
+                    </div>
+                    <!-- Weather -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="weather">
+                        <div class="nautilus-item-icon">
+                            <span style="font-size: 32px; line-height: 40px;">🌤️</span>
+                        </div>
+                        <div class="nautilus-item-label">Weather</div>
+                    </div>
+                    <!-- Image Viewer -->
+                    <div class="nautilus-item sysapp-launch-item" data-app="imageviewer">
+                        <div class="nautilus-item-icon">
+                            <span style="font-size: 32px; line-height: 40px;">🖼️</span>
+                        </div>
+                        <div class="nautilus-item-label">Viewer</div>
                     </div>
                 </div>
             </div>
@@ -1237,6 +1414,10 @@ Loading...
         <div class="menu-popup-item" data-app="calculator">🧮 Calculator (gcalctool)</div>
         <div class="menu-popup-item" data-app="overleaf">🍃 Editor</div>
         <div class="menu-popup-item" data-app="games-folder">🎮 Games Folder</div>
+        <div class="menu-popup-item" data-app="sysmonitor">📈 System Monitor</div>
+        <div class="menu-popup-item" data-app="clock">🕒 Clock App</div>
+        <div class="menu-popup-item" data-app="weather">🌤️ Weather App</div>
+        <div class="menu-popup-item" data-app="imageviewer">🖼️ Image Viewer</div>
         <div class="menu-popup-item logout-item" onclick="alert('Session closed. Please refresh page to reboot.')">❌ Log Out souranil...</div>
     </div>
 

@@ -1,14 +1,5 @@
-/**
- * boot.js — Red Hat GRUB → systemd boot → Login card
- * Shown on first visit (sessionStorage flag so it shows each session,
- * but use localStorage if you only want it once ever).
- *
- * Phases:
- *   1. GRUB menu with 5-second countdown (or Enter to skip immediately)
- *   2. Scrolling systemd-style boot log
- *   3. Login card with profile photo, bio, and "Enter Workstation" button
- *   4. Overlay fades out → desktop revealed
- */
+import { applyTheme } from './theme.js';
+import { openAppWindow } from './desktop.js';
 
 // ─── Systemd boot log lines ────────────────────────────────────────────
 // format: [status, message, time_ms]
@@ -130,14 +121,54 @@ function runGrub() {
     let count = 2;
     if (timerEl) timerEl.textContent = count;
     let proceeded = false;
+    let currentSelectedOS = 'rhel';
+
+    const entries = Array.from(document.querySelectorAll('.grub-box .grub-entry[data-os]'));
+
+    const selectEntry = (entry) => {
+        if (!entry) return;
+        entries.forEach(el => el.classList.remove('grub-selected'));
+        entry.classList.add('grub-selected');
+        currentSelectedOS = entry.getAttribute('data-os') || 'rhel';
+    };
+
+    const pauseTimer = () => {
+        clearInterval(interval);
+        const countdownEl = document.querySelector('.grub-countdown');
+        if (countdownEl) {
+            countdownEl.textContent = 'Automatic boot paused. Press Enter to boot selected OS.';
+        }
+    };
 
     const proceed = () => {
         if (proceeded) return;
         proceeded = true;
         clearInterval(interval);
         overlay.removeEventListener('keydown', keyHandler);
+        
+        // Apply and persist selection theme
+        applyTheme(currentSelectedOS);
+        try {
+            localStorage.setItem('portfolio-theme', currentSelectedOS);
+        } catch (e) {
+            console.warn('localStorage access denied:', e);
+        }
+
         runBootLog();
     };
+
+    // Attach click listeners to options
+    entries.forEach(entry => {
+        entry.addEventListener('click', (e) => {
+            e.stopPropagation();
+            pauseTimer();
+            selectEntry(entry);
+        });
+        entry.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+            proceed();
+        });
+    });
 
     const interval = setInterval(() => {
         count--;
@@ -146,9 +177,21 @@ function runGrub() {
     }, 1000);
 
     const keyHandler = (e) => {
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             proceed();
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            pauseTimer();
+            let activeIdx = entries.findIndex(el => el.classList.contains('grub-selected'));
+            if (activeIdx === -1) activeIdx = 0;
+            
+            if (e.key === 'ArrowDown') {
+                activeIdx = (activeIdx + 1) % entries.length;
+            } else {
+                activeIdx = (activeIdx - 1 + entries.length) % entries.length;
+            }
+            selectEntry(entries[activeIdx]);
         }
     };
 
@@ -156,8 +199,12 @@ function runGrub() {
     const overlay = document.getElementById('boot-overlay');
     if (overlay) {
         overlay.addEventListener('keydown', keyHandler);
-        // Clicking anywhere on the GRUB screen proceeds
-        overlay.addEventListener('click', proceed, { once: true });
+        // Clicking anywhere on the GRUB screen (background) proceeds
+        overlay.addEventListener('click', (e) => {
+            // Only proceed if clicking background and not entries
+            if (e.target.classList.contains('grub-entry')) return;
+            proceed();
+        }, { once: true });
         // Make sure it can receive keydown events
         overlay.focus();
     }
@@ -219,6 +266,7 @@ function runLoginCard() {
 
     const enterBtn = document.getElementById('boot-enter-btn');
     const skipBtn  = document.getElementById('boot-skip');
+    const avatar   = document.querySelector('.login-avatar');
     let finished = false;
 
     const finish = () => {
@@ -230,6 +278,17 @@ function runLoginCard() {
 
     if (enterBtn) enterBtn.addEventListener('click', finish, { once: true });
     if (skipBtn)  skipBtn.addEventListener('click', finish, { once: true });
+    
+    if (avatar) {
+        avatar.style.cursor = 'pointer';
+        avatar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            finish();
+            setTimeout(() => {
+                openAppWindow('imageviewer');
+            }, 100);
+        });
+    }
 
     // Enter key on login screen
     const keyHandler = (e) => {
@@ -249,12 +308,23 @@ export function initBootScreen() {
     if (!overlay) return;
 
     // Show every session. Switch to localStorage to show only once ever.
-    const seen = sessionStorage.getItem('boot-seen');
+    let seen = false;
+    try {
+        seen = sessionStorage.getItem('boot-seen');
+    } catch (e) {
+        console.warn('sessionStorage read blocked:', e);
+    }
+
     if (seen) {
         overlay.remove();
         return;
     }
-    sessionStorage.setItem('boot-seen', '1');
+    
+    try {
+        sessionStorage.setItem('boot-seen', '1');
+    } catch (e) {
+        console.warn('sessionStorage write blocked:', e);
+    }
 
     // Make overlay focusable and immediately steal focus away from the
     // zsh autofocus input so Enter/Space keypresses are captured here.

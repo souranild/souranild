@@ -2834,6 +2834,139 @@ body[data-theme="win7"] .desktop-window {
 }
 
 
+/* =============================================================
+   THEME SWITCHER GLOBAL OVERRIDES & POSITION FIXES
+   ============================================================= */
+
+/* Default positioning for RHEL, Ubuntu, Kali, etc. */
+.theme-switcher-wrap {
+    position: fixed !important;
+    top: 5px !important;
+    right: 10px !important;
+    z-index: 9999 !important;
+}
+
+.top-panel-right {
+    margin-right: 90px !important;
+}
+
+/* macOS specific overrides */
+body[data-theme="macos"] .theme-switcher-wrap {
+    position: fixed !important;
+    top: 5px !important;
+    right: 210px !important;
+    z-index: 9999 !important;
+}
+
+body[data-theme="macos"] .top-panel-right {
+    margin-right: 290px !important;
+}
+
+/* Windows theme specific overrides */
+body[data-theme="win7"] .theme-switcher-wrap,
+body[data-theme="win10"] .theme-switcher-wrap,
+body[data-theme="win11"] .theme-switcher-wrap {
+    position: fixed !important;
+    top: 10px !important;
+    right: 10px !important;
+    z-index: 9999 !important;
+}
+
+
+/* =============================================================
+   NEW APPLICATIONS STYLING (Clock, Weather, Image Viewer)
+   ============================================================= */
+
+/* Clock App */
+.clock-tabs {
+    display: flex;
+    background: rgba(30, 30, 30, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.clock-tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 0.8rem 1.2rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.clock-tab-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.clock-tab-btn.active {
+    color: #fff;
+    border-bottom-color: var(--rhel-red, #ef4444);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.clock-tab-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    padding: 1.5rem;
+}
+
+/* Weather App */
+.weather-window-body {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+}
+
+/* Image Viewer App */
+.imageviewer-window-body {
+    background: #141414 !important;
+}
+
+.imageviewer-toolbar {
+    background: #202020 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.imageviewer-toolbar button {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.imageviewer-toolbar button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.imageviewer-toolbar button:active {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.imageviewer-viewport {
+    background: radial-gradient(circle, #222 0%, #111 100%);
+    overflow: auto;
+}
+
+/* Responsive fixes for new windows */
+@media (max-width: 768px) {
+    #win-clock, #win-weather, #win-imageviewer {
+        width: 90% !important;
+        height: 80% !important;
+        left: 5% !important;
+        top: 10% !important;
+    }
+}
+
+
 
 
 
