@@ -1,17 +1,16 @@
 /**
- * theme.js — Theme switcher for the portfolio OS
+ * theme.js — OS Theme application and Power Off control
  * Supported themes: rhel | kali | ubuntu | win7 | win10
  */
 
 const THEMES = ['rhel', 'kali', 'ubuntu', 'win7', 'win10', 'win11', 'macos'];
 const STORAGE_KEY = 'portfolio-theme';
 
-export function initThemeSwitcher() {
-    const btn     = document.getElementById('theme-btn');
-    const popover = document.getElementById('theme-popover');
-    if (!btn || !popover) return;
+export function initPowerOff() {
+    const btn = document.getElementById('power-btn');
+    if (!btn) return;
 
-    // Restore saved theme
+    // Restore saved theme on initial load
     let saved = 'rhel';
     try {
         saved = localStorage.getItem(STORAGE_KEY) || 'rhel';
@@ -20,51 +19,36 @@ export function initThemeSwitcher() {
     }
     applyTheme(saved);
 
-    // Toggle popover
+    // Power off logic
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const isOpen = popover.classList.contains('open');
-        popover.classList.toggle('open', !isOpen);
-        popover.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
-    });
+        
+        // Create a blackout overlay for shutdown animation
+        const blackout = document.createElement('div');
+        blackout.style.position = 'fixed';
+        blackout.style.inset = '0';
+        blackout.style.backgroundColor = '#000';
+        blackout.style.zIndex = '999999';
+        blackout.style.opacity = '0';
+        blackout.style.transition = 'opacity 0.6s ease';
+        document.body.appendChild(blackout);
+        
+        // Trigger reflow to ensure transition runs
+        void blackout.offsetWidth;
+        blackout.style.opacity = '1';
 
-    // Close on outside click
-    document.addEventListener('click', (e) => {
-        if (!document.getElementById('theme-switcher-wrap')?.contains(e.target)) {
-            popover.classList.remove('open');
-            popover.setAttribute('aria-hidden', 'true');
-        }
-    });
-
-    // Theme card clicks
-    THEMES.forEach(id => {
-        const card = document.getElementById(`theme-${id}`);
-        if (card) {
-            card.addEventListener('click', () => {
-                applyTheme(id);
-                try {
-                    localStorage.setItem(STORAGE_KEY, id);
-                } catch (e) {
-                    console.warn('localStorage write blocked:', e);
-                }
-                // Brief delay then close popover
-                setTimeout(() => {
-                    popover.classList.remove('open');
-                    popover.setAttribute('aria-hidden', 'true');
-                }, 220);
-            });
-        }
+        // Clear boot-seen so the GNU screen shows again, then reload
+        setTimeout(() => {
+            try {
+                sessionStorage.removeItem('boot-seen');
+            } catch (e) {
+                console.warn('sessionStorage write blocked:', e);
+            }
+            window.location.reload();
+        }, 700);
     });
 }
 
 export function applyTheme(id) {
     document.body.setAttribute('data-theme', id);
-
-    // Update active card highlight and checkmarks
-    THEMES.forEach(t => {
-        const card  = document.getElementById(`theme-${t}`);
-        const check = document.getElementById(`check-${t}`);
-        if (card)  card.classList.toggle('active', t === id);
-        if (check) check.textContent = t === id ? '✓' : '';
-    });
 }

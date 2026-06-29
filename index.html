@@ -97,77 +97,15 @@
     </div>
     <!-- End boot overlay -->
 
-    <!-- Theme Switcher (Global body child to prevent parent-hiding across themes) -->
-    <div class="theme-switcher-wrap" id="theme-switcher-wrap">
-        <button class="theme-btn" id="theme-btn" title="Change theme" aria-label="Theme switcher">
-            <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
-                <circle cx="10" cy="10" r="3.5"/>
-                <path d="M10 1v2M10 17v2M1 10h2M17 10h2M3.22 3.22l1.42 1.42M15.36 15.36l1.42 1.42M3.22 16.78l1.42-1.42M15.36 4.64l1.42-1.42"/>
-                <circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <!-- Power Off Button (Replaces Theme Switcher) -->
+    <div class="theme-switcher-wrap" id="power-wrap">
+        <button class="theme-btn power-btn" id="power-btn" title="Power Off" aria-label="Power Off" style="background-color: #cc0000; color: white;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                <line x1="12" y1="2" x2="12" y2="12"></line>
             </svg>
-            Theme
+            Power Off
         </button>
-        <div class="theme-popover" id="theme-popover" aria-hidden="true">
-            <div class="theme-popover-title">Choose Theme</div>
-            <div class="theme-grid">
-                <button class="theme-card active" data-theme="rhel" id="theme-rhel">
-                    <div class="theme-preview" style="background:linear-gradient(135deg,#12141a 50%,#cc0000 100%)">
-                        <span class="theme-preview-bar" style="background:#353945"></span>
-                        <span class="theme-preview-bar" style="background:#353945;margin-top:auto"></span>
-                    </div>
-                    <span class="theme-name">Red Hat</span>
-                    <span class="theme-check" id="check-rhel">✓</span>
-                </button>
-                <button class="theme-card" data-theme="kali" id="theme-kali">
-                    <div class="theme-preview" style="background:linear-gradient(135deg,#0a0a12 50%,#367bf0 100%)">
-                        <span class="theme-preview-bar" style="background:#1a1a2e"></span>
-                        <span class="theme-preview-bar" style="background:#1a1a2e;margin-top:auto"></span>
-                    </div>
-                    <span class="theme-name">Kali Linux</span>
-                    <span class="theme-check" id="check-kali"></span>
-                </button>
-                <button class="theme-card" data-theme="ubuntu" id="theme-ubuntu">
-                    <div class="theme-preview" style="background:linear-gradient(135deg,#2c001e 50%,#f26122 100%)">
-                        <span class="theme-preview-bar" style="background:#3b0025"></span>
-                        <span class="theme-preview-bar" style="background:#3b0025;margin-top:auto"></span>
-                    </div>
-                    <span class="theme-name">Ubuntu</span>
-                    <span class="theme-check" id="check-ubuntu"></span>
-                </button>
-                <button class="theme-card" data-theme="win7" id="theme-win7">
-                    <div class="theme-preview" style="background:linear-gradient(135deg,#1a3a6e 50%,#4a8fd8 100%)">
-                        <span class="theme-preview-bar" style="background:rgba(120,160,220,0.35);backdrop-filter:blur(4px)"></span>
-                        <span class="theme-preview-bar" style="background:rgba(120,160,220,0.35);margin-top:auto"></span>
-                    </div>
-                    <span class="theme-name">Windows 7</span>
-                    <span class="theme-check" id="check-win7"></span>
-                </button>
-                <button class="theme-card" data-theme="win10" id="theme-win10">
-                    <div class="theme-preview" style="background:linear-gradient(135deg,#001f3f 50%,#0078d4 100%)">
-                        <span class="theme-preview-bar" style="background:#1a1a2a"></span>
-                        <span class="theme-preview-bar" style="background:#1a1a2a;margin-top:auto"></span>
-                    </div>
-                    <span class="theme-name">Windows 10</span>
-                    <span class="theme-check" id="check-win10"></span>
-                </button>
-                <button class="theme-card" data-theme="win11" id="theme-win11">
-                    <div class="theme-preview" style="background:radial-gradient(circle,#1a3b68 30%,#0f1d3a 100%)">
-                        <span class="theme-preview-bar" style="background:rgba(30,30,30,0.6);backdrop-filter:blur(3px)"></span>
-                        <span class="theme-preview-bar" style="background:rgba(30,30,30,0.6);margin-top:auto"></span>
-                    </div>
-                    <span class="theme-name">Windows 11</span>
-                    <span class="theme-check" id="check-win11"></span>
-                </button>
-                <button class="theme-card" data-theme="macos" id="theme-macos">
-                    <div class="theme-preview" style="background:linear-gradient(135deg,#ff5e62 0%,#ff9966 50%,#1e90ff 100%)">
-                        <span class="theme-preview-bar" style="background:rgba(255,255,255,0.7)"></span>
-                        <span class="theme-preview-bar" style="background:rgba(40,40,40,0.8);margin-top:auto"></span>
-                    </div>
-                    <span class="theme-name">macOS</span>
-                    <span class="theme-check" id="check-macos"></span>
-                </button>
-            </div>
-        </div>
     </div>
 
     <!-- RHEL TOP PANEL (Active Window Tabs) -->

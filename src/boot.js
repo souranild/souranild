@@ -254,14 +254,43 @@ function runBootLog() {
 
 // ─── Phase 3: Login card ─────────────────────────────────────────────────
 function runLoginCard() {
+    const theme = document.body.getAttribute('data-theme') || 'rhel';
+    const bgLabel = document.querySelector('.login-bg-label');
+    const bioText = document.querySelector('.login-bio');
+    const loginCard = document.querySelector('.login-card');
+    
+    if (bgLabel) {
+        const labels = {
+            'rhel': 'Red Hat Enterprise Linux 9.4 — NXP DV-Workstation',
+            'kali': 'Kali GNU/Linux Rolling — Root Access',
+            'ubuntu': 'Ubuntu 22.04 LTS — NXP DV-Workstation',
+            'win7': 'Windows 7 Professional — DV Workstation',
+            'win10': 'Windows 10 Pro — DV Workstation',
+            'win11': 'Windows 11 Workstation Edition',
+            'macos': 'macOS Sonoma 14.2 — NXP DV-Workstation'
+        };
+        bgLabel.textContent = labels[theme] || labels['rhel'];
+    }
+
+    if (bioText) {
+        let osName = 'Red Hat Linux';
+        if (theme === 'kali') osName = 'Kali Linux';
+        else if (theme === 'ubuntu') osName = 'Ubuntu Linux';
+        else if (theme === 'win7') osName = 'Windows 7';
+        else if (theme === 'win10') osName = 'Windows 10';
+        else if (theme === 'win11') osName = 'Windows 11';
+        else if (theme === 'macos') osName = 'macOS';
+
+        bioText.innerHTML = `Welcome to my interactive portfolio — styled as a ${osName} workstation.<br>You can open apps, run terminal commands, drag windows, and explore my work.`;
+    }
+
     showPhase('boot-login');
 
     // Trigger the card animation (re-apply so it always animates in)
-    const card = document.querySelector('.login-card');
-    if (card) {
-        card.style.animation = 'none';
-        void card.offsetWidth; // force reflow
-        card.style.animation = '';
+    if (loginCard) {
+        loginCard.style.animation = 'none';
+        void loginCard.offsetWidth; // force reflow
+        loginCard.style.animation = '';
     }
 
     const enterBtn = document.getElementById('boot-enter-btn');

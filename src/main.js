@@ -2,7 +2,7 @@ import { initDesktop } from './desktop.js';
 import { initZsh, updateZshFiles } from './zsh.js';
 import { getResumeData } from './resumeParser.js';
 import { initBootScreen } from './boot.js';
-import { initThemeSwitcher } from './theme.js';
+import { initPowerOff } from './theme.js';
 
 // Application entry orchestrator
 window.addEventListener('DOMContentLoaded', async () => {
@@ -26,8 +26,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     // 5. Sync and start Gnome system clock ticks
     startClock();
 
-    // 6. Initialise the Theme Switcher
-    initThemeSwitcher();
+    // 6. Initialise the Power Off Button
+    initPowerOff();
 });
 
 function updateWindowsWithResume(resumeData) {
