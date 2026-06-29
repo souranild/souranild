@@ -2736,7 +2736,7 @@ body[data-theme="win7"] .desktop-window {
     font-family: var(--font-mono);
     font-size: 0.8rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-    z-index: 1; /* Sits on wallpaper, behind windows */
+    z-index: 5; /* Sits above desktop icons, behind windows */
     user-select: none;
     cursor: move;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -3231,4 +3231,139 @@ body[data-theme="macos"] .launcher-icon[data-open="calculator"] {
 /* 7. Overleaf */
 body[data-theme="macos"] .launcher-icon[data-open="overleaf"] {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="%2348a14d"/><path d="M30 70 C 30 30, 80 20, 80 50 C 80 80, 40 90, 30 70" fill="%23ffffff"/><path d="M50 80 C 50 40, 90 30, 90 60 C 90 85, 60 95, 50 80" fill="%23e8f5e9"/></svg>') !important;
+}
+
+/* =============================================================
+   MOBILE & TABLET RESPONSIVENESS
+============================================================= */
+
+@media (max-width: 768px) {
+    /* 1. Fullscreen Windows */
+    .desktop-window {
+        width: 100% !important;
+        height: calc(100% - 62px) !important; /* Account for top/bottom panel area */
+        top: 30px !important;
+        left: 0 !important;
+        transform: none !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: none !important;
+    }
+
+    body[data-theme="macos"] .desktop-window {
+        height: calc(100% - 94px) !important; /* Account for top panel + dock */
+    }
+
+    /* Disable resizing handles on mobile */
+    .window-resize-handle {
+        display: none !important;
+    }
+
+    /* Maximize buttons hidden on mobile since it's already full screen */
+    .win-btn.maximize {
+        display: none !important;
+    }
+
+    /* 2. Login Card Responsive Width */
+    .login-card {
+        width: 90% !important;
+        padding: 1.5rem !important;
+    }
+    body[data-theme="win7"] .login-card {
+        width: 100% !important;
+        padding: 1.5rem !important;
+    }
+
+    /* 3. Taskbars & Docks */
+    .rhel-top-panel {
+        font-size: 0.8rem !important;
+    }
+    .top-panel-right {
+        margin-right: 90px !important;
+    }
+    .rhel-bottom-panel {
+        padding: 4px 8px !important;
+    }
+    .panel-launchers {
+        gap: 4px !important;
+    }
+    .launcher-icon {
+        font-size: 1.2rem !important; /* Emojis smaller */
+    }
+
+    /* macOS Dock shrinking */
+    body[data-theme="macos"] .launcher-icon {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 8px !important;
+    }
+    body[data-theme="macos"] .rhel-bottom-panel {
+        height: 54px !important;
+        padding: 6px 8px !important;
+        bottom: 6px !important;
+    }
+    body[data-theme="macos"] .launcher-icon:hover {
+        transform: scale(1.2) translateY(-6px) !important;
+        margin: 0 6px !important;
+    }
+    body[data-theme="macos"] .launcher-icon:hover + .launcher-icon,
+    body[data-theme="macos"] .launcher-icon:has(+ .launcher-icon:hover) {
+        transform: scale(1.1) translateY(-3px) !important;
+        margin: 0 4px !important;
+    }
+
+    /* Hide non-essential indicators to save space */
+    .lang-badge, .workspace-switcher {
+        display: none !important;
+    }
+    
+    /* Desktop layout grid */
+    .desktop-grid-left {
+        gap: 0.5rem !important;
+    }
+    .desktop-icon {
+        width: 60px !important;
+        font-size: 2rem !important;
+    }
+    .icon-label {
+        font-size: 0.75rem !important;
+    }
+
+    /* Popups max size */
+    .rhel-popup-menu {
+        max-width: 90vw !important;
+        right: 5vw !important;
+        left: auto !important;
+    }
+
+    /* App-specific tweaks */
+    #win-terminal {
+        height: calc(100% - 60px) !important;
+        min-height: unset !important;
+    }
+    #emulator-container {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    #emulator-iframe {
+        width: 100% !important;
+        height: 100% !important;
+        transform: none !important;
+    }
+    .pdf-viewer-content {
+        padding: 1rem !important;
+    }
+    .games-grid {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    
+    /* Clock and weather widget */
+    #clock-widget {
+        width: 100% !important;
+        max-width: 320px !important;
+    }
+    #weather-widget {
+        display: none !important;
+    }
 }
