@@ -718,7 +718,7 @@ Below is a detailed technical review of the architecture, stack, and optimizatio
 ## 1. Windowing Engine & Focus Management
 The core windowing shell is built on raw DOM manipulation and GSAP animations. Focus layering uses a dynamic stacking array. When a window is focused, its \`z-index\` is elevated to \`topZIndex\` while other windows are re-ordered.
 
-![Gnome Desktop Workstation Layout](./ss_desktop.png)
+![Gnome Desktop Workstation Layout](./blogs/desktop.png)
 
 * **Coordinate Serialization**: Dragging and resizing events update a state object. To ensure smooth interactions, custom boundary calculations prevent windows from drifting off-screen.
 * **Session Persistence**: Desktop layouts are serialized to \`localStorage\` on modifications. The system stores open apps, minimized states, coordinates, active workspace tabs, and current themes, automatically deserializing on page re-boots.
@@ -726,7 +726,7 @@ The core windowing shell is built on raw DOM manipulation and GSAP animations. F
 ## 2. Multi-Workspace Virtual Desktops
 To optimize screen space, the desktop features 4 indexable workspace desktops.
 
-![Windows 11 Workstation Desktop Theme](./ss_win11.png)
+![RHEL Workstation with VS Code and Document Viewer](./blogs/rhel_apps.png)
 
 * **Routing Assignments**: Open apps are mapped to specific workspace indices in \`windowWorkspaces\`.
 * **State Transitions**: Switching workspaces hides all windows assigned to other workspaces using GSAP fade animations while restoring the display state (\`flex\`/\`none\`) of the targeted workspace's apps, refreshing the top taskbar badge indicators.
@@ -740,7 +740,7 @@ To optimize screen space, the desktop features 4 indexable workspace desktops.
 ## 4. Theme Engine & Performance
 * **Vanilla Tokens**: Uses CSS Custom Properties (\`--theme-*\`) to style the UI across Red Hat RHEL 9, Ubuntu, Kali, Windows 7, 10, 11, and macOS.
 
-![Ubuntu Workstation Theme with VS Code and PDF Viewer](./ss_ubuntu.png)
+![RHEL Workstation with Multiple Apps Open](./blogs/home.png)
 
 * **Image Compression**: Background wallpapers are transcoded from HEIC/PNG formats to compressed progressive JPEGs using macOS \`sips\` tools, speeding up asset loads.
 * **Backdrop Filters & Hover Checks**: The glassmorphic blur overlay (\`backdrop-filter: blur(20px)\`) is optimized using mouse coordinate trackers. When the cursor hovers on empty desktop space, the blur fades out to reduce GPU rendering load.
@@ -753,14 +753,12 @@ This entire multitasking virtual OS shell was 100% **vibe-coded**! Instead of ma
 
 Explore the workstation files and let me know your feedback! 👇`,
                 slides: [
-                    { title: "💻 Virtual Workstation Portfolio", desc: "A full multitasking desktop shell built with raw HTML, JS, and custom CSS.", img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=450&q=80" },
+                    { title: "💻 Virtual Workstation Portfolio", desc: "A full multitasking desktop shell built with raw HTML, JS, and custom CSS.", img: "./blogs/desktop.png" },
                     { title: "📁 6 Bootable OS Environments", desc: "Dynamically switch OS themes on the fly. Includes RHEL, Ubuntu, Kali, Windows 7/10/11, and macOS Sonoma!", html: `<div class="os-badge-grid"><span class="os-badge">Red Hat RHEL</span><span class="os-badge">Ubuntu</span><span class="os-badge">Kali Linux</span><span class="os-badge">Windows 7</span><span class="os-badge">Windows 10</span><span class="os-badge">Windows 11</span><span class="os-badge">macOS</span></div>` },
-                    { title: "🐚 ZSH Terminal Emulator", desc: "Fully functional terminal shell executing standard system and folder commands.", img: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=450&q=80" },
-                    { title: "📝 VS Code & Evince PDF", desc: "Inspect academic research documents and code configurations directly in the workspace.", img: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=450&q=80" },
-                    { title: "🍃 Overleaf LaTeX Editor", desc: "Modify LaTeX code and compile it in real-time to view my live resume PDF.", img: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=450&q=80" },
-                    { title: "🎮 Cache-loaded GBA Emulator", desc: "No lags, no server overhead. Gameboy Advance ROMs load instantly using client-side Cache Storage APIs.", img: "https://images.unsplash.com/photo-1531525645387-7f14be1bdbbd?w=450&q=80" },
-                    { title: "🦊 Firefox & Blogs App", desc: "Houses this blog feed, handles external web bookmarks, and supports custom frame embeds.", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=450&q=80" },
-                    { title: "🌅 Rotating Wallpaper & Blur", desc: "Cycles stunning high-resolution abstract backgrounds, automatically applying a backdrop blur overlay whenever windows are open.", img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=450&q=80" }
+                    { title: "📝 VS Code & Research Papers", desc: "Inspect academic research documents and code configurations directly in the workspace.", img: "./blogs/rhel_apps.png" },
+                    { title: "📄 Resume PDF Viewer", desc: "View and browse the resume directly inside the Document Viewer app.", img: "./blogs/home.png" },
+                    { title: "🎮 GBA Emulator — DOOM", desc: "Play retro console games directly in the browser. ROMs load instantly via Cache Storage APIs.", img: "./blogs/doom.png" },
+                    { title: "🌅 Desktop Home & Widgets", desc: "Profile card, system stats, weather widget, and rotating high-res wallpapers with backdrop blur.", img: "./blogs/desktop.png" }
                 ]
             },
             'semiconductor-flow': {
