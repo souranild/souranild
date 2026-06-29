@@ -32,10 +32,51 @@
 
         EJS_player = '#game';
         EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
-        EJS_gameUrl = '/roms/' + encodeURIComponent(game);
         EJS_core = core;
         EJS_startOnLoaded = true;
         EJS_fixedSaveInterval = 1000; // Auto-save SRM to IndexedDB every second
+
+        // Detect base path dynamically for GitHub Pages compatibility
+        const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
+        const rawGameUrl = basePath + '/roms/' + encodeURIComponent(game);
+
+        async function initGame() {
+            const cacheName = 'gba-rom-cache-v1';
+            const cache = await caches.open(cacheName);
+            
+            // Check if ROM is cached
+            let response = await cache.match(rawGameUrl);
+            if (!response) {
+                const gameDiv = document.getElementById('game');
+                gameDiv.innerHTML = '<div style="color: white; font-family: sans-serif; text-align: center; padding: 2rem;">' +
+                                    'Downloading game ROM...<br>' +
+                                    '<small style="color: #888;">This only happens on the first launch. Subsequent launches are instant!</small></div>';
+                
+                try {
+                    response = await fetch(rawGameUrl);
+                    if (!response.ok) throw new Error('Failed to fetch ROM file from server');
+                    
+                    // Cache the successful response clone
+                    await cache.put(rawGameUrl, response.clone());
+                } catch (e) {
+                    gameDiv.innerHTML = `<div style="color: #ef4444; font-family: sans-serif; text-align: center; padding: 2rem;">Error: ${e.message}</div>`;
+                    return;
+                }
+            }
+            
+            const romBlob = await response.blob();
+            const blobUrl = URL.createObjectURL(romBlob);
+            
+            // Assign the local Blob URL to EJS
+            EJS_gameUrl = blobUrl;
+            
+            // Load EmulatorJS dynamically
+            const loaderScript = document.createElement('script');
+            loaderScript.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+            document.body.appendChild(loaderScript);
+        }
+
+        initGame();
     </script>
     <script>
         // Keyboard mapping for WASD and alternative keys to standard emulator keys
@@ -112,6 +153,6 @@
             }
         });
     </script>
-    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+    <!-- Loader script dynamically loaded in initGame() above -->
 </body>
 </html>

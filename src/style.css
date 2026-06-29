@@ -545,7 +545,7 @@ body[data-theme="rhel"], body:not([data-theme]) {
     --theme-win-btn-bg:   linear-gradient(to bottom, #4e5260 0%, #3a3d4a 100%);
     --theme-tab-active:   #cc0000;
     --theme-tab-active-border: #990000;
-    --theme-desktop-bg:   url('/rhel_bg.png') center/cover no-repeat;
+    --theme-desktop-bg:   url('https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=3840&q=90&fm=jpg&fit=crop') center/cover no-repeat;
     --theme-window-bg:    #1e1e24;
     --theme-window-border:#2b2e37;
     --theme-terminal-bg:  #1c1d22;
@@ -564,7 +564,7 @@ body[data-theme="kali"] {
     --theme-win-btn-bg:   #252936;
     --theme-tab-active:   #00f0ff;
     --theme-tab-active-border: #0088cc;
-    --theme-desktop-bg:   url('/kali_bg.png') center/cover no-repeat;
+    --theme-desktop-bg:   url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=3840&q=90&fm=jpg&fit=crop') center/cover no-repeat;
     --theme-window-bg:    #0f111a;
     --theme-window-border:#1f2330;
     --theme-terminal-bg:  #090a0f;
@@ -589,7 +589,7 @@ body[data-theme="ubuntu"] {
     --theme-win-btn-bg:   #555555;
     --theme-tab-active:   #e95420;
     --theme-tab-active-border: #ae3c13;
-    --theme-desktop-bg:   url('/ubuntu_bg.png') center/cover no-repeat;
+    --theme-desktop-bg:   url('https://images.unsplash.com/photo-1618005198140-13c8ecb281b8?w=3840&q=90&fm=jpg&fit=crop') center/cover no-repeat;
     --theme-window-bg:    #2d2d2d;
     --theme-window-border:#3d3d3d;
     --theme-terminal-bg:  #300a24;
@@ -611,7 +611,7 @@ body[data-theme="win7"] {
     --theme-win-btn-bg:   linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(200,220,250,0.3) 100%);
     --theme-tab-active:   #4ba3e3;
     --theme-tab-active-border: #2c72b8;
-    --theme-desktop-bg:   url('/win7_bg.png') center/cover no-repeat;
+    --theme-desktop-bg:   url('https://images.unsplash.com/photo-1618005198143-e5283464f28f?w=3840&q=90&fm=jpg&fit=crop') center/cover no-repeat;
     --theme-window-bg:    rgba(245, 250, 255, 0.85);
     --theme-window-border:rgba(120,170,220,0.5);
     --theme-terminal-bg:  #0a0f1d;
@@ -643,7 +643,7 @@ body[data-theme="win10"] {
     --theme-win-btn-bg:   transparent;
     --theme-tab-active:   #0078d4;
     --theme-tab-active-border: #005699;
-    --theme-desktop-bg:   url('/win10_bg.png') center/cover no-repeat;
+    --theme-desktop-bg:   url('https://images.unsplash.com/photo-1507608869274-d3177c8bb4c7?w=3840&q=90&fm=jpg&fit=crop') center/cover no-repeat;
     --theme-window-bg:    #1f1f1f;
     --theme-window-border:#333333;
     --theme-terminal-bg:  #0c0c0c;
@@ -685,7 +685,7 @@ body[data-theme="win11"] {
     --theme-win-btn-bg:   transparent;
     --theme-tab-active:   #0078d4;
     --theme-tab-active-border: #005699;
-    --theme-desktop-bg:   url('/win11_bg.png') center/cover no-repeat;
+    --theme-desktop-bg:   url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=3840&q=90&fm=jpg&fit=crop') center/cover no-repeat;
     --theme-window-bg:    rgba(32, 32, 32, 0.85);
     --theme-window-border:rgba(255, 255, 255, 0.12);
     --theme-terminal-bg:  #0c0c0c;
@@ -910,6 +910,28 @@ body[data-theme="macos"] .win-btn.minimize {
 body[data-theme="macos"] .win-btn.maximize {
     background: #27c93f !important;
     order: 3 !important;
+}
+body[data-theme="macos"] .window-titlebar:hover .win-btn.maximize::before {
+    content: "+" !important;
+    color: #006504 !important;
+    font-size: 8px !important;
+    font-weight: bold !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    line-height: 1 !important;
+}
+body[data-theme="macos"] .desktop-window.maximized .window-titlebar:hover .win-btn.maximize::before {
+    content: "–" !important;
+    color: #006504 !important;
+    font-size: 9px !important;
+    font-weight: bold !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    line-height: 1 !important;
 }
 body[data-theme="macos"] .window-titlebar:hover .win-btn.close::before {
     content: "×" !important;
@@ -1326,11 +1348,30 @@ body[data-theme="win7"] .desktop-window {
 }
 
 .desktop-window.maximized {
-    top: 30px !important; /* clamp below top panel */
+    top: 0 !important;
     left: 0 !important;
     width: 100% !important;
-    height: calc(100% - 62px) !important;
-    border-radius: 0;
+    height: 100% !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Theme-specific maximized window and desktop area bounds */
+body[data-theme="win10"] .desktop-area,
+body[data-theme="win7"] .desktop-area {
+    margin-top: 0 !important;
+    height: calc(100vh - 40px) !important;
+}
+
+body[data-theme="win11"] .desktop-area {
+    margin-top: 0 !important;
+    height: calc(100vh - 48px) !important;
+}
+
+body[data-theme="macos"] .desktop-window.maximized {
+    top: 30px !important;
+    height: calc(100% - 94px) !important;
 }
 
 /* RHEL Titlebar styling */
@@ -1385,6 +1426,82 @@ body[data-theme="win7"] .desktop-window {
     align-items: center;
     transition: all 0.1s;
     user-select: none;
+}
+
+/* Draw window controls using CSS pseudo-elements to ensure cross-system compatibility and sharp rendering */
+body:not([data-theme="macos"]) .win-btn {
+    font-size: 0 !important; /* Hide original text characters like _, ▢, ✕ */
+    position: relative !important;
+}
+
+/* Close button cross icon */
+body:not([data-theme="macos"]) .win-btn.close::before,
+body:not([data-theme="macos"]) .win-btn.close::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 9px !important;
+    height: 1.5px !important;
+    background-color: currentColor !important;
+    top: 50% !important;
+    left: 50% !important;
+}
+body:not([data-theme="macos"]) .win-btn.close::before {
+    transform: translate(-50%, -50%) rotate(45deg) !important;
+}
+body:not([data-theme="macos"]) .win-btn.close::after {
+    transform: translate(-50%, -50%) rotate(-45deg) !important;
+}
+
+/* Minimize button minus/underscore icon */
+body:not([data-theme="macos"]) .win-btn.minimize::before {
+    content: "" !important;
+    position: absolute !important;
+    width: 9px !important;
+    height: 1.5px !important;
+    background-color: currentColor !important;
+    bottom: 4px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+/* Maximize button single square icon */
+body:not([data-theme="macos"]) .win-btn.maximize::before {
+    content: "" !important;
+    position: absolute !important;
+    width: 8px !important;
+    height: 8px !important;
+    border: 1.5px solid currentColor !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+/* Restore button overlapping double square icon (when window is maximized) */
+body:not([data-theme="macos"]) .desktop-window.maximized .win-btn.maximize::before {
+    display: none !important; /* Hide the single square */
+}
+body:not([data-theme="macos"]) .desktop-window.maximized .win-btn.maximize::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 6px !important;
+    height: 6px !important;
+    border: 1.2px solid currentColor !important;
+    top: 4px !important;
+    left: 9px !important;
+    background: transparent !important;
+    z-index: 1 !important;
+}
+body:not([data-theme="macos"]) .desktop-window.maximized .win-btn.maximize::before {
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    width: 6px !important;
+    height: 6px !important;
+    border: 1.2px solid currentColor !important;
+    background: var(--theme-win-btn-bg, #3a3d4a) !important;
+    top: 7px !important;
+    left: 4px !important;
+    z-index: 2 !important;
 }
 
 .win-btn:hover {
@@ -3366,4 +3483,55 @@ body[data-theme="macos"] .launcher-icon[data-open="overleaf"] {
     #weather-widget {
         display: none !important;
     }
+}
+
+/* =============================================================
+   FIREFOX BROWSER SPECIFIC STYLES
+============================================================= */
+.firefox-tab {
+    transition: background 0.15s, color 0.15s;
+}
+.firefox-tab:hover:not(.active) {
+    background: #2b2a33 !important;
+    color: #fbfbfe !important;
+}
+.firefox-tab .tab-close:hover {
+    background: #e0e0e030;
+    border-radius: 4px;
+}
+.firefox-new-tab-btn:hover {
+    background: #2b2a33 !important;
+    color: #fbfbfe !important;
+}
+.firefox-navbar button:hover {
+    background: #2b2a33 !important;
+}
+.firefox-navbar button:active {
+    background: #4a4a4f !important;
+}
+.bookmark-item {
+    transition: opacity 0.15s, transform 0.1s;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.bookmark-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+#firefox-blocked-link:hover {
+    background: #0060df !important;
+}
+
+#desktop-blur-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(20px) saturate(1.1);
+    -webkit-backdrop-filter: blur(20px) saturate(1.1);
+    background: rgba(0, 0, 0, 0.05);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }

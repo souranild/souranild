@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 let topZIndex = 30;
 let isDraggingGlobal = false;
 let currentWorkspace = 1;
+let topWidgetZIndex = 5;
 
 // Define default workspace assignments for each window
 const windowWorkspaces = {
@@ -22,7 +23,8 @@ const windowWorkspaces = {
     'sysmonitor': 2,
     'clock': 2,
     'weather': 2,
-    'imageviewer': 1
+    'imageviewer': 1,
+    'firefox': 1
 };
 
 export function initDesktop() {
@@ -192,9 +194,16 @@ export function initDesktop() {
     setupClockApp();
     setupWeatherApp();
     setupImageViewerApp();
+    setupFirefox();
+    
+    // Initialize random wallpaper rotation
+    initWallpaperRotator();
     
     // Final default window arrangement
     arrangeDefaultWindows();
+    
+    // Initialize desktop wallpaper blur
+    initDesktopWallpaperBlur();
 }
 
 function focusWindow(win) {
@@ -273,6 +282,7 @@ export function openAppWindow(appId) {
         
         updateTaskbarTabs();
         saveSessionState();
+        updateWallpaperBlur();
 
         // Animate expand from launcher/badge
         const launcher = document.querySelector(`.launcher-icon[data-open="${appId}"]`) || 
@@ -465,6 +475,15 @@ function setupResize(win) {
     }
 }
 
+export function updateWindowMaximizeState(win) {
+    const isMax = win.classList.contains('maximized');
+    const maxBtn = win.querySelector('.win-btn.maximize');
+    if (maxBtn) {
+        maxBtn.textContent = isMax ? '❐' : '▢';
+        maxBtn.title = isMax ? 'Restore' : 'Maximize';
+    }
+}
+
 function setupWindowControls(win) {
     const closeBtn = win.querySelector('.win-btn.close');
     const minBtn = win.querySelector('.win-btn.minimize');
@@ -500,6 +519,7 @@ function setupWindowControls(win) {
                     updateTaskbarTabs();
                     focusNextWindow();
                     saveSessionState();
+                    updateWallpaperBlur();
                 }
             });
         };
@@ -516,6 +536,7 @@ function setupWindowControls(win) {
         maxBtn.onclick = (e) => {
             e.stopPropagation();
             win.classList.toggle('maximized');
+            updateWindowMaximizeState(win);
             saveSessionState();
         };
     }
@@ -525,6 +546,7 @@ function setupWindowControls(win) {
         titleBar.addEventListener('dblclick', (e) => {
             e.stopPropagation();
             win.classList.toggle('maximized');
+            updateWindowMaximizeState(win);
             saveSessionState();
         });
     }
@@ -575,6 +597,7 @@ function minimizeWindow(win) {
             updateTaskbarTabs();
             focusNextWindow();
             saveSessionState();
+            updateWallpaperBlur();
         }
     });
 }
@@ -620,6 +643,7 @@ function switchWorkspace(wId) {
         if (terminal) {
             windowWorkspaces['terminal'] = 3;
             terminal.classList.add('maximized');
+            updateWindowMaximizeState(terminal);
             terminal.dataset.isOpen = 'true';
             terminal.dataset.isMinimized = 'false';
             
@@ -634,6 +658,7 @@ function switchWorkspace(wId) {
         if (terminal && windowWorkspaces['terminal'] === 3) {
             windowWorkspaces['terminal'] = 1;
             terminal.classList.remove('maximized');
+            updateWindowMaximizeState(terminal);
         }
     }
 
@@ -683,6 +708,7 @@ function switchWorkspace(wId) {
     // Focus the highest active window in this workspace
     focusNextWindow();
     saveSessionState();
+    updateWallpaperBlur();
 }
 
 function updateTaskbarTabs() {
@@ -1540,7 +1566,8 @@ function setupGamesApp() {
         
         const launchAction = (e) => {
             e.stopPropagation();
-            const targetUrl = `/emulator.html?game=${encodeURIComponent(game)}&core=${encodeURIComponent(core)}`;
+            const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
+            const targetUrl = `${basePath}/emulator.html?game=${encodeURIComponent(game)}&core=${encodeURIComponent(core)}`;
             if (iframe && iframe.getAttribute('src') !== targetUrl) {
                 iframe.src = targetUrl;
             }
@@ -1575,6 +1602,105 @@ function setupGamesApp() {
         };
         controlsBtn.addEventListener('click', launchControls);
         controlsBtn.addEventListener('dblclick', launchControls);
+    }
+}
+
+function setupFirefox() {
+    const firefoxWindow = document.getElementById('win-firefox');
+    if (!firefoxWindow) return;
+
+    const iframe = document.getElementById('firefox-iframe');
+    const addressInput = document.getElementById('firefox-address-input');
+    const blockedOverlay = document.getElementById('firefox-iframe-blocked');
+    const blockedLink = document.getElementById('firefox-blocked-link');
+
+    function navigateFirefox(url) {
+        if (!iframe || !blockedOverlay || !blockedLink || !addressInput) return;
+        
+        let targetUrl = url.trim();
+        if (!targetUrl) targetUrl = 'blog.local';
+
+        if (targetUrl === 'blog.local' || targetUrl === 'localhost' || targetUrl.includes('blog.html')) {
+            const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
+            iframe.src = `${basePath}/blog.html?t=${Date.now()}`;
+            blockedOverlay.style.display = 'none';
+            addressInput.value = 'blog.local';
+            return;
+        }
+
+        // Add protocol if missing
+        if (!/^https?:\/\//i.test(targetUrl)) {
+            targetUrl = 'https://' + targetUrl;
+        }
+
+        addressInput.value = targetUrl;
+
+        const iframeBlockingDomains = [
+            'github.com', 'linkedin.com', 'google.com', 'instagram.com',
+            'youtube.com', 'discord.com', 'facebook.com', 'twitter.com', 'x.com'
+        ];
+
+        const isBlocked = iframeBlockingDomains.some(domain => targetUrl.toLowerCase().includes(domain));
+
+        if (isBlocked) {
+            iframe.src = 'about:blank';
+            blockedOverlay.style.display = 'flex';
+            blockedLink.href = targetUrl;
+            blockedLink.textContent = `Open ${targetUrl.replace('https://', '')} in New Window ➡️`;
+        } else {
+            iframe.src = targetUrl;
+            blockedOverlay.style.display = 'none';
+        }
+    }
+
+    if (addressInput) {
+        addressInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                navigateFirefox(addressInput.value);
+            }
+        });
+    }
+
+    const bookmarks = firefoxWindow.querySelectorAll('.bookmark-item');
+    bookmarks.forEach(bm => {
+        bm.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const url = bm.getAttribute('data-url');
+            if (url) navigateFirefox(url);
+        });
+    });
+
+    const btnBack = document.getElementById('firefox-back');
+    const btnForward = document.getElementById('firefox-forward');
+    const btnReload = document.getElementById('firefox-reload');
+    const btnHome = document.getElementById('firefox-home');
+
+    if (btnBack) {
+        btnBack.addEventListener('click', (e) => {
+            e.stopPropagation();
+            try { iframe.contentWindow.history.back(); } catch (err) {}
+        });
+    }
+
+    if (btnForward) {
+        btnForward.addEventListener('click', (e) => {
+            e.stopPropagation();
+            try { iframe.contentWindow.history.forward(); } catch (err) {}
+        });
+    }
+
+    if (btnReload) {
+        btnReload.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (addressInput) navigateFirefox(addressInput.value);
+        });
+    }
+
+    if (btnHome) {
+        btnHome.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigateFirefox('blog.local');
+        });
     }
 }
 
@@ -2171,6 +2297,7 @@ function arrangeDefaultWindows() {
                     
                     if (savedWin.isMaximized) win.classList.add('maximized');
                     else win.classList.remove('maximized');
+                    updateWindowMaximizeState(win);
 
                     win.style.zIndex = savedWin.zIndex;
                     win.style.top = savedWin.top;
@@ -2327,7 +2454,8 @@ function arrangeDefaultWindows() {
     } else {
         const gamesFolder = document.getElementById('win-games-folder');
         const emulator = document.getElementById('win-emulator');
-        const wins = [overleaf, terminal, vscode, pdf, lo, calculator, verisium, gamesFolder, emulator];
+        const firefox = document.getElementById('win-firefox');
+        const wins = [overleaf, terminal, vscode, pdf, lo, calculator, verisium, gamesFolder, emulator, firefox];
         wins.forEach((win, index) => {
             if (win) {
                 win.dataset.isOpen = (win === lo) ? 'false' : 'true';
@@ -2363,6 +2491,18 @@ function setupWidgetDrag(widget) {
     if (!handle) return;
 
     let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
+
+    function focusWidget() {
+        if (topWidgetZIndex >= 28) {
+            document.querySelectorAll('.desktop-widget').forEach(w => w.style.zIndex = '5');
+            topWidgetZIndex = 5;
+        }
+        topWidgetZIndex++;
+        widget.style.zIndex = topWidgetZIndex;
+    }
+
+    widget.addEventListener('mousedown', focusWidget);
+    widget.addEventListener('touchstart', focusWidget, { passive: true });
 
     handle.addEventListener('mousedown', dragMouseDown);
     handle.addEventListener('touchstart', dragTouchStart, { passive: false });
@@ -3022,6 +3162,25 @@ function setupImageViewerApp() {
     const rotLeftBtn = document.getElementById('img-rotate-left');
     const rotRightBtn = document.getElementById('img-rotate-right');
     const zoomLevelEl = document.getElementById('img-zoom-level');
+    
+    const prevBtn = document.getElementById('img-prev');
+    const nextBtn = document.getElementById('img-next');
+    const filenameEl = document.getElementById('img-filename');
+
+    const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
+
+    const images = [
+        { name: 'profile.png', path: `${basePath}/profile.png` },
+        { name: 'hanoi.jpg', path: `${basePath}/wallpapers/hanoi.jpg` },
+        { name: 'hcm.jpg', path: `${basePath}/wallpapers/hcm.jpg` },
+        { name: 'hoian.jpg', path: `${basePath}/wallpapers/hoian.jpg` },
+        { name: 'kuah.jpg', path: `${basePath}/wallpapers/kuah.jpg` },
+        { name: 'mua.jpg', path: `${basePath}/wallpapers/mua.jpg` },
+        { name: 'petronas.jpg', path: `${basePath}/wallpapers/petronas.jpg` },
+        { name: 'sungsot.jpg', path: `${basePath}/wallpapers/sungsot.jpg` },
+        { name: 'towerkl.jpg', path: `${basePath}/wallpapers/towerkl.jpg` }
+    ];
+    let currentIdx = 0;
 
     let currentScale = 1.0;
     let currentRotation = 0;
@@ -3033,6 +3192,39 @@ function setupImageViewerApp() {
         if (zoomLevelEl) {
             zoomLevelEl.textContent = `${Math.round(currentScale * 100)}%`;
         }
+    }
+
+    function showImage(idx) {
+        if (idx < 0) idx = images.length - 1;
+        if (idx >= images.length) idx = 0;
+        currentIdx = idx;
+
+        const activeImg = images[currentIdx];
+        if (img) {
+            img.src = activeImg.path;
+            img.alt = activeImg.name;
+        }
+        if (filenameEl) {
+            filenameEl.textContent = activeImg.name;
+        }
+
+        currentScale = 1.0;
+        currentRotation = 0;
+        applyTransforms();
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showImage(currentIdx - 1);
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showImage(currentIdx + 1);
+        });
     }
 
     if (zoomInBtn) {
@@ -3075,4 +3267,114 @@ function setupImageViewerApp() {
             applyTransforms();
         });
     }
+
+    // Initialize with first image
+    showImage(0);
+}
+
+function initWallpaperRotator() {
+    const wallpapers = [
+        'hanoi.jpg', 'hcm.jpg', 'hoian.jpg', 'kuah.jpg',
+        'mua.jpg', 'petronas.jpg', 'sungsot.jpg', 'towerkl.jpg'
+    ];
+    
+    const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
+    
+    function setRandomWallpaper() {
+        const randomIdx = Math.floor(Math.random() * wallpapers.length);
+        const wallpaperFile = wallpapers[randomIdx];
+        const imageUrl = `url('${basePath}/wallpapers/${wallpaperFile}')`;
+        
+        // Set the background on body, desktop-area, and boot-login
+        const desktopArea = document.querySelector('.desktop-area');
+        const bootLogin = document.getElementById('boot-login');
+        
+        if (desktopArea) {
+            desktopArea.style.setProperty('background', `${imageUrl} center/cover no-repeat`, 'important');
+        }
+        if (bootLogin) {
+            bootLogin.style.setProperty('background', `${imageUrl} center/cover no-repeat`, 'important');
+        }
+        
+        // Update CSS variable so other elements fallback to it
+        document.body.style.setProperty('--theme-desktop-bg', `${imageUrl} center/cover no-repeat`, 'important');
+    }
+    
+    setRandomWallpaper();
+    setInterval(setRandomWallpaper, 10 * 60 * 1000); // 10 minutes
+}
+
+export function updateWallpaperBlur() {
+    const blurOverlay = document.getElementById('desktop-blur-overlay');
+    if (!blurOverlay) return;
+
+    const openWindows = Array.from(document.querySelectorAll('.desktop-window')).filter(win => {
+        return win.style.display === 'flex' && win.dataset.isOpen === 'true' && win.dataset.isMinimized !== 'true';
+    });
+
+    const isAnyAppOpen = openWindows.length > 0;
+    
+    if (isAnyAppOpen) {
+        blurOverlay.style.opacity = '1';
+    } else {
+        blurOverlay.style.opacity = '0';
+    }
+}
+
+function initDesktopWallpaperBlur() {
+    const desktopArea = document.querySelector('.desktop-area');
+    if (!desktopArea) return;
+
+    desktopArea.addEventListener('mousemove', (e) => {
+        const blurOverlay = document.getElementById('desktop-blur-overlay');
+        if (!blurOverlay) return;
+
+        const openWindows = Array.from(document.querySelectorAll('.desktop-window')).filter(win => {
+            return win.style.display === 'flex' && win.dataset.isOpen === 'true' && win.dataset.isMinimized !== 'true';
+        });
+
+        if (openWindows.length === 0) {
+            blurOverlay.style.opacity = '0';
+            return;
+        }
+
+        let isOverWindow = false;
+        for (const win of openWindows) {
+            const rect = win.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                isOverWindow = true;
+                break;
+            }
+        }
+
+        const rhelTop = document.querySelector('.rhel-top-panel');
+        const rhelBottom = document.querySelector('.rhel-bottom-panel');
+        if (rhelTop) {
+            const rect = rhelTop.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                isOverWindow = true;
+            }
+        }
+        if (rhelBottom) {
+            const rect = rhelBottom.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                isOverWindow = true;
+            }
+        }
+
+        if (isOverWindow) {
+            blurOverlay.style.opacity = '1';
+        } else {
+            blurOverlay.style.opacity = '0';
+        }
+    });
+
+    desktopArea.addEventListener('mouseleave', () => {
+        updateWallpaperBlur();
+    });
+
+    updateWallpaperBlur();
 }

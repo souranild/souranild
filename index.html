@@ -126,6 +126,7 @@
                 <span class="window-tab-badge" data-toggle="clock" style="display: none;">🕒 Clock</span>
                 <span class="window-tab-badge" data-toggle="weather" style="display: none;">🌤️ Weather</span>
                 <span class="window-tab-badge" data-toggle="imageviewer" style="display: none;">🖼️ Viewer</span>
+                <span class="window-tab-badge" data-toggle="firefox" style="display: none;">🦊 Browser</span>
             </div>
         </div>
         <div class="top-panel-right">
@@ -135,6 +136,7 @@
 
     <!-- Desktop Workspace Grid -->
     <main class="desktop-area">
+        <div id="desktop-blur-overlay"></div>
         <!-- LEFT SIDE SHORTCUTS: System Apps Folder + User Files -->
         <div class="desktop-grid-left">
             <!-- System Apps Folder -->
@@ -213,6 +215,20 @@
                     <img src="./profile.png" alt="Profile" style="width: 48px; height: 48px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);">
                 </div>
                 <div class="icon-label">profile.png</div>
+            </div>
+            <!-- User App: Firefox Browser -->
+            <div class="desktop-icon" data-open="firefox">
+                <div class="linux-app-icon">
+                    <svg viewBox="0 0 48 48" width="48" height="48">
+                        <circle cx="24" cy="24" r="20" fill="#e05000" stroke="#b03000" stroke-width="1"/>
+                        <circle cx="24" cy="24" r="16" fill="#004a9f"/>
+                        <path d="M12 24c0-6.63 5.37-12 12-12s12 5.37 12 12-5.37 12-12 12S12 30.63 12 24z" fill="#ff7e00" opacity="0.95"/>
+                        <path d="M14 24c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10S14 29.52 14 24z" fill="#ff9a00"/>
+                        <path d="M18 20c2-4 6-6 10-4s6 6 4 10-6 6-10 4-4-6-4-10z" fill="#ffcd00"/>
+                        <circle cx="28" cy="22" r="8" fill="#0080ff"/>
+                    </svg>
+                </div>
+                <div class="icon-label">Blogs</div>
             </div>
         </div>
 
@@ -1047,6 +1063,9 @@ Loading...
             </div>
             <div class="window-body imageviewer-window-body" style="background: #181818; display: flex; flex-direction: column; padding: 0; overflow: hidden; height: 100%;">
                 <div class="imageviewer-toolbar" style="background: #252525; padding: 0.5rem; display: flex; gap: 0.6rem; align-items: center; border-bottom: 1px solid #333;">
+                    <button id="img-prev" title="Previous Image">◀ Prev</button>
+                    <button id="img-next" title="Next Image">Next ▶</button>
+                    <span style="color: #ccc; font-size: 0.75rem; margin-right: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;" id="img-filename">profile.png</span>
                     <button id="img-zoom-in" title="Zoom In">➕ Zoom In</button>
                     <button id="img-zoom-out" title="Zoom Out">➖ Zoom Out</button>
                     <button id="img-reset" title="Actual Size">🔄 Reset</button>
@@ -1056,6 +1075,70 @@ Loading...
                 </div>
                 <div class="imageviewer-viewport" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: auto; padding: 1.5rem; position: relative;">
                     <img id="imageviewer-img" src="./profile.png" alt="Profile Image" style="max-width: 80%; max-height: 80%; object-fit: contain; box-shadow: 0 8px 24px rgba(0,0,0,0.5); transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); transform-origin: center center;">
+                </div>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------
+           APPLICATION 11E: FIREFOX BROWSER
+        ------------------------------------------------------------- -->
+        <div class="desktop-window" id="win-firefox" style="top: 100px; left: 180px; width: 850px; height: 600px; z-index: 10; display: none;">
+            <div class="window-titlebar">
+                <div class="titlebar-left">
+                    <span class="win-app-icon">🦊</span>
+                    <span class="window-title">Firefox Developer Edition</span>
+                </div>
+                <div class="window-controls">
+                    <span class="win-btn minimize" data-min="firefox" title="Minimize">_</span>
+                    <span class="win-btn maximize" data-max="firefox" title="Maximize">▢</span>
+                    <span class="win-btn close" data-close="firefox" title="Close">✕</span>
+                </div>
+            </div>
+            <div class="window-body firefox-window-body" style="background: #1c1b22; display: flex; flex-direction: column; padding: 0; overflow: hidden; height: 100%;">
+                <!-- Firefox Tab Bar -->
+                <div class="firefox-tabs" style="display: flex; background: #0f0f12; padding: 4px 8px 0 8px; gap: 4px; align-items: flex-end; border-bottom: 1px solid #2b2a33;">
+                    <div class="firefox-tab active" data-tab-id="1" style="display: flex; align-items: center; background: #1c1b22; padding: 6px 12px; border-radius: 8px 8px 0 0; color: #fbfbfe; font-size: 0.75rem; gap: 8px; cursor: pointer; max-width: 150px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                        <span class="tab-icon">📝</span>
+                        <span class="tab-title">Souranil's Blog</span>
+                        <span class="tab-close" style="font-size: 0.7rem; opacity: 0.6; margin-left: auto;">✕</span>
+                    </div>
+                    <button class="firefox-new-tab-btn" style="background: transparent; border: none; color: #8f8f9d; padding: 4px 8px; margin-bottom: 2px; cursor: pointer; font-size: 0.9rem; border-radius: 4px;">+</button>
+                </div>
+                <!-- Firefox Address / Navigation Bar -->
+                <div class="firefox-navbar" style="background: #1c1b22; padding: 6px 8px; display: flex; gap: 8px; align-items: center; border-bottom: 1px solid #2b2a33;">
+                    <button id="firefox-back" title="Back" style="background: transparent; border: none; color: #8f8f9d; font-size: 0.95rem; cursor: pointer; border-radius: 4px; padding: 4px 6px;">⬅️</button>
+                    <button id="firefox-forward" title="Forward" style="background: transparent; border: none; color: #3f3f45; font-size: 0.95rem; cursor: pointer; border-radius: 4px; padding: 4px 6px;">➡️</button>
+                    <button id="firefox-reload" title="Reload" style="background: transparent; border: none; color: #8f8f9d; font-size: 0.95rem; cursor: pointer; border-radius: 4px; padding: 4px 6px;">🔄</button>
+                    <button id="firefox-home" title="Home" style="background: transparent; border: none; color: #8f8f9d; font-size: 0.95rem; cursor: pointer; border-radius: 4px; padding: 4px 6px;">🏠</button>
+                    
+                    <div class="firefox-address-container" style="flex-grow: 1; display: flex; align-items: center; background: #2b2a33; border: 1px solid #5b5b66; border-radius: 4px; padding: 4px 8px;">
+                        <span style="font-size: 0.75rem; color: #10b981; margin-right: 6px; font-weight: bold;">🔒</span>
+                        <input id="firefox-address-input" type="text" value="blog.local" style="background: transparent; border: none; color: #fbfbfe; font-size: 0.75rem; flex-grow: 1; outline: none; width: 100%;" />
+                    </div>
+                </div>
+                <!-- Firefox Bookmarks Toolbar -->
+                <div class="firefox-bookmarks" style="background: #1c1b22; padding: 2px 8px 4px 8px; display: flex; gap: 12px; font-size: 0.7rem; border-bottom: 1px solid #2b2a33; align-items: center;">
+                    <span class="bookmark-item" data-url="blog.local" style="color: #fbfbfe; cursor: pointer; display: flex; align-items: center; gap: 4px;">🔖 Souranil's Blog</span>
+                    <span class="bookmark-item" data-url="https://github.com/souranild" style="color: #fbfbfe; cursor: pointer; display: flex; align-items: center; gap: 4px;">🐙 GitHub</span>
+                    <span class="bookmark-item" data-url="https://www.linkedin.com/in/souranild/" style="color: #fbfbfe; cursor: pointer; display: flex; align-items: center; gap: 4px;">💼 LinkedIn</span>
+                    <span class="bookmark-item" data-url="https://www.google.com" style="color: #fbfbfe; cursor: pointer; display: flex; align-items: center; gap: 4px;">🔍 Google</span>
+                </div>
+                <!-- Browser Viewport Frame -->
+                <div class="firefox-viewport" style="flex-grow: 1; position: relative; background: #ffffff;">
+                    <!-- Iframe for website loading -->
+                    <iframe id="firefox-iframe" src="./blog.html" style="width: 100%; height: 100%; border: none; background: #ffffff;"></iframe>
+                    
+                    <!-- Overlay custom frame options block mock -->
+                    <div id="firefox-iframe-blocked" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #fbfbfe; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; color: #1c1b22; font-family: sans-serif;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+                        <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.5rem; color: #1c1b22;">Unable to Embed Page</h2>
+                        <p style="font-size: 0.85rem; color: #5b5b66; max-width: 420px; margin-bottom: 1.5rem; line-height: 1.4;">
+                            For security reasons, some websites (like Google, GitHub, or LinkedIn) reject embedding inside virtual frames (X-Frame-Options: SAMEORIGIN).
+                        </p>
+                        <a id="firefox-blocked-link" href="#" target="_blank" style="background: #0a84ff; color: white; padding: 0.5rem 1rem; text-decoration: none; border-radius: 4px; font-size: 0.85rem; font-weight: bold; transition: background 0.15s;">
+                            Open in New Window ➡️
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1328,6 +1411,7 @@ Loading...
                 <span class="launcher-icon" data-open="verisium" title="Launch Debug">🔬</span>
                 <span class="launcher-icon" data-open="calculator" title="Launch Calculator">🧮</span>
                 <span class="launcher-icon" data-open="overleaf" title="Launch Editor">🍃</span>
+                <span class="launcher-icon" data-open="firefox" title="Launch Firefox">🦊</span>
             </div>
         </div>
     </footer>
@@ -1365,6 +1449,7 @@ Loading...
         <div class="menu-popup-item" data-app="clock">🕒 Clock App</div>
         <div class="menu-popup-item" data-app="weather">🌤️ Weather App</div>
         <div class="menu-popup-item" data-app="imageviewer">🖼️ Image Viewer</div>
+        <div class="menu-popup-item" data-app="firefox">🦊 Firefox Browser (Blogs)</div>
         <div class="menu-popup-item logout-item" onclick="alert('Session closed. Please refresh page to reboot.')">❌ Log Out souranil...</div>
     </div>
 
