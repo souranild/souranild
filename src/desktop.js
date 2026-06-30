@@ -1557,6 +1557,19 @@ function setupIconDrag() {
 function setupGamesApp() {
     const iframe = document.getElementById('emulator-iframe');
     
+    // Resolve emulator.html path — works on both Vite dev server and GitHub Pages
+    let resolvedEmulatorPath = null;
+    (async function probeEmulatorPath() {
+        const candidates = ['./emulator.html', './public/emulator.html'];
+        for (const path of candidates) {
+            try {
+                const res = await fetch(path, { method: 'HEAD' });
+                if (res.ok) { resolvedEmulatorPath = path; return; }
+            } catch (e) {}
+        }
+        resolvedEmulatorPath = './emulator.html'; // fallback
+    })();
+
     // Bind all game launch items in Games Folder Nautilus grid
     const gameItems = document.querySelectorAll('.game-launch-item');
     gameItems.forEach(item => {
@@ -1566,8 +1579,8 @@ function setupGamesApp() {
         
         const launchAction = (e) => {
             e.stopPropagation();
-            const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
-            const targetUrl = `${basePath}/emulator.html?game=${encodeURIComponent(game)}&core=${encodeURIComponent(core)}`;
+            const emulatorPath = resolvedEmulatorPath || './emulator.html';
+            const targetUrl = `${emulatorPath}?game=${encodeURIComponent(game)}&core=${encodeURIComponent(core)}`;
             if (iframe && iframe.getAttribute('src') !== targetUrl) {
                 iframe.src = targetUrl;
             }
