@@ -3,15 +3,13 @@
 import { parseLaTeXString } from './resumeParser.js';
 import { gsap } from 'gsap';
 
-function getBasePath() {
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    if (isLocal) {
-        return window.location.pathname.includes('/public/') ? '/public' : '';
+function getAssetPath(relativePath) {
+    const isBuilt = !!document.querySelector('script[src*="/assets/"]');
+    if (isBuilt) {
+        return `./${relativePath}`;
+    } else {
+        return `./public/${relativePath}`;
     }
-    const segments = window.location.pathname.split('/').filter(Boolean);
-    const repoName = segments[0] || '';
-    const hasPublic = window.location.pathname.includes('/public/');
-    return `/${repoName}` + (hasPublic ? '/public' : '');
 }
 
 let topZIndex = 30;
@@ -1568,9 +1566,8 @@ function setupIconDrag() {
 function setupGamesApp() {
     const iframe = document.getElementById('emulator-iframe');
     
-    // Resolve emulator.html path synchronously based on location path
-    const isRawRepo = window.location.pathname.includes('/public/');
-    const resolvedEmulatorPath = isRawRepo ? './public/emulator.html' : './emulator.html';
+    // Resolve emulator.html path synchronously
+    const resolvedEmulatorPath = getAssetPath('emulator.html');
 
     // Bind all game launch items in Games Folder Nautilus grid
     const gameItems = document.querySelectorAll('.game-launch-item');
@@ -1629,9 +1626,8 @@ function setupFirefox() {
     const blockedOverlay = document.getElementById('firefox-iframe-blocked');
     const blockedLink = document.getElementById('firefox-blocked-link');
 
-    // Resolve blog.html path synchronously based on location path
-    const isRawRepo = window.location.pathname.includes('/public/');
-    const resolvedBlogPath = isRawRepo ? './public/blog.html' : './blog.html';
+    // Resolve blog.html path synchronously
+    const resolvedBlogPath = getAssetPath('blog.html');
 
     // Simulated site mockup renderer
     function renderSimulatedSite(domain, fullUrl) {
@@ -3269,18 +3265,16 @@ function setupImageViewerApp() {
     const nextBtn = document.getElementById('img-next');
     const filenameEl = document.getElementById('img-filename');
 
-    const basePath = getBasePath();
-
     const images = [
-        { name: 'profile.png', path: `${basePath}/profile.png` },
-        { name: 'hanoi.jpg', path: `${basePath}/wallpapers/hanoi.jpg` },
-        { name: 'hcm.jpg', path: `${basePath}/wallpapers/hcm.jpg` },
-        { name: 'hoian.jpg', path: `${basePath}/wallpapers/hoian.jpg` },
-        { name: 'kuah.jpg', path: `${basePath}/wallpapers/kuah.jpg` },
-        { name: 'mua.jpg', path: `${basePath}/wallpapers/mua.jpg` },
-        { name: 'petronas.jpg', path: `${basePath}/wallpapers/petronas.jpg` },
-        { name: 'sungsot.jpg', path: `${basePath}/wallpapers/sungsot.jpg` },
-        { name: 'towerkl.jpg', path: `${basePath}/wallpapers/towerkl.jpg` }
+        { name: 'profile.png', path: getAssetPath('profile.png') },
+        { name: 'hanoi.jpg', path: getAssetPath('wallpapers/hanoi.jpg') },
+        { name: 'hcm.jpg', path: getAssetPath('wallpapers/hcm.jpg') },
+        { name: 'hoian.jpg', path: getAssetPath('wallpapers/hoian.jpg') },
+        { name: 'kuah.jpg', path: getAssetPath('wallpapers/kuah.jpg') },
+        { name: 'mua.jpg', path: getAssetPath('wallpapers/mua.jpg') },
+        { name: 'petronas.jpg', path: getAssetPath('wallpapers/petronas.jpg') },
+        { name: 'sungsot.jpg', path: getAssetPath('wallpapers/sungsot.jpg') },
+        { name: 'towerkl.jpg', path: getAssetPath('wallpapers/towerkl.jpg') }
     ];
     let currentIdx = 0;
 
@@ -3380,12 +3374,10 @@ function initWallpaperRotator() {
         'mua.jpg', 'petronas.jpg', 'sungsot.jpg', 'towerkl.jpg'
     ];
     
-    const basePath = getBasePath();
-    
     function setRandomWallpaper() {
         const randomIdx = Math.floor(Math.random() * wallpapers.length);
         const wallpaperFile = wallpapers[randomIdx];
-        const imageUrl = `url('${basePath}/wallpapers/${wallpaperFile}')`;
+        const imageUrl = `url('${getAssetPath(`wallpapers/${wallpaperFile}`)}')`;
         
         // Set the background on body, desktop-area, and boot-login
         const desktopArea = document.querySelector('.desktop-area');
