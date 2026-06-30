@@ -1557,18 +1557,9 @@ function setupIconDrag() {
 function setupGamesApp() {
     const iframe = document.getElementById('emulator-iframe');
     
-    // Resolve emulator.html path — works on both Vite dev server and GitHub Pages
-    let resolvedEmulatorPath = null;
-    (async function probeEmulatorPath() {
-        const candidates = ['./emulator.html', './public/emulator.html'];
-        for (const path of candidates) {
-            try {
-                const res = await fetch(path, { method: 'HEAD' });
-                if (res.ok) { resolvedEmulatorPath = path; return; }
-            } catch (e) {}
-        }
-        resolvedEmulatorPath = './emulator.html'; // fallback
-    })();
+    // Resolve emulator.html path synchronously based on location path
+    const isRawRepo = window.location.pathname.includes('/public/');
+    const resolvedEmulatorPath = isRawRepo ? './public/emulator.html' : './emulator.html';
 
     // Bind all game launch items in Games Folder Nautilus grid
     const gameItems = document.querySelectorAll('.game-launch-item');
@@ -1627,18 +1618,9 @@ function setupFirefox() {
     const blockedOverlay = document.getElementById('firefox-iframe-blocked');
     const blockedLink = document.getElementById('firefox-blocked-link');
 
-    // Resolve blog.html path — works on both Vite dev server and GitHub Pages
-    let resolvedBlogPath = null;
-    (async function probeBlogPath() {
-        const candidates = ['./blog.html', './public/blog.html'];
-        for (const path of candidates) {
-            try {
-                const res = await fetch(path, { method: 'HEAD' });
-                if (res.ok) { resolvedBlogPath = path; return; }
-            } catch (e) {}
-        }
-        resolvedBlogPath = './blog.html'; // fallback
-    })();
+    // Resolve blog.html path synchronously based on location path
+    const isRawRepo = window.location.pathname.includes('/public/');
+    const resolvedBlogPath = isRawRepo ? './public/blog.html' : './blog.html';
 
     // Simulated site mockup renderer
     function renderSimulatedSite(domain, fullUrl) {

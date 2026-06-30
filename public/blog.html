@@ -781,22 +781,10 @@
 
 
 
-        // Resolve blogs content base path dynamically for different environments
-        let resolvedBlogsBase = null;
-        async function getBlogsBase() {
-            if (resolvedBlogsBase) return resolvedBlogsBase;
-            const candidates = ['./blogs/', './public/blogs/'];
-            for (const path of candidates) {
-                try {
-                    const res = await fetch(`${path}workstation-launch.txt`, { method: 'HEAD' });
-                    if (res.ok) {
-                        resolvedBlogsBase = path;
-                        return path;
-                    }
-                } catch (e) {}
-            }
-            resolvedBlogsBase = './blogs/'; // fallback
-            return './blogs/';
+        // Resolve blogs base path synchronously based on location path
+        function getBlogsBase() {
+            const isRawRepo = window.location.pathname.includes('/public/');
+            return isRawRepo ? './public/blogs/' : './blogs/';
         }
 
         async function selectPost(postId) {
@@ -829,7 +817,7 @@
 
             try {
                 // Fetch the dynamic raw content file (serves as the isolated LinkedIn source of truth)
-                const base = await getBlogsBase();
+                const base = getBlogsBase();
                 const res = await fetch(`${base}${postId}.txt`);
                 if (!res.ok) throw new Error('Failed to fetch source content');
                 const text = await res.text();
