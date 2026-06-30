@@ -3,6 +3,17 @@
 import { parseLaTeXString } from './resumeParser.js';
 import { gsap } from 'gsap';
 
+function getBasePath() {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isLocal) {
+        return window.location.pathname.includes('/public/') ? '/public' : '';
+    }
+    const segments = window.location.pathname.split('/').filter(Boolean);
+    const repoName = segments[0] || '';
+    const hasPublic = window.location.pathname.includes('/public/');
+    return `/${repoName}` + (hasPublic ? '/public' : '');
+}
+
 let topZIndex = 30;
 let isDraggingGlobal = false;
 let currentWorkspace = 1;
@@ -3258,7 +3269,7 @@ function setupImageViewerApp() {
     const nextBtn = document.getElementById('img-next');
     const filenameEl = document.getElementById('img-filename');
 
-    const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
+    const basePath = getBasePath();
 
     const images = [
         { name: 'profile.png', path: `${basePath}/profile.png` },
@@ -3369,7 +3380,7 @@ function initWallpaperRotator() {
         'mua.jpg', 'petronas.jpg', 'sungsot.jpg', 'towerkl.jpg'
     ];
     
-    const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
+    const basePath = getBasePath();
     
     function setRandomWallpaper() {
         const randomIdx = Math.floor(Math.random() * wallpapers.length);
