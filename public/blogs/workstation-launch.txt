@@ -1,0 +1,68 @@
+Title: Why I built a 6-OS Multitasking Workstation... in a Browser 🚀💻💻✨
+Author: Souranil Das
+Headline: The standard static resume is dead. In an era of interactive web experiences, I wanted to push the boundaries of what "portfolio" means.
+Time: Just Now • Edited • 🌐
+Likes: 👍 86 Likes • 8 Comments
+SourceUrl: https://www.linkedin.com/pulse/why-i-built-6-os-multitasking-workstation-browser-souranil-das-wxcjc/
+
+Body:
+The standard static resume is dead. In an era of interactive web experiences, I wanted to push the boundaries of what "portfolio" means.
+
+After weeks (days) of intensive coding (prompting gemini), refactoring, and performance tuning (ordering gemini), I’m excited to launch my Virtual Workstation Portfolio.
+
+This isn't just a website; it’s an interactive, multitasking desktop shell that lives entirely in your browser. It features 6 different OS environments (including macOS, Ubuntu, and Windows 11), a functioning terminal, a GBA emulator, and a multi-workspace windowing engine.
+
+And you can play Doom on it too (its a bit buggy atm, but I will fix it soon 💪🤞)
+
+### Why build this?
+I wanted to demonstrate more than just UI design. This project was a stress test for:
+1. Complex State Management: Handling multiple windows, workspaces, and persistence.
+2. Performance Engineering: Ensuring smooth 60fps animations even with glassmorphic blurs and active emulators.
+3. AI-Augmented Development: This project was 100% "Vibe Coded," leveraging advanced AI pair-programming to architect 3,500+ lines of logic and styles in record time. (Made with Antigravity IDE, with a "free" Google Premium from Jio)
+
+Check out the live workstation here: https://github.com/souranild/souranild
+Explore the Source Code: https://souranild.github.io/souranild/
+
+### Under the Hood
+For the engineers, architects, and/or the curious, here is the breakdown of how this system handles multitasking and performance at scale.
+
+### 1. The Windowing Engine & Stacking Context
+The core shell is built on raw DOM manipulation and GSAP for high-performance animations.
+
+![Gnome Desktop Workstation Layout](./blogs/desktop.png)
+
+- **Focus Management**: I implemented a dynamic stacking array. When a window is focused, its z-index is elevated to a `topZIndex` constant, while the rest of the array is re-sorted to maintain visual hierarchy.
+- **Session Persistence**: To ensure the user doesn't lose their setup on refresh, the entire desktop state—including open apps, window coordinates, active workspace indices, and chosen themes—is serialized to `localStorage`.
+
+### 2. Multi-Workspace Architecture
+To maximize screen real estate, I built 4 indexable virtual desktops.
+
+![RHEL Workstation with VS Code and Document Viewer](./blogs/rhel_apps.png)
+
+- **State Mapping**: Apps are mapped to specific indices in a `windowWorkspaces` object.
+- **Transitions**: Switching workspaces triggers a GSAP sequence that toggles display states (`flex`/`none`) while updating the taskbar’s badge indicators in real-time.
+
+### 3. Modular App Ecosystem
+- **ZSH Terminal Emulator**: Features a custom tokenizer to parse system commands (`ls`, `cat`, `neofetch`).
+- **GBA Emulator (Cache Storage API)**: To eliminate server-side latency, ROM files are stored on-demand in the client-side `Cache Storage API` via service workers, allowing for near-instantaneous load times.
+- **Firefox Simulator**: A mock browser skin that handles `X-Frame-Options` security headers. If an iframe fails to load due to `SAMEORIGIN` restrictions, the system catches the error and prompts the user to open the link in a new tab.
+
+### 4. Theme Engine & GPU Optimization
+- **Vanilla CSS Tokens**: I used CSS Custom Properties (`--theme-*`) to switch the entire UI skin across RHEL 9, Ubuntu, Kali, Windows 7/10/11, and macOS.
+
+![RHEL Workstation with Multiple Apps Open](./blogs/home.png)
+
+- **Asset Pipeline**: Wallpapers were transcoded from HEIC/PNG to progressive JPEGs using macOS `sips` tools to reduce initial payload size.
+- **Glassmorphism vs. Performance**: `backdrop-filter: blur(20px)` is expensive for GPUs. I implemented a mouse-coordinate tracker that reduces blur intensity when the cursor is over empty desktop space, significantly lowering rendering overhead.
+
+### 5. AI-Augmented Development
+This project was a masterclass in Strategic Prompt Engineering. Rather than writing every line manually, I acted as the "Architect-in-Chief," guiding an AI agent through:
+- **Architectural Definitions**: Defining window boundary calculations and drag-and-drop logic.
+- **Technical Problem Solving**: Prompting the agent to implement client-side ROM caching to bypass server limitations.
+- **Iterative Refinement**: Fine-tuning CSS-drawn window controls for non-macOS themes to ensure pixel-perfect accuracy.
+
+I’d love to hear your thoughts! What’s the most complex "fake" OS feature you’ve seen implemented in the browser?
+
+There are some "easter eggs" here. If you find them lmk :)
+
+👇 Let’s discuss in the comments!

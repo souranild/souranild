@@ -699,59 +699,14 @@
 
     <script>
         // Posts data definitions including specific previews and slide sets
+        // Posts data definitions including specific previews and slide sets
         const postsData = {
             'workstation-launch': {
                 authorName: 'Souranil Das',
                 headline: 'Design Verification Engineer @ NXP Semiconductors | SoC DV | Electronics & Comms',
                 time: 'Just Now • Edited • 🌐',
                 likes: '👍 86 Likes • 8 Comments',
-                sourceUrl: 'https://www.linkedin.com/in/souranild/',
-                previewText: `🚀 Project Launch: Introducing my 6-OS Interactive Virtual Workstation Portfolio! 💻✨
-
-After hours of coding and polishing, I have launched a major redesign of my portfolio site. Instead of a traditional flat resume website, I built a high-fidelity **multitasking desktop environment** directly inside the web browser! Explore the slides below to see the layout...`,
-                fullText: `🚀 Project Launch: Deep Dive into the Architecture of a 6-OS Multitasking Virtual Workstation Portfolio 💻✨
-
-After weeks of intensive coding, refactoring, and performance tuning, I've officially launched my virtual workstation portfolio site. Instead of presenting a standard static resume, this project renders an interactive, multitasking desktop shell inside standard web browsers.
-
-Below is a detailed technical review of the architecture, stack, and optimization strategies implemented in this project.
-
-## 1. Windowing Engine & Focus Management
-The core windowing shell is built on raw DOM manipulation and GSAP animations. Focus layering uses a dynamic stacking array. When a window is focused, its \`z-index\` is elevated to \`topZIndex\` while other windows are re-ordered.
-
-![Gnome Desktop Workstation Layout](./blogs/desktop.png)
-
-* **Coordinate Serialization**: Dragging and resizing events update a state object. To ensure smooth interactions, custom boundary calculations prevent windows from drifting off-screen.
-* **Session Persistence**: Desktop layouts are serialized to \`localStorage\` on modifications. The system stores open apps, minimized states, coordinates, active workspace tabs, and current themes, automatically deserializing on page re-boots.
-
-## 2. Multi-Workspace Virtual Desktops
-To optimize screen space, the desktop features 4 indexable workspace desktops.
-
-![RHEL Workstation with VS Code and Document Viewer](./blogs/rhel_apps.png)
-
-* **Routing Assignments**: Open apps are mapped to specific workspace indices in \`windowWorkspaces\`.
-* **State Transitions**: Switching workspaces hides all windows assigned to other workspaces using GSAP fade animations while restoring the display state (\`flex\`/\`none\`) of the targeted workspace's apps, refreshing the top taskbar badge indicators.
-
-## 3. Modular App Customizations
-* **Terminal Emulator (ZSH)**: Custom tokenizer parsing system commands. Includes file inspection (\`cat\`), neofetch ASCII graphics, directory listing, and manual documentation pages.
-* **Overleaf Compiler Mock**: Dual-pane text editor syncing LaTeX source files with a previewer.
-* **Cache Storage API (GBA Emulator)**: To eliminate server load and latency, Gameboy ROM files are stored on-demand in the client-side \`Cache Storage API\` using service-worker-level logic, providing instantaneous loads.
-* **Firefox Simulator**: Mock web browser skin with custom url routing. Iframes that fail due to site security headers (\`X-Frame-Options: SAMEORIGIN\`) are caught, and visitors are prompted to open them in a new tab.
-
-## 4. Theme Engine & Performance
-* **Vanilla Tokens**: Uses CSS Custom Properties (\`--theme-*\`) to style the UI across Red Hat RHEL 9, Ubuntu, Kali, Windows 7, 10, 11, and macOS.
-
-![RHEL Workstation with Multiple Apps Open](./blogs/home.png)
-
-* **Image Compression**: Background wallpapers are transcoded from HEIC/PNG formats to compressed progressive JPEGs using macOS \`sips\` tools, speeding up asset loads.
-* **Backdrop Filters & Hover Checks**: The glassmorphic blur overlay (\`backdrop-filter: blur(20px)\`) is optimized using mouse coordinate trackers. When the cursor hovers on empty desktop space, the blur fades out to reduce GPU rendering load.
-
-## 5. The Vibe Coding Workflow & Prompt Engineering
-This entire multitasking virtual OS shell was 100% **vibe-coded**! Instead of manually typing out all 3,500+ lines of layout styles and state logic, I pair-programmed in real-time with an advanced AI coding agent.
-* **Strategic Prompting**: Success in vibe coding isn't about letting the AI write blindly—it's about prompt engineering. I formulated detailed prompts defining system architectures, window dimensions, drag bounds, and OS panel heights.
-* **Asking the Right Questions**: Guided the model by posing targeted technical questions—like implementing client-side ROM caching with the Cache Storage API to bypass server latency, or adding cache-busters to virtual iframes to avoid document stale states.
-* **Aesthetic Refinement**: Tuned the UI iteratively, aligning on modern glassmorphic overlays and custom CSS drawing of window titlebar buttons for non-macOS systems.
-
-Explore the workstation files and let me know your feedback! 👇`,
+                sourceUrl: 'https://www.linkedin.com/pulse/why-i-built-6-os-multitasking-workstation-browser-souranil-das-wxcjc/',
                 slides: [
                     { title: "💻 Virtual Workstation Portfolio", desc: "A full multitasking desktop shell built with raw HTML, JS, and custom CSS.", img: "./blogs/desktop.png" },
                     { title: "📁 6 Bootable OS Environments", desc: "Dynamically switch OS themes on the fly. Includes RHEL, Ubuntu, Kali, Windows 7/10/11, and macOS Sonoma!", html: `<div class="os-badge-grid"><span class="os-badge">Red Hat RHEL</span><span class="os-badge">Ubuntu</span><span class="os-badge">Kali Linux</span><span class="os-badge">Windows 7</span><span class="os-badge">Windows 10</span><span class="os-badge">Windows 11</span><span class="os-badge">macOS</span></div>` },
@@ -767,48 +722,6 @@ Explore the workstation files and let me know your feedback! 👇`,
                 time: '2mo • Edited • 🌐',
                 likes: '👍 142 Likes • 14 Comments',
                 sourceUrl: 'https://www.linkedin.com/feed/update/urn:li:activity:7184937870007103489/',
-                previewText: `Ever wondered how chips are made? No, Not these 🍪
-
-I used to be a software guy. Chose all software related courses in my electives, did competitive coding, did my internships in web design, validation and testing.
-
-Switching to hardware, I noticed there aren't as many good interactive resources explaining the chip design process. Let's trace the 11 steps below...`,
-                fullText: `Ever wondered how chips are made? No, Not these 🍪
-
-I used to be a software guy. Chose all software related courses in my electives, did competitive coding, did my internships in web design, validation and testing.
-
-Switching to hardware, I noticed one thing which can be really interesting to a lot of people, but there aren't as many good resources.
-
-So, I hopped into Figma, made this small infographic, inspired by Visual Capitalist, and came up with this timeline of what exactly happens in the chip design industry.
-
-🏁 Checkpoint! Here's more information:
-
-![Semiconductor Flow Infographic](./semiconductor_flow.png)
-
-1. **Specification**: Defining the functional requirements, performance goals, power constraints and other specifications for the chip, based on customer/market requirements. This is a really important step, requiring lots of experience.
-
-2. **Architecture**: Designing the high-level structure of functional blocks and their interactions in the chip while evaluating options and trade-offs to meet the specifications efficiently. Power consumption, performance, scalability are considered.
-
-3. **Design**: Creating a logic implementation based on the architecture in Verilog/VHDL to implement complex algorithms, data paths and control logic.
-
-4. **Verification**: Developing testbenches and test cases to verify the functionality of the design against the specifications by simulation-based testing using tools like Synopsis VCS or Cadence Xcelium. Functional, formal, digital, analog and many methods to prove the design's accuracy.
-
-5. **Synthesis**: Converting the high-level logic into a gate-level netlist that represents the hardware implementation. Optimizing the design for area, power, and timing using synthesis tools like Synopsys Design Compiler or Cadence Genus.
-
-6. **Place & Route (P&R)**: Determining the physical locations of chip components, "floor planning" to allocate space for functional blocks and I/O interfaces, and routing the connections between components efficiently.
-
-7. **Fabrication**: Manufacturing the physical chip using fabrication processes such as photolithography, etching, and doping. Usually outsourced to foundries such as TSMC/Samsung.
-
-8. **Testing**: Performing wafer-level testing and packaged-chip testing to ensure functionality and reliability, analyzing test results and identifying any defects or failures for further investigation.
-
-9. **Debugging**: Identifying and diagnosing issues discovered during testing using tools such as logic analyzers, waveform viewers, and debug probes to trace and analyze signals.
-
-10. **Integration**: Integrating the chip into a larger product environment and interfacing the chip with other system components like processors, memory and peripherals. Performing system-level validation and testing to ensure interoperability.
-
-11. **Deployment**: Preparing the chip for mass production and distribution, coordinating with supply chain partners for sourcing materials and components, and finally shipping the product to the market.
-
-Each phase represents thousands of developer hours and is critical to ensuring the reliability of the tech we use every day!
-
-Hope you all like it 😎`,
                 slides: [
                     { title: "🔬 Semiconductor Flow Pipeline", desc: "11 structural phases of bringing a silicon chip from specification to market deployment.", img: "./semiconductor_flow.png" },
                     { title: "1. Specification & Specs", desc: "Defining specifications based on customer constraints, power envelopes, and chip functionalities." },
@@ -830,7 +743,63 @@ Hope you all like it 😎`,
         let isExpanded = false;
         let activeSlideIndex = 0;
 
-        function selectPost(postId) {
+        function parseRawPostFile(text) {
+            const lines = text.split('\n');
+            const metadata = {};
+            let bodyIndex = 0;
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.startsWith('Body:')) {
+                    bodyIndex = i + 1;
+                    break;
+                }
+                const colonIdx = line.indexOf(':');
+                if (colonIdx > -1) {
+                    const key = line.substring(0, colonIdx).trim().toLowerCase();
+                    const val = line.substring(colonIdx + 1).trim();
+                    metadata[key] = val;
+                }
+            }
+            const body = lines.slice(bodyIndex).join('\n').trim();
+            
+            // Generate preview text (first 300 chars, truncated at last sentence/word)
+            let preview = body;
+            if (body.length > 300) {
+                preview = body.substring(0, 300);
+                const lastSpace = preview.lastIndexOf(' ');
+                if (lastSpace > -1) {
+                    preview = preview.substring(0, lastSpace) + '...';
+                }
+            }
+            
+            return {
+                ...metadata,
+                previewText: preview,
+                fullText: body
+            };
+        }
+
+
+
+        // Resolve blogs content base path dynamically for different environments
+        let resolvedBlogsBase = null;
+        async function getBlogsBase() {
+            if (resolvedBlogsBase) return resolvedBlogsBase;
+            const candidates = ['./blogs/', './public/blogs/'];
+            for (const path of candidates) {
+                try {
+                    const res = await fetch(`${path}workstation-launch.txt`, { method: 'HEAD' });
+                    if (res.ok) {
+                        resolvedBlogsBase = path;
+                        return path;
+                    }
+                } catch (e) {}
+            }
+            resolvedBlogsBase = './blogs/'; // fallback
+            return './blogs/';
+        }
+
+        async function selectPost(postId) {
             activePostId = postId;
             isExpanded = false; // Reset to collapsed view on selection
             activeSlideIndex = 0; // Reset slide index
@@ -844,14 +813,54 @@ Hope you all like it 😎`,
                 }
             });
 
-            // Update Author Header details
-            const post = postsData[postId];
-            document.getElementById('post-author-headline').textContent = post.headline;
-            document.getElementById('post-time').textContent = post.time;
-            document.getElementById('post-likes-count').textContent = post.likes;
+            const container = document.getElementById('dynamic-content-area');
+            container.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; color: var(--li-text-secondary); font-family: sans-serif; gap: 16px;">
+                    <div style="width: 28px; height: 28px; border: 3px solid var(--li-border); border-top-color: #0a66c2; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                    <div style="font-size: 0.85rem; font-weight: 500; letter-spacing: 0.2px;">Fetching from LinkedIn source...</div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
 
-            // Render view
-            renderPostContent();
+            try {
+                // Fetch the dynamic raw content file (serves as the isolated LinkedIn source of truth)
+                const base = await getBlogsBase();
+                const res = await fetch(`${base}${postId}.txt`);
+                if (!res.ok) throw new Error('Failed to fetch source content');
+                const text = await res.text();
+                
+                // Parse the LinkedIn data structure
+                const parsed = parseRawPostFile(text);
+                
+                // Bind properties dynamically without storing inside the client code structure
+                postsData[postId].previewText = parsed.previewText;
+                postsData[postId].fullText = parsed.fullText;
+                
+                // Update Author Header UI details
+                document.getElementById('post-author-headline').textContent = parsed.headline || postsData[postId].headline;
+                document.getElementById('post-time').textContent = parsed.time || postsData[postId].time;
+                document.getElementById('post-likes-count').textContent = parsed.likes || postsData[postId].likes;
+                if (parsed.sourceurl) {
+                    postsData[postId].sourceUrl = parsed.sourceurl;
+                }
+
+                // Render content
+                renderPostContent();
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = `
+                    <div style="padding: 3rem 1.5rem; text-align: center; color: #ef4444; font-family: sans-serif;">
+                        <span style="font-size: 2rem;">⚠️</span>
+                        <h4 style="margin: 0.75rem 0 0.25rem 0; font-size: 0.95rem; font-weight: bold;">Connection Timeout</h4>
+                        <p style="font-size: 0.8rem; color: var(--li-text-secondary);">Unable to reach LinkedIn source database. Please try again later.</p>
+                    </div>
+                `;
+            }
             
             // Scroll pane back to top
             document.querySelector('.post-detail-scrollable').scrollTop = 0;

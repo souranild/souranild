@@ -1,0 +1,47 @@
+Title: Ever wondered how chips are made? No, Not these 🍪
+Author: Souranil Das
+Headline: Design Verification Engineer @ NXP Semiconductors | SoC DV | Electronics & Comms
+Time: 2mo • Edited • 🌐
+Likes: 👍 142 Likes • 14 Comments
+SourceUrl: https://www.linkedin.com/feed/update/urn:li:activity:7184937870007103489/
+
+Body:
+Ever wondered how chips are made? No, Not these 🍪
+
+I used to be a software guy. Chose all software related courses in my electives, did competitive coding, did my internships in web design, validation and testing.
+
+Switching to hardware, I noticed one thing which can be really interesting to a lot of people, but there aren't as many good resources.
+
+So, I hopped into Figma, made this small infographic, inspired by Visual Capitalist, and came up with this timeline of what exactly happens in the chip design industry.
+
+Hope you all like it 😎
+
+🏁 Checkpoint! Here's more information:
+
+![Semiconductor Flow Infographic](./semiconductor_flow.png)
+
+1. **Specification**: Defining the functional requirements, performance goals, power constraints and other specifications for the chip, based on customer/market requirements. This is a really important step, requiring lots of experience.
+
+2. **Architecture**: Designing the high-level structure of functional blocks and their interactions in the chip while evaluating options and trade-offs to meet the specifications efficiently. Power consumption, performance, scalability are considered.
+
+3. **Design**: Creating a logic implementation based on the architecture in Verilog/VHDL to implement complex algorithms, data paths and control logic.
+
+4. **Verification**: Developing testbenches and test cases to verify the functionality of the design against the specifications by simulation-based testing using tools like Synopsis VCS or Cadence Xcelium. Functional, formal, digital, analog and many methods to prove the design's accuracy.
+
+5. **Synthesis**: Converting the high-level logic into a gate-level netlist that represents the hardware implementation. Optimizing the design for area, power, and timing using synthesis tools like Synopsys Design Compiler or Cadence Genus.
+
+6. **Place & Route (P&R)**: Determining the physical locations of chip components, "floor planning" to allocate space for functional blocks and I/O interfaces, and routing the connections between components efficiently.
+
+7. **Fabrication**: Manufacturing the physical chip using fabrication processes such as photolithography, etching, and doping. Usually outsourced to foundries such as TSMC/Samsung.
+
+8. **Testing**: Performing wafer-level testing and packaged-chip testing to ensure functionality and reliability, analyzing test results and identifying any defects or failures for further investigation.
+
+9. **Debugging**: Identifying and diagnosing issues discovered during testing using tools such as logic analyzers, waveform viewers, and debug probes to trace and analyze signals.
+
+10. **Integration**: Integrating the chip into a larger product environment and interfacing the chip with other system components like processors, memory and peripherals. Performing system-level validation and testing to ensure interoperability.
+
+11. **Deployment**: Preparing the chip for mass production and distribution, coordinating with supply chain partners for sourcing materials and components, and finally shipping the product to the market.
+
+Each phase represents thousands of developer hours and is critical to ensuring the reliability of the tech we use every day!
+
+Hope you all like it 😎
